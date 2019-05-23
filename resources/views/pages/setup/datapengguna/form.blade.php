@@ -27,6 +27,7 @@
 		<form action="/datapengguna/{{ strtolower($aksi) }}" method="post" data-parsley-validate="true" data-parsley-errors-messages-disabled="">
 			@csrf
 			<div class="panel-body">
+				<input type="hidden" name="redirect" value="{{ url()->previous() }}">
 				<div class="row">
 					<div class="col-md-5">
 						@if(!$data)

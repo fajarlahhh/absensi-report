@@ -7,12 +7,12 @@
 @endpush
 
 @section('page')
-	<li class="breadcrumb-item">Data Mesin</li>
+	<li class="breadcrumb-item">Data Kantor</li>
 	<li class="breadcrumb-item active">{{ $aksi }} Data</li>
 @endsection
 
 @section('header')
-	<h1 class="page-header">Data Mesin <small>{{ $aksi }} Data</small></h1>
+	<h1 class="page-header">Data Kantor <small>{{ $aksi }} Data</small></h1>
 @endsection
 
 @section('subcontent')
@@ -24,38 +24,26 @@
             </div>
 			<h4 class="panel-title">Form</h4>
 		</div>
-		<form action="/datamesin/{{ strtolower($aksi) }}" method="post" data-parsley-validate="true" data-parsley-errors-messages-disabled="">
+		<form action="/datakantor/{{ strtolower($aksi) }}" method="post" data-parsley-validate="true" data-parsley-errors-messages-disabled="">
 			@csrf
 			<div class="panel-body">
 				<input type="hidden" name="redirect" value="{{ url()->previous() }}">
 				@if($data)
 				<div class="form-group">
 					<label class="control-label">ID</label>
-					<input class="form-control" type="text" name="mesin_id" value="{{ $data? $data->mesin_id: '' }}" required readonly />
+					<input class="form-control" type="text" name="kantor_id" value="{{ $data? $data->kantor_id: '' }}" required readonly />
 				</div>
 				@endif
 				<div class="form-group">
 					<label class="control-label">Lokasi</label>
-					<input class="form-control" type="text" name="mesin_lokasi" value="{{ $data? $data->mesin_lokasi: '' }}" required data-parsley-maxlength="250" autocomplete="off" />
-				</div>
-				<div class="form-group">
-					<label class="control-label">IP</label>
-					<input class="form-control" type="text" name="mesin_ip" value="{{ $data? $data->mesin_ip: '' }}" required data-parsley-maxlength="15" autocomplete="off" />
-				</div>
-				<div class="form-group">
-					<label class="control-label">Key</label>
-					<input class="form-control" type="text" name="mesin_key" value="{{ $data? $data->mesin_key: '' }}" required data-parsley-maxlength="25" autocomplete="off" />
-				</div>
-				<div class="form-group">
-					<label class="control-label">SN</label>
-					<input class="form-control" type="text" name="mesin_sn" value="{{ $data? $data->mesin_sn: '' }}" required data-parsley-maxlength="25" autocomplete="off" />
+					<input class="form-control" type="text" name="kantor_nama" value="{{ $data? $data->kantor_nama: '' }}" required data-parsley-maxlength="250" autocomplete="off" />
 				</div>
 				<div class="form-group input-group-sm">
 					<label class="control-label">Unit</label>
-					<select class="form-control selectpicker" data-live-search="true" name="unit_kd" data-style="btn-info" data-width="100%">
+					<select class="form-control selectpicker" data-live-search="true" name="unit_id" data-style="btn-info" data-width="100%">
 						@foreach($unit as $unt)
 						<option value="{{ $unt->kd_unit }}" 
-							@if($data && $data->unit_kd == $unt->kd_unit)
+							@if($data && $data->unit_id == $unt->kd_unit)
 								selected
 							@endif
 						>{{ $unt->nm_unit }}</option>

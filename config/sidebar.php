@@ -28,6 +28,9 @@ return [
 		],[
 			'url' => '/datapengguna',
 			'title' => 'Data Pengguna'
+		],[
+			'url' => '/datakantor',
+			'title' => 'Data Kantor'
 		]]
 	],[
 		'icon' => 'fa fa-database',

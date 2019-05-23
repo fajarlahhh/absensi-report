@@ -10,7 +10,7 @@ class Mesin extends Model
     protected $primaryKey = 'mesin_id';
     public $incrementing = false;
 
-    public function unit(){
-        return $this->hasOne('Absensi\Unit', 'kd_unit', 'unit_kd');
+    public function kantor(){
+        return $this->hasOne('Absensi\Kantor', 'kantor_id', 'kantor_id');
 	}
 }

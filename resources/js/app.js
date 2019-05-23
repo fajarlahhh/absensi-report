@@ -8,5 +8,5 @@ window.$ = window.jQuery = require('jquery');
 window.Cookies = require('js-cookie');
 
 require('jqueryui');
-require('bootstrap');
+require('./bootstrap');
 require('jquery-slimscroll');

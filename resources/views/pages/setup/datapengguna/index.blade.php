@@ -65,12 +65,16 @@
 					        <td>{{ ucFirst($pengguna->getRoleNames()[0]) }}</td>
 					        <td class="text-right">
 					        	@role('user|administrator')
-					        	<a href="/datapengguna/edit/{{ $pengguna->pengguna_nip }}" class='btn btn-grey btn-xs'><i class='fa fa-pencil-alt'></i></a>
-	                    		@endrole
-					        	@role('administrator')
-					        	@if(!in_array($pengguna->pengguna_nip, config('admin.nip')))
-	                            <a href="javascript:;" onclick="hapus('{{ $pengguna->pengguna_nip }}')" id='btn-del' class='btn btn-danger btn-xs'><i class='fa fa-trash-alt'></i></a>
-	                            @endif
+					        	<form action="datapengguna/edit" method="get">
+					        		@csrf
+					        		<input type="hidden" name="id" value="{{ $pengguna->pengguna_nip }}">
+					        		<button class='btn btn-grey btn-xs'>
+					        			<i class='fa fa-pencil-alt'></i>
+					        		</button>	                            	
+						        	@if(!in_array($pengguna->pengguna_nip, config('admin.nip')))
+		                            <a href="javascript:;" onclick="hapus('{{ $pengguna->pengguna_nip }}')" id='btn-del' class='btn btn-danger btn-xs'><i class='fa fa-trash-alt'></i></a>
+		                            @endif
+					        	</form>
 	                    		@endrole
 					        </td>
 				      	</tr>

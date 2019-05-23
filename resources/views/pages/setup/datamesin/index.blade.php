@@ -46,7 +46,7 @@
 							<th>IP</th>
 							<th>Key</th>
 							<th>SN</th>
-							<th>Unit</th>
+							<th>Kantor</th>
 							<th width="100"></th>
 						</tr>
 					</thead>
@@ -58,11 +58,17 @@
 					        <td>{{ $mesin->mesin_ip }}</td>
 					        <td>{{ $mesin->mesin_key }}</td>
 					        <td>{{ $mesin->mesin_sn }}</td>
-					        <td>{{ $mesin->unit->nm_unit }}</td>
+					        <td>{{ $mesin->kantor->kantor_nama }}</td>
 					        <td class="text-right">
 					        	@role('user|administrator')
-					        	<a href="/datamesin/edit/{{ $mesin->mesin_id }}" class='btn btn-grey btn-xs'><i class='fa fa-pencil-alt'></i></a>
-	                            <a href="javascript:;" onclick="hapus('{{ $mesin->mesin_id }}, {{ $mesin->mesin_lokasi }}')" id='btn-del' class='btn btn-danger btn-xs'><i class='fa fa-trash-alt'></i></a>
+					        	<form action="datamesin/edit" method="get">
+					        		@csrf
+					        		<input type="hidden" name="id" value="{{ $mesin->mesin_id }}">
+					        		<button class='btn btn-grey btn-xs'>
+					        			<i class='fa fa-pencil-alt'></i>
+					        		</button>
+	                            	<a href="javascript:;" onclick="hapus('{{ $mesin->mesin_id }}, {{ $mesin->mesin_lokasi }}')" id='btn-del' class='btn btn-danger btn-xs'><i class='fa fa-trash-alt'></i></a>
+					        	</form>
 	                    		@endrole
 					        </td>
 				      	</tr>

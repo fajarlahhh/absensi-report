@@ -90,9 +90,9 @@ class Dataanggotacontroller extends Controller
 		}
 	}
 
-	public function edit($id)
+	public function edit(Request $req)
 	{
-		$anggota = Anggota::find($id);
+		$anggota = Anggota::find($req->id);
 		return view('pages.master.dataanggota.form',[
 			'data' => $anggota,
 			'aksi' => 'Edit'
@@ -138,7 +138,7 @@ class Dataanggotacontroller extends Controller
 			->with('judul', 'Hapus data')
 			->with('tipe', 'success');
 		}catch(\Exception $e){
-			return redirect('dataanggota')
+			return redirect()->back()
 			->with('pesan', 'Gagal menghapus data anggota (NIP:'.$req->get('anggota_nip').') Error: '.$e)
 			->with('judul', 'Hapus data')
 			->with('tipe', 'error');
@@ -147,6 +147,10 @@ class Dataanggotacontroller extends Controller
 
 	public function upload()
 	{
-		# code...
+		$unit = Unit::all();
+		return view('pages.master.dataanggota.form',[
+			'data' => $anggota,
+			'aksi' => 'Edit'
+		]);
 	}
 }

@@ -98,22 +98,22 @@ class PenggunaController extends Controller
 					}
 				}
 			});
-			return redirect('datapengguna')
+			return redirect($req->get('redirect')? $req->get('redirect'): 'datapengguna')
 			->with('pesan', 'Berhasil menambah data pengguna (nip:'.$req->get('pengguna_nip').')')
 			->with('judul', 'Tambah data')
 			->with('tipe', 'success');
 		}catch(\Exception $e){
-			return redirect('datapengguna')
+			return redirect($req->get('redirect')? $req->get('redirect'): 'datapengguna')
 			->with('pesan', 'Gagal menambah data pengguna (nip:'.$req->get('pengguna_nip').') Error: '.$e)
 			->with('judul', 'Tambah data')
 			->with('tipe', 'error');
 		}
 	}
 
-	public function edit($nip)
+	public function edit(Request $req)
 	{
-		$pengguna = Pengguna::find($nip);
-		$level = (in_array($nip, config('admin.nip'))? \Spatie\Permission\Models\Role::where('name', 'Administrator')->get(): \Spatie\Permission\Models\Role::all());
+		$pengguna = Pengguna::find($req->id);
+		$level = (in_array($req->id, config('admin.nip'))? \Spatie\Permission\Models\Role::where('name', 'Administrator')->get(): \Spatie\Permission\Models\Role::all());
 		$izin = \Spatie\Permission\Models\Permission::all();
 		return view('pages.setup.datapengguna.form',[
 			'data' => $pengguna,
@@ -158,12 +158,12 @@ class PenggunaController extends Controller
 					}
 				}
 			});
-			return redirect('datapengguna')
+			return redirect($req->get('redirect')? $req->get('redirect'): 'datapengguna')
 			->with('pesan', 'Berhasil mengedit data pengguna (nip:'.$req->get('pengguna_nip').')')
 			->with('judul', 'Edit data')
 			->with('tipe', 'success');
 		}catch(\Exception $e){
-			return redirect('datapengguna')
+			return redirect($req->get('redirect')? $req->get('redirect'): 'datapengguna')
 			->with('pesan', 'Gagal mengedit data pengguna (nip:'.$req->get('pengguna_nip').') Error: '.$e)
 			->with('judul', 'Edit data')
 			->with('tipe', 'error');
@@ -179,7 +179,7 @@ class PenggunaController extends Controller
 			->with('judul', 'Hapus data')
 			->with('tipe', 'success');
 		}catch(\Exception $e){
-			return redirect('datapengguna')
+			return redirect()->back()
 			->with('pesan', 'Gagal menghapus data pengguna (nip:'.$req->get('pengguna_nip').') Error: '.$e)
 			->with('judul', 'Hapus data')
 			->with('tipe', 'error');

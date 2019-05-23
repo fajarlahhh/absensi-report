@@ -1,11 +1,11 @@
 @extends('pages.setup.main')
 
 @section('page')
-	<li class="breadcrumb-item active">Data Mesin</li>
+	<li class="breadcrumb-item active">Data Kantor</li>
 @endsection
 
 @section('header')
-	<h1 class="page-header">Data Anggota</h1>
+	<h1 class="page-header">Data Kantor</h1>
 @endsection
 
 @section('subcontent')
@@ -16,13 +16,12 @@
                 <div class="col-md-6 col-lg-7 col-xl-9 col-xs-12">
                 	@role('user|administrator')
                     <div class="form-inline">
-                        <a href="/dataanggota/tambah" class="btn btn-sm btn-primary"><span class="glyphicon glyphicon-plus"></span>Tambah</a>&nbsp;
-                        <a href="/dataanggota/upload" class="btn btn-sm btn-success"><span class="glyphicon glyphicon-plus"></span>Upload</a>
+                        <a href="/datakantor/tambah" class="btn btn-sm btn-primary"><span class="glyphicon glyphicon-plus"></span>Tambah</a>
                     </div>
                     @endrole
                 </div>
                 <div class="col-md-6 col-lg-5 col-xl-3 col-xs-12">
-                	<form action="/dataanggota" method="GET">
+                	<form action="/datakantor" method="GET">
 	                	<div class="input-group input-group-sm">
 	                		@csrf
 							<input type="text" class="form-control" name="cari" placeholder="Pencarian" aria-label="Sizing example input" autocomplete="off" aria-describedby="inputGroup-sizing-sm" value="{{ $cari }}">
@@ -43,36 +42,26 @@
                     <thead>
 						<tr>
 							<th>No.</th>
-							<th>NIP</th>
-							<th>Nama</th>
+							<th>Lokasi</th>
 							<th>Unit</th>
-							<th>Jabatan</th>
-							<th>Bagian</th>
-							<th>Seksi</th>
-							<th>Hak Akses</th>
-							<th width="100"></th>
+							<th width="120"></th>
 						</tr>
 					</thead>
 					<tbody>
-					    @foreach ($data as $index => $anggota)
+					    @foreach ($data as $index => $kantor)
 					    <tr>
 					        <td>{{ (($data->currentPage() - 1 ) * $data->perPage() ) + $loop->iteration }}</td>
-					        <td>{{ $anggota->anggota_nip }}</td>
-					        <td>{{ $anggota->nm_pegawai }}</td>
-					        <td>{{ $anggota->nm_unit }}</td>
-					        <td>{{ $anggota->nm_jabatan }}</td>
-					        <td>{{ $anggota->nm_bagian }}</td>
-					        <td>{{ $anggota->nm_seksi }}</td>
-					        <td>{{ $anggota->anggota_hak_akses == 14? 'Super Admin': 'User Biasa' }}</td>
+					        <td>{{ $kantor->kantor_nama }}</td>
+					        <td>{{ $kantor->unit->nm_unit }}</td>
 					        <td class="text-right">
 					        	@role('user|administrator')
-					        	<form action="dataanggota/edit" method="get">
+					        	<form action="datakantor/edit" method="get">
 					        		@csrf
-					        		<input type="hidden" name="id" value="{{ $anggota->pegawai_id }}">
+					        		<input type="hidden" name="id" value="{{ $kantor->kantor_id }}">
 					        		<button class='btn btn-grey btn-xs'>
 					        			<i class='fa fa-pencil-alt'></i>
 					        		</button>
-	                            	<a href="javascript:;" onclick="hapus('{{ $anggota->pegawai_id }}')" id='btn-del' class='btn btn-danger btn-xs'><i class='fa fa-trash-alt'></i></a>
+	                            	<a href="javascript:;" onclick="hapus('{{ $kantor->kantor_id }}', '{{ $kantor->kantor_nama }}')" id='btn-del' class='btn btn-danger btn-xs'><i class='fa fa-trash-alt'></i></a>
 					        	</form>
 	                    		@endrole
 					        </td>
@@ -95,10 +84,10 @@
 
 @push('scripts')
 	<script>
-		function hapus(id) {
+		function hapus(id, lokasi) {
 			swal({
 				title: 'Apakah anda yakin?',
-				text: 'Anda akan menghapus anggota dengan NIP : ' + id + '',
+				text: 'Anda akan menghapus kantor ' + lokasi + '',
 				icon: 'warning',
 				buttons: {
 					cancel: {
@@ -118,7 +107,7 @@
 				}
 			}).then(function(isConfirm) {
 		      	if (isConfirm) {
-	          		window.location.href = "/dataanggota/hapus/" + id;
+	          		window.location.href = "/datakantor/hapus/" + id;
 		      	}
 		    });
 		}		
