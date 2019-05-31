@@ -17,9 +17,13 @@ class Anggota extends Model
 
     public function pegawai(){
         return $this->hasOne('Absensi\Pegawai', 'id', 'pegawai_id')->orderBy('nm_pegawai');
-	}
+    }
 
-	public function anggota_detail(){
-		return $this->hasMany('Absensi\Anggotadetail');
+    public function kantor(){
+        return $this->hasOne('Absensi\Kantor', 'kantor_id', 'kantor_id');
+    }
+
+	public function fingerprint(){
+		return $this->hasMany('Absensi\Fingerprint', 'pegawai_id', 'pegawai_id');
 	}
 }

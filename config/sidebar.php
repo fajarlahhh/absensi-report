@@ -56,5 +56,17 @@ return [
 			'url' => '/dataizin',
 			'title' => 'Data Izin'
 		]]
+	],[
+		'icon' => 'fa fa-file-alt',
+		'title' => 'Laporan',
+		'url' => 'javascript:;',
+		'caret' => true,
+		'sub_menu' => [[
+			'url' => '/datakehadiran',
+			'title' => 'Data Kehadiran'
+		],[
+			'url' => '/dataizin',
+			'title' => 'Data Izin'
+		]]
 	]]
 ];

@@ -76,7 +76,7 @@
 				{{ $data->links() }}
 			</div>
 			<div class="col-md-6 col-lg-2 col-xl-2 col-xs-12">
-				<label class="pull-right">Jumlah Data : {{ $data->count() }}</label>
+				<label class="pull-right">Jumlah Data : {{ $data->total() }}</label>
 			</div>
 		</div>
 	</div>

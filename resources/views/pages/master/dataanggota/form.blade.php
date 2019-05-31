@@ -1,4 +1,4 @@
-@extends('pages.setup.main')
+@extends('pages.master.main')
 
 @push('css')
 	<link href="/assets/plugins/password-indicator/css/password-indicator.css" rel="stylesheet" />
@@ -28,50 +28,42 @@
 			@csrf
 			<div class="panel-body">
 				<input type="hidden" name="redirect" value="{{ url()->previous() }}">
-				@if($aksi == 'Tambah')
 				<div class="form-group input-group-sm">
 					<label class="control-label">Nama Pegawai</label>
-					<select class="form-control selectpicker" data-live-search="true" name="pegawai_id" data-style="btn-info" data-width="100%">
+					<select class="form-control selectpicker" data-live-search="true" name="pegawai_id" id="pegawai_id" data-style="btn-info" data-width="100%" onchange="getnip()">
 						@foreach($pegawai as $peg)
-						<option value="{{ $peg->id }}" >{{ $peg->nm_pegawai }}</option>
+						<option value="{{ $peg->id }}" data-nip="{{ $peg->nip }}">{{ $peg->nm_pegawai }}</option>
 						@endforeach
 					</select>
 				</div>
-				@else
-				<input type="hidden" name="pegawai_id" value="{{ $data->pegawai_id }}" required /> <div class="form-group">
-					<label class="control-label">NIP</label>
-					<input class="form-control" type="text" name="anggota_nip"  value="{{ $data->anggota_nip }}" required readonly />
-				</div>
-				<div class="form-group">
-					<label class="control-label">Nama</label>
-					<input class="form-control" type="text" value="{{ $data->pegawai->nm_pegawai }}" required readonly />
-				</div>
-				<div class="form-group">
-					<label class="control-label">Unit</label>
-					<input class="form-control" type="text" value="{{ $data->pegawai->unit->nm_unit }}" required readonly />
-				</div>
-				<div class="form-group">
-					<label class="control-label">Jabatan</label>
-					<input class="form-control" type="text" value="{{ $data->pegawai->jabatan->nm_jabatan }}" required readonly />
-				</div>
-				<div class="form-group">
-					<label class="control-label">Bagian</label>
-					<input class="form-control" type="text" value="{{ $data->pegawai->bagian->nm_bagian }}" required readonly />
-				</div>
-				<div class="form-group">
-					<label class="control-label">Seksi</label>
-					<input class="form-control" type="text" value="{{ $data->pegawai->seksi->nm_seksi }}" required readonly />
-				</div>
-				@endif
+				<input type="hidden" name="anggota_nip" id="nip" value="{{ $pegawai{0}->nip }}">
 				<div class="form-group">
 					<label class="control-label">Hak Akses</label>
 					<select class="form-control selectpicker" style="width : 100%" name="anggota_hak_akses" id="anggota_hak_akses" data-style="btn-info" data-width="100%">
-						<option value="14" {{ $data && $data->anggota_hak_akses == 14? "selected": "" }}>
-							Super Admin
-						</option>
 						<option value="9" {{ $data && $data->anggota_hak_akses == 0? "selected": "" }}>
 							User Biasa
 						</option>
+						@role('administrator')
+						<option value="14" {{ $data && $data->anggota_hak_akses == 14? "selected": "" }}>
+							Super Admin
+						</option>
+						@endrole
+					</select>
+				</div>
+				<div class="form-group">
+					<label class="control-label">Sandi</label>
+					<input class="form-control" type="text" name="anggota_sandi" value="{{ $data? $data->anggota_sandi: '' }}" data-parsley-maxlength="10" autocomplete="off" />
+				</div>
+				<div class="form-group input-group-sm">
+					<label class="control-label">Kantor</label>
+					<select class="form-control selectpicker" data-live-search="true" name="kantor_id" data-style="btn-info" data-width="100%">
+						@foreach($kantor as $ktr)
+						<option value="{{ $ktr->kantor_id }}" 
+							@if($data && $data->kantor_id == $ktr->kantor_id)
+								selected
+							@endif
+						>{{ $ktr->kantor_nama }}</option>
+						@endforeach
 					</select>
 				</div>
 			</div>
@@ -95,4 +87,9 @@
 @push('scripts')
 	<script src="/assets/plugins/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
 	<script src="/assets/plugins/parsleyjs/dist/parsley.js"></script>
+	<script type="text/javascript">
+		function getnip() {
+			$("#nip").val($("#pegawai_id option:selected").data("nip"));
+		}
+	</script>
 @endpush

@@ -15,6 +15,12 @@ Route::group(['middleware' => ['auth']], function () {
 	Route::get('/', 'DashboardController@index')->name('dashboard');
 	Route::get('/home', 'DashboardController@index');
 
+	Route::group(['middleware' => ['auth', 'permission:data kehadiran']], function () {
+		Route::get('/datakehadiran', 'DatakehadiranController@index')->name('datapengguna');
+		Route::get('/datakehadiran/download', 'DatakehadiranController@download')->middleware(['role:administrator|user']);
+		Route::post('/datakehadiran/download', 'DatakehadiranController@do_download')->middleware(['role:administrator|user']);
+	});
+
 	Route::group(['middleware' => ['auth', 'permission:data pengguna']], function () {
 		Route::get('/datapengguna', 'PenggunaController@index')->name('datapengguna');
 		Route::get('/datapengguna/edit', 'PenggunaController@edit')->middleware(['role:administrator|user']);
@@ -44,12 +50,12 @@ Route::group(['middleware' => ['auth']], function () {
 
 	Route::group(['middleware' => ['auth', 'permission:data anggota']], function () {
 		Route::get('/dataanggota', 'Dataanggotacontroller@index')->name('dataanggota');
-		Route::get('/dataanggota/edit', 'Dataanggotacontroller@edit')->middleware(['role:administrator|user']);
 		Route::get('/dataanggota/tambah', 'Dataanggotacontroller@tambah')->middleware(['role:administrator|user']);
 		Route::post('/dataanggota/tambah', 'Dataanggotacontroller@do_tambah')->middleware(['role:administrator|user']);
-		Route::post('/dataanggota/edit', 'Dataanggotacontroller@do_edit')->middleware(['role:administrator|user']);
+		Route::post('/dataanggota/fingerprint', 'Dataanggotacontroller@fingerprint')->middleware(['role:administrator|user']);
 		Route::get('/dataanggota/hapus/{post}', 'Dataanggotacontroller@hapus')->middleware(['role:administrator|user']);
 		Route::get('/dataanggota/upload', 'Dataanggotacontroller@upload')->middleware(['role:administrator|user']);
+		Route::post('/dataanggota/upload', 'Dataanggotacontroller@do_upload')->middleware(['role:administrator|user']);
 	});
 });
 

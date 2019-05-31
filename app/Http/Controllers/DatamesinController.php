@@ -4,7 +4,7 @@ namespace Absensi\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Absensi\Mesin;
-use Absensi\Unit;
+use Absensi\Kantor;
 use Illuminate\Support\Facades\DB;
 
 
@@ -28,10 +28,10 @@ class DatamesinController extends Controller
 
     public function tambah()
 	{
-		$unit = Unit::all();
+		$kantor = Kantor::all();
 		return view('pages.setup.datamesin.form',[
 			'data' => null,
-			'unit' => $unit,
+			'kantor' => $kantor,
 			'aksi' => 'Tambah'
 		]);
 	}
@@ -43,14 +43,14 @@ class DatamesinController extends Controller
 				'mesin_lokasi' => 'required',
 				'mesin_ip' => 'required|max:15',
 				'mesin_key' => 'required',
-				'unit_kd' => 'required',
+				'kantor_id' => 'required',
 				'mesin_sn' => 'required'
 			],[
          	   'mesin_lokasi.required' => 'Lokasi tidak boleh kosong',
          	   'mesin_ip.required' => 'IP tidak boleh kosong',
          	   'mesin_ip.max' => 'Kata Sandi max 15 karakter',
          	   'mesin_key.required' => 'Key tidak boleh kosong',
-         	   'unit_kd.required' => 'Unit tidak boleh kosong',
+         	   'kantor_id.required' => 'Kantor tidak boleh kosong',
          	   'mesin_sn.required' => 'SN tidak boleh kosong',
         	]
 		);
@@ -62,7 +62,7 @@ class DatamesinController extends Controller
 				$mesin->mesin_lokasi = $req->get('mesin_lokasi');
 				$mesin->mesin_ip = $req->get('mesin_ip');
 				$mesin->mesin_key = $req->get('mesin_key');
-				$mesin->unit_kd = $req->get('unit_kd');
+				$mesin->kantor_id = $req->get('kantor_id');
 				$mesin->mesin_sn = $req->get('mesin_sn');
 				$mesin->save();
 			}
@@ -80,11 +80,11 @@ class DatamesinController extends Controller
 
 	public function edit(Request $req)
 	{	
-		$unit = Unit::all();
+		$kantor = Kantor::all();
 		$mesin = Mesin::find($req->id);
 		return view('pages.setup.datamesin.form',[
 			'data' => $mesin,
-			'unit' => $unit,
+			'kantor' => $kantor,
 			'aksi' => 'Edit'
 		]);
 	}
@@ -97,7 +97,7 @@ class DatamesinController extends Controller
 				'mesin_lokasi' => 'required',
 				'mesin_ip' => 'required|max:15',
 				'mesin_key' => 'required',
-				'unit_kd' => 'required',
+				'kantor_id' => 'required',
 				'mesin_sn' => 'required'
 			],[
          	   'mesin_id.required' => 'ID Mesin tidak boleh kosong',
@@ -105,7 +105,7 @@ class DatamesinController extends Controller
          	   'mesin_ip.required' => 'IP tidak boleh kosong',
          	   'mesin_ip.max' => 'Kata Sandi max 15 karakter',
          	   'mesin_key.required' => 'Key tidak boleh kosong',
-         	   'unit_kd.required' => 'Unit tidak boleh kosong',
+         	   'kantor_id.required' => 'Kantor tidak boleh kosong',
          	   'mesin_sn.required' => 'SN tidak boleh kosong',
         	]
 		);
@@ -117,7 +117,7 @@ class DatamesinController extends Controller
 			$mesin->mesin_ip = $req->get('mesin_ip');
 			$mesin->mesin_key = $req->get('mesin_key');
 			$mesin->mesin_sn = $req->get('mesin_sn');
-			$mesin->unit_kd = $req->get('unit_kd');
+			$mesin->kantor_id = $req->get('kantor_id');
 			$mesin->save();
 			return redirect($req->get('redirect')? $req->get('redirect'): 'datamesin')
 			->with('pesan', 'Berhasil mengedit data mesin (lokasi:'.$req->get('mesin_lokasi').')')

@@ -122,7 +122,7 @@
 	<script src="/assets/plugins/parsleyjs/dist/parsley.js"></script>
 	<script>
 		$(document).ready(function() {
-				hakakses();
+			hakakses();
 		});
 
 		function hakakses() {

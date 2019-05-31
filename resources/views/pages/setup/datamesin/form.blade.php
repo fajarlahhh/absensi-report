@@ -52,13 +52,13 @@
 				</div>
 				<div class="form-group input-group-sm">
 					<label class="control-label">Unit</label>
-					<select class="form-control selectpicker" data-live-search="true" name="unit_kd" data-style="btn-info" data-width="100%">
-						@foreach($unit as $unt)
-						<option value="{{ $unt->kd_unit }}" 
-							@if($data && $data->unit_kd == $unt->kd_unit)
+					<select class="form-control selectpicker" data-live-search="true" name="kantor_id" data-style="btn-info" data-width="100%">
+						@foreach($kantor as $ktr)
+						<option value="{{ $ktr->kantor_id }}" 
+							@if($data && $data->kantor_id == $ktr->kantor_id)
 								selected
 							@endif
-						>{{ $unt->nm_unit }}</option>
+						>{{ $ktr->kantor_nama }}</option>
 						@endforeach
 					</select>
 				</div>

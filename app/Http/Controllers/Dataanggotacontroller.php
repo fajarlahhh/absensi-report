@@ -4,8 +4,11 @@ namespace Absensi\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Absensi\Anggota;
+use Absensi\Fingerprint;
 use Absensi\Pegawai;
 use Absensi\Mesin;
+use Absensi\Unit;
+use Absensi\Kantor;
 use Illuminate\Support\Facades\DB;
 
 class Dataanggotacontroller extends Controller
@@ -19,21 +22,31 @@ class Dataanggotacontroller extends Controller
 
     public function index(Request $req)
     {
-    	$anggota = Anggota::join('personalia.pegawai', 'pegawai.id', '=', 'pegawai_id')
+		$kantor = Kantor::all();
+		$kantor_id = $req->kantor? $req->kantor: $kantor{0}->kantor_id;
+    	$anggota = Anggota::join('m_kantor', 'm_anggota.kantor_id', '=', 'm_kantor.kantor_id')
+		->join('personalia.pegawai', 'pegawai.id', '=', 'pegawai_id')
 		->join('personalia.jabatan', 'pegawai.kd_jabatan', '=', 'jabatan.kd_jabatan')
 		->join('personalia.bagian', 'pegawai.kd_bagian', '=', 'bagian.kd_bagian')
 		->join('personalia.unit', 'pegawai.kd_unit', '=', 'unit.kd_unit')
 		->join('personalia.seksi', 'pegawai.kd_seksi', '=', 'seksi.kd_seksi')
-		->where('nm_pegawai', 'like', '%'.$req->cari.'%')
-		->orwhere('pegawai_id', 'like', '%'.$req->cari.'%')
-		->orwhere('nm_pegawai', 'like', '%'.$req->cari.'%')
-		->orwhere('nm_unit', 'like', '%'.$req->cari.'%')
-		->orwhere('nm_jabatan', 'like', '%'.$req->cari.'%')
-		->orwhere('nm_bagian', 'like', '%'.$req->cari.'%')
-		->orwhere('nm_seksi', 'like', '%'.$req->cari.'%')
+		->where('m_anggota.kantor_id', $kantor_id)
+		->where(
+			function($q) use ($req){
+				$q->where('nm_pegawai', 'like', '%'.$req->cari.'%')
+				->orwhere('pegawai_id', 'like', '%'.$req->cari.'%')
+				->orwhere('nm_pegawai', 'like', '%'.$req->cari.'%')
+				->orwhere('nm_unit', 'like', '%'.$req->cari.'%')
+				->orwhere('nm_jabatan', 'like', '%'.$req->cari.'%')
+				->orwhere('nm_bagian', 'like', '%'.$req->cari.'%')
+				->orwhere('nm_seksi', 'like', '%'.$req->cari.'%');
+			}
+		)
 		->orderBy('nm_pegawai')->paginate(10);
-		$anggota->appends($req->only('cari'));
+		$anggota->appends(['kantor' => $kantor_id, 'cari' => $req->cari])->links();
 		return view('pages.master.dataanggota.index',[
+			'kantor' => $kantor,
+			'kantor_id' => $kantor_id,
 			'data' => $anggota,
 			'cari' => $req->cari
 		]);
@@ -41,7 +54,8 @@ class Dataanggotacontroller extends Controller
 
     public function tambah()
 	{
-		$pegawai = Pegawai::select('id', 'nm_pegawai')
+		$kantor = Kantor::all();
+		$pegawai = Pegawai::select('id', 'nm_pegawai', 'nip')
 		->orderBy('nm_pegawai', 'asc')
 		->whereNotIn('nip', Anggota::select('anggota_nip')->get())
 		->where('kd_status', '!=', '07')
@@ -49,7 +63,8 @@ class Dataanggotacontroller extends Controller
 		return view('pages.master.dataanggota.form',[
 			'data' => null,
 			'aksi' => 'Tambah',
-			'pegawai' => $pegawai
+			'pegawai' => $pegawai,
+			'kantor' => $kantor
 		]);
 	}
 
@@ -57,31 +72,59 @@ class Dataanggotacontroller extends Controller
 	{
 		$req->validate(
 			[
-				'anggota_nip' => 'required',
-				'anggota_ip' => 'required|max:15',
-				'anggota_key' => 'required',
-				'anggota_sn' => 'required'
+				'pegawai_id' => 'required',
+				'anggota_hak_akses' => 'required',
+				'kantor_id' => 'required'
 			],[
-         	   'anggota_nip.required' => 'Lokasi tidak boleh kosong',
-         	   'anggota_ip.required' => 'IP tidak boleh kosong',
-         	   'anggota_ip.max' => 'Kata Sandi max 15 karakter',
-         	   'anggota_key.required' => 'Key tidak boleh kosong',
-         	   'anggota_sn.required' => 'SN tidak boleh kosong',
+         	   'pegawai_id.required' => 'Pegawai tidak boleh kosong',
+         	   'anggota_hak_akses.required' => 'Hak Akses tidak boleh kosong',
+         	   'kantor_id.required' => 'Kantor tidak boleh kosong'
         	]
 		);
 		try{
 			if (Anggota::find($req->get('pegawai_id'))) {
 				return redirect('dataanggota/tambah')->with('eror', 'Anggota '.$req->get('pegawai_id').' sudah ada');
 			}else{
-				$anggota = new Anggota();
-				$anggota->anggota_nip = $req->get('anggota_nip');
-				$anggota->pegawai_id = $req->get('pegawai_id');
-				$anggota->save();
+				$mesin = Mesin::where('kantor_id', $req->kantor_id)->get();
+				if(count($mesin) > 0){
+					$Connect = fsockopen($mesin[0]->mesin_ip, "80", $errno, $errstr, 1);
+					if($Connect){
+						$soap_request="<SetUserInfo><ArgComKey Xsi:type=\"xsd:integer\">".$mesin[0]->mesin_key."</ArgComKey><Arg><PIN>".$req->get('pegawai_id')."</PIN><Name>".$req->get('anggota_nip')."</Name><Password>".$req->get('anggota_sandi')."</Password><Privilege>".$req->get('anggota_hak_akses')."</Privilege></Arg></SetUserInfo>";
+						$newLine="\r\n";
+						fputs($Connect, "POST /iWsService HTTP/1.0".$newLine);
+					    fputs($Connect, "Content-Type: text/xml".$newLine);
+					    fputs($Connect, "Content-Length: ".strlen($soap_request).$newLine.$newLine);
+					    fputs($Connect, $soap_request.$newLine);
+						$buffer="";
+						while($Response=fgets($Connect, 1024)){
+							$buffer=$buffer.$Response;
+						}
+
+						$anggota = new Anggota();
+						$anggota->anggota_nip = $req->get('anggota_nip');
+						$anggota->pegawai_id = $req->get('pegawai_id');
+						$anggota->kantor_id = $req->get('kantor_id');
+						$anggota->anggota_sandi = $req->get('anggota_sandi');
+						$anggota->anggota_hak_akses = $req->get('anggota_hak_akses');
+						$anggota->save();
+
+						return redirect($req->get('redirect'))
+						->with('pesan', 'Berhasil menambah data anggota (NIP:'.$req->get('anggota_nip').')')
+						->with('judul', 'Tambah data')
+						->with('tipe', 'success');
+					}else {
+						return redirect()->back()
+						->with('pesan', 'Gagal menambah data anggota ('.$errno.')')
+						->with('judul', 'Upload data')
+						->with('tipe', 'error');
+					}
+				}else{
+					return redirect()->back()
+					->with('pesan', 'Gagal menambah data anggota. Data mesin tidak tersedia untuk kantor ini')
+					->with('judul', 'Upload data')
+					->with('tipe', 'error');
+				}
 			}
-			return redirect($req->get('redirect'))
-			->with('pesan', 'Berhasil menambah data anggota (NIP:'.$req->get('anggota_nip').')')
-			->with('judul', 'Tambah data')
-			->with('tipe', 'success');
 		}catch(\Exception $e){
 			return redirect($req->get('redirect'))
 			->with('pesan', 'Gagal menambah data anggota (NIP:'.$req->get('anggota_nip').') Error: '.$e)
@@ -90,67 +133,114 @@ class Dataanggotacontroller extends Controller
 		}
 	}
 
-	public function edit(Request $req)
-	{
-		$anggota = Anggota::find($req->id);
-		return view('pages.master.dataanggota.form',[
-			'data' => $anggota,
-			'aksi' => 'Edit'
-		]);
-	}
-
-	public function do_edit(Request $req)
-	{
-		$req->validate(
-			[
-				'pegawai_id' => 'required',
-				'anggota_hak_akses' => 'required'
-			],[
-         	   'pegawai_id.required' => 'ID tidak boleh kosong',
-         	   'anggota_hak_akses.required' => 'Hak Akses tidak boleh kosong',
-        	]
-		);
-		try{
-			$anggota = new Anggota();
-			$anggota->exists = true;
-			$anggota->pegawai_id = $req->get('pegawai_id');
-			$anggota->anggota_hak_akses = $req->get('anggota_hak_akses');
-			$anggota->save();
-			return redirect($req->get('redirect'))
-			->with('pesan', 'Berhasil mengedit data anggota (NIP:'.$req->get('anggota_nip').')')
-			->with('judul', 'Edit data')
-			->with('tipe', 'success');
-		}catch(\Exception $e){
-			return redirect($req->get('redirect'))
-			->with('pesan', 'Gagal mengedit data anggota (NIP:'.$req->get('anggota_nip').') Error: '.$e)
-			->with('judul', 'Edit data')
-			->with('tipe', 'error');
-		}
-	}
-
 	public function hapus($id)
 	{
 		try{
-			$data = Anggota::findorfail($id);
-			Anggota::destroy($id);
-			return redirect()->back()
-			->with('pesan', 'Berhasil menghapus data anggota (NIP:'.$data->anggota_nip.')')
-			->with('judul', 'Hapus data')
-			->with('tipe', 'success');
+			$mesin = Mesin::where('kantor_id', $req->kantor_id)->get();
+			if(count($mesin) > 0){
+				$Connect = fsockopen($mesin[0]->mesin_ip, "80", $errno, $errstr, 1);
+				if($Connect){
+					$soap_request="<DeleteUser><ArgComKey xsi:type=\"xsd:integer\">".$mesin[0]->mesin_key."</ArgComKey><Arg><PIN xsi:type=\"xsd:integer\">".$angg->pegawai_id."</PIN></Arg></DeleteUser>";
+					$newLine="\r\n";
+					fputs($Connect, "POST /iWsService HTTP/1.0".$newLine);
+				    fputs($Connect, "Content-Type: text/xml".$newLine);
+				    fputs($Connect, "Content-Length: ".strlen($soap_request).$newLine.$newLine);
+				    fputs($Connect, $soap_request.$newLine);
+					$buffer="";
+					while($Response=fgets($Connect, 1024)){
+						$buffer=$buffer.$Response;
+					}
+			
+					$data = Anggota::findorfail($id);
+					Anggota::destroy($id);
+					return redirect()->back()
+					->with('pesan', 'Berhasil menghapus data anggota (NIP:'.$data->anggota_nip.')')
+					->with('judul', 'Hapus data')
+					->with('tipe', 'success');
+				}
+			}else{
+				return redirect()->back()
+				->with('pesan', 'Gagal menghapus data anggota. Data mesin tidak tersedia untuk kantor ini')
+				->with('judul', 'Upload data')
+				->with('tipe', 'error');
+			}
 		}catch(\Exception $e){
 			return redirect()->back()
-			->with('pesan', 'Gagal menghapus data anggota (NIP:'.$req->get('anggota_nip').') Error: '.$e)
+			->with('pesan', 'Gagal menghapus data anggota (NIP:'.$id->get('anggota_nip').') Error: '.$e)
 			->with('judul', 'Hapus data')
 			->with('tipe', 'error');
 		}
 	}
 
-	public function upload()
+	public function fingerprint(Request $req)
 	{
-		$unit = Unit::all();
-		return view('pages.master.dataanggota.form',[
-			'data' => $anggota,
-			'aksi' => 'Edit'
-		]);
+		try{
+			$mesin = Mesin::where('kantor_id', $req->kantor_id)->get();
+			if(count($mesin) > 0){$Connect = fsockopen($mesin[0]->mesin_ip, "80", $errno, $errstr, 1);
+				$anggota = Anggota::where('kantor_id', $req->kantor_id)->get();
+				$template = [];
+				$i = 0;
+				foreach ($anggota as $key => $angg) {
+					$buffer="";
+					$Connect = fsockopen($mesin[0]->mesin_ip, "80", $errno, $errstr, 1);
+					if($Connect){
+						$soap_request="<GetUserTemplate><ArgComKey xsi:type=\"xsd:integer\">".$mesin[0]->mesin_key."</ArgComKey><Arg><PIN xsi:type=\"xsd:integer\">".$angg->pegawai_id."</PIN></Arg></GetUserTemplate>";
+						$newLine="\r\n";
+						fputs($Connect, "POST /iWsService HTTP/1.0".$newLine);
+					    fputs($Connect, "Content-Type: text/xml".$newLine);
+					    fputs($Connect, "Content-Length: ".strlen($soap_request).$newLine.$newLine);
+					    fputs($Connect, $soap_request.$newLine);
+						while($Response=fgets($Connect, 1024)){
+							$buffer=$buffer.$Response;
+						}
+					}
+					$buffer=$this->parse($buffer,"<GetUserTemplateResponse>","</GetUserTemplateResponse>");
+					$buffer=explode("\r\n",$buffer);
+					$template[$i] = $buffer;
+
+					$i++;
+				}
+				$data = [];
+				Fingerprint::where('kantor_id', $req->kantor_id)->delete();
+				for($a = 0; $a < count($template); $a++){
+					$data[$a] = array(
+						'pegawai_id' => (int)$this->parse($template[$a][1],"<PIN>","</PIN>"),
+						'fingerprint_id' => (int)$this->parse($template[$a][1],"<FingerID>","</FingerID>"),
+						'fingerprint_size' => (int)$this->parse($template[$a][1],"<Size>","</Size>"),
+						'fingerprint_valid' => (int)$this->parse($template[$a][1],"<Valid>","</Valid>"),
+						'fingerprint_template' => $this->parse($template[$a][1],"<Template>","</Template>"),
+						'kantor_id' => $req->kantor_id
+					);
+				}
+				Fingerprint::insert($data);
+				return redirect()->back()
+				->with('pesan', 'Berhasil mendownload data fingerprint (Mesin:'.$mesin[0]->mesin_lokasi.')')
+				->with('judul', 'Download Fingerprint')
+				->with('tipe', 'success');
+			}else{
+				return redirect()->back()
+				->with('pesan', 'Gagal mendownload data fingerprint. Data mesin tidak tersedia untuk kantor ini')
+				->with('judul', 'Download Fingerprint')
+				->with('tipe', 'error');
+			}
+		}catch(\Exception $e){
+			return redirect()->back()
+			->with('pesan', 'Gagal mendownload data fingerprint. Error: '.$e)
+			->with('judul', 'Download Fingerprint')
+			->with('tipe', 'error');
+		}
+	}
+
+	private function parse($data,$p1,$p2){
+		$data=" ".$data;
+		$hasil="";
+		$awal=strpos($data,$p1);
+		if($awal!=""){
+			$akhir=strpos(strstr($data,$p1),$p2);
+			if($akhir!=""){
+				$hasil=substr($data,$awal+strlen($p1),$akhir-strlen($p1));
+			}
+		}
+		return $hasil;	
 	}
 }
