@@ -72,7 +72,7 @@ class DatamesinController extends Controller
 			->with('tipe', 'success');
 		}catch(\Exception $e){
 			return redirect($req->get('redirect')? $req->get('redirect'): 'datamesin')
-			->with('pesan', 'Gagal menambah data mesin (lokasi:'.$req->get('mesin_lokasi').') Error: '.$e)
+			->with('pesan', 'Gagal menambah data mesin (lokasi:'.$req->get('mesin_lokasi').') Error: '.$e->getMessage())
 			->with('judul', 'Tambah data')
 			->with('tipe', 'error');
 		}
@@ -125,7 +125,7 @@ class DatamesinController extends Controller
 			->with('tipe', 'success');
 		}catch(\Exception $e){
 			return redirect($req->get('redirect')? $req->get('redirect'): 'datamesin')
-			->with('pesan', 'Gagal mengedit data mesin (lokasi:'.$req->get('mesin_lokasi').') Error: '.$e)
+			->with('pesan', 'Gagal mengedit data mesin (lokasi:'.$req->get('mesin_lokasi').') Error: '.$e->getMessage())
 			->with('judul', 'Edit data')
 			->with('tipe', 'error');
 		}
@@ -141,7 +141,7 @@ class DatamesinController extends Controller
 			->with('tipe', 'success');
 		}catch(\Exception $e){
 			return redirect()->back()
-			->with('pesan', 'Gagal menghapus data mesin (lokasi:'.$req->get('mesin_lokasi').') Error: '.$e)
+			->with('pesan', 'Gagal menghapus data mesin (lokasi:'.$nip.') Error: '.$e->getMessage())
 			->with('judul', 'Hapus data')
 			->with('tipe', 'error');
 		}

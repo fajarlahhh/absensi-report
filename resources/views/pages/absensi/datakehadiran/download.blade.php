@@ -1,4 +1,4 @@
-@extends('pages.setup.main')
+@extends('pages.absensi.main')
 
 @push('css')
 	<link href="/assets/plugins/bootstrap-select/dist/css/bootstrap-select.min.css" rel="stylesheet" />

@@ -7,11 +7,11 @@
 @endpush
 
 @section('page')
-	<li class="breadcrumb-item active">Data Kehadiran</li>
+	<li class="breadcrumb-item active">Data Izin</li>
 @endsection
 
 @section('header')
-	<h1 class="page-header">Data Kehadiran</h1>
+	<h1 class="page-header">Data Izin</h1>
 @endsection
 
 @section('subcontent')
@@ -22,27 +22,14 @@
                 <div class="col-md-12 col-lg-3 col-xl-3 col-xs-12">
                 	@role('user|administrator')
                     <div class="form-inline">
-                        <a href="/datakehadiran/tambah" class="btn btn-primary">Tambah</a>&nbsp;
-                        <a href="/datakehadiran/download" class="btn btn-success">Download</a>
+                        <a href="/dataizin/tambah" class="btn btn-primary">Tambah</a>
                     </div>
                     @endrole
                 </div>
                 <div class="col-md-12 col-lg-9 col-xl-9 col-xs-12">
-                	<form id="frm-cari" action="/datakehadiran" method="GET">
+                	<form id="frm-cari" action="/dataizin" method="GET">
                 		@csrf
 	                	<div class="form-inline pull-right">
-							<div class="form-group">
-								<select class="form-control selectpicker cari" data-live-search="true" name="pegawai" data-width="100%">
-									<option value="00">Semua Pegawai</option>
-									@foreach($anggota as $angg)
-									<option value="{{ $angg->pegawai_id }}" 
-										@if($pegawai == $angg->pegawai_id)
-											selected
-										@endif
-									>{{ ucwords(strtolower($angg->pegawai->nm_pegawai)) }}</option>
-									@endforeach
-								</select>
-							</div>&nbsp;
 							<div class="form-group">
 								<input type="text" readonly class="form-control cari" id="datepicker1" name="tgl1" placeholder="Tgl. Mulai" value="{{ date('d M Y', strtotime($tgl1)) }}"/>
 							</div>
@@ -54,7 +41,6 @@
 					</form>
                 </div>
             </div>
-
 		</div>
 		<div class="panel-body">
 			<div class="table-responsive">
@@ -66,7 +52,7 @@
 							<th>Waktu</th>
 							<th>NIP</th>
 							<th>Nama</th>
-							<th>Kode</th>
+							<th>Alasan</th>
 							<th>Keterangan</th>
 							<th></th>
 						</tr>
@@ -82,29 +68,23 @@
 					        <td>
 				        	@php
 				        	switch($absen->kehadiran_kode){
-								case "0": echo "Masuk";
+								case "11": echo "Sakit";
 								break;
-								case "1": echo "Pulang";
+								case "12": echo "Izin";
 								break;
-								case "2": echo "Istirahat";
+								case "13": echo "Dispensasi";
 								break;
-								case "3": echo "Kembali";
+								case "14": echo "Tugas Dinas";
 								break;
-								case "4": echo "Masuk Lembur";
+								case "15": echo "Cuti";
 								break;
-								case "5": echo "Pulang Lembur";
+								case "16": echo "Lain-lain";
 								break;
 				        	}
 				        	@endphp
 					        </td>
 					        <td>{{ $absen->kehadiran_keterangan }}</td>
-					        <td class="text-right">
-					        @php
-					        if($absen->kehadiran_status == 'T'){
-								echo "<a href='javascript:;' onclick='hapus(".$absen->kehadiran_id.")' id='btn-del' class='btn btn-danger btn-xs'><i class='fa fa-trash-alt'></i></a>";
-					    	}
-					        @endphp
-					    	</td>
+					        <td class="text-right"><a href='javascript:;' onclick="hapus({{ $absen->kehadiran_id }})" id='btn-del' class='btn btn-danger btn-xs'><i class='fa fa-trash-alt'></i></a></td>
 				      	</tr>
 					    @endforeach
 				    </tbody>
@@ -141,7 +121,7 @@
 			format: 'dd MM yyyy',
 			autoclose: true
 		});
-
+		
 		function hapus(id) {
 			swal({
 				title: 'Apakah anda yakin?',
@@ -165,7 +145,7 @@
 				}
 			}).then(function(isConfirm) {
 		      	if (isConfirm) {
-	          		window.location.href = "/datakehadiran/hapus/" + id;
+	          		window.location.href = "/dataizin/hapus/" + id;
 		      	}
 		    });
 		}

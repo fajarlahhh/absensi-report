@@ -7,11 +7,11 @@
 @endpush
 
 @section('page')
-	<li class="breadcrumb-item active">Data Kehadiran</li>
+	<li class="breadcrumb-item active">Hari Libur</li>
 @endsection
 
 @section('header')
-	<h1 class="page-header">Data Kehadiran</h1>
+	<h1 class="page-header">Hari Libur</h1>
 @endsection
 
 @section('subcontent')
@@ -22,34 +22,29 @@
                 <div class="col-md-12 col-lg-3 col-xl-3 col-xs-12">
                 	@role('user|administrator')
                     <div class="form-inline">
-                        <a href="/datakehadiran/tambah" class="btn btn-primary">Tambah</a>&nbsp;
-                        <a href="/datakehadiran/download" class="btn btn-success">Download</a>
+                        <a href="/harilibur/tambah" class="btn btn-primary">Tambah</a>&nbsp;
                     </div>
                     @endrole
                 </div>
                 <div class="col-md-12 col-lg-9 col-xl-9 col-xs-12">
-                	<form id="frm-cari" action="/datakehadiran" method="GET">
+                	<form id="frm-cari" action="/harilibur" method="GET">
                 		@csrf
 	                	<div class="form-inline pull-right">
-							<div class="form-group">
-								<select class="form-control selectpicker cari" data-live-search="true" name="pegawai" data-width="100%">
-									<option value="00">Semua Pegawai</option>
-									@foreach($anggota as $angg)
-									<option value="{{ $angg->pegawai_id }}" 
-										@if($pegawai == $angg->pegawai_id)
-											selected
-										@endif
-									>{{ ucwords(strtolower($angg->pegawai->nm_pegawai)) }}</option>
-									@endforeach
-								</select>
-							</div>&nbsp;
 							<div class="form-group">
 								<input type="text" readonly class="form-control cari" id="datepicker1" name="tgl1" placeholder="Tgl. Mulai" value="{{ date('d M Y', strtotime($tgl1)) }}"/>
 							</div>
 		                    &nbsp;s/d&nbsp;
 							<div class="form-group">
 								<input type="text" readonly class="form-control cari" id="datepicker2" name="tgl2" placeholder="Tgl. Akhir" value="{{ date('d M Y', strtotime($tgl2)) }}" data-date-end-date="0d"/>
-		                    </div>
+		                    </div>&nbsp;
+		                	<div class="input-group">
+								<input type="text" class="form-control" name="cari" placeholder="Pencarian" aria-label="Sizing example input" autocomplete="off" aria-describedby="inputGroup-sizing-sm" value="{{ $cari }}">
+								<div class="input-group-append">
+									<button class="btn input-group-text" id="inputGroup-sizing-sm">
+										<i class="fa fa-search"></i>
+									</button>
+								</div>
+							</div>
 	                	</div>
 					</form>
                 </div>
@@ -62,48 +57,24 @@
                     <thead>
 						<tr>
 							<th>No.</th>
-							<th>ID</th>
-							<th>Waktu</th>
-							<th>NIP</th>
-							<th>Nama</th>
-							<th>Kode</th>
+							<th>Tanggal</th>
 							<th>Keterangan</th>
+							<th>Operator</th>
 							<th></th>
 						</tr>
 					</thead>
 					<tbody>
-					    @foreach ($data as $index => $absen)
+					    @foreach ($data as $index => $libur)
 					    <tr>
+					    	@php
+					    		$tgl = date('d M Y', strtotime($libur->libur_tgl));
+					    	@endphp
 					        <td>{{ (($data->currentPage() - 1 ) * $data->perPage() ) + $loop->iteration }}</td>
-					        <td>{{ $absen->kehadiran_id }}</td>
-					        <td>{{ date('d M Y h:m:s', strtotime($absen->kehadiran_tgl)) }}</td>
-					        <td>{{ $absen->anggota->anggota_nip }}</td>
-					        <td>{{ $absen->pegawai->nm_pegawai }}</td>
-					        <td>
-				        	@php
-				        	switch($absen->kehadiran_kode){
-								case "0": echo "Masuk";
-								break;
-								case "1": echo "Pulang";
-								break;
-								case "2": echo "Istirahat";
-								break;
-								case "3": echo "Kembali";
-								break;
-								case "4": echo "Masuk Lembur";
-								break;
-								case "5": echo "Pulang Lembur";
-								break;
-				        	}
-				        	@endphp
-					        </td>
-					        <td>{{ $absen->kehadiran_keterangan }}</td>
+					        <td>{{ $tgl }}</td>
+					        <td>{{ $libur->libur_keterangan }}</td>
+					        <td>{{ $libur->operator }}</td>
 					        <td class="text-right">
-					        @php
-					        if($absen->kehadiran_status == 'T'){
-								echo "<a href='javascript:;' onclick='hapus(".$absen->kehadiran_id.")' id='btn-del' class='btn btn-danger btn-xs'><i class='fa fa-trash-alt'></i></a>";
-					    	}
-					        @endphp
+					        	<a href='javascript:;' onclick="hapus('{{ $tgl }}')" id='btn-del' class='btn btn-danger btn-xs'><i class='fa fa-trash-alt'></i></a>
 					    	</td>
 				      	</tr>
 					    @endforeach
@@ -145,7 +116,7 @@
 		function hapus(id) {
 			swal({
 				title: 'Apakah anda yakin?',
-				text: 'Anda akan menghapus kehadiran ' + id + '',
+				text: 'Anda akan menghapus hari libur ' + id + '',
 				icon: 'warning',
 				buttons: {
 					cancel: {
@@ -165,7 +136,7 @@
 				}
 			}).then(function(isConfirm) {
 		      	if (isConfirm) {
-	          		window.location.href = "/datakehadiran/hapus/" + id;
+	          		window.location.href = "/harilibur/hapus/" + id;
 		      	}
 		    });
 		}

@@ -59,7 +59,7 @@ class DatakantorController extends Controller
 			->with('tipe', 'success');
 		}catch(\Exception $e){
 			return redirect($req->get('redirect')? $req->get('redirect'): 'datakantor')
-			->with('pesan', 'Gagal menambah data kantor '.$req->get('kantor_nama').'. Error: '.$e)
+			->with('pesan', 'Gagal menambah data kantor '.$req->get('kantor_nama').'. Error: '.$e->getMessage())
 			->with('judul', 'Tambah data')
 			->with('tipe', 'error');
 		}
@@ -103,7 +103,7 @@ class DatakantorController extends Controller
 			->with('tipe', 'success');
 		}catch(\Exception $e){
 			return redirect($req->get('redirect')? $req->get('redirect'): 'datakantor')
-			->with('pesan', 'Gagal mengedit data kantor '.$req->get('kantor_nama').'. Error: '.$e)
+			->with('pesan', 'Gagal mengedit data kantor '.$req->get('kantor_nama').'. Error: '.$e->getMessage())
 			->with('judul', 'Edit data')
 			->with('tipe', 'error');
 		}
@@ -119,7 +119,7 @@ class DatakantorController extends Controller
 			->with('tipe', 'success');
 		}catch(\Exception $e){
 			return redirect()->back()
-			->with('pesan', 'Gagal menghapus data kantor (lokasi:'.$req->get('kantor_id').') Error: '.$e)
+			->with('pesan', 'Gagal menghapus data kantor (lokasi:'.$id.') Error: '.$e->getMessage())
 			->with('judul', 'Hapus data')
 			->with('tipe', 'error');
 		}

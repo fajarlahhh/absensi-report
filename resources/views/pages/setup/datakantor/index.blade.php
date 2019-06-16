@@ -110,6 +110,6 @@
 	          		window.location.href = "/datakantor/hapus/" + id;
 		      	}
 		    });
-		}		
+		}
 	</script>
 @endpush

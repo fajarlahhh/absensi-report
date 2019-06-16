@@ -104,7 +104,7 @@ class PenggunaController extends Controller
 			->with('tipe', 'success');
 		}catch(\Exception $e){
 			return redirect($req->get('redirect')? $req->get('redirect'): 'datapengguna')
-			->with('pesan', 'Gagal menambah data pengguna (nip:'.$req->get('pengguna_nip').') Error: '.$e)
+			->with('pesan', 'Gagal menambah data pengguna (nip:'.$req->get('pengguna_nip').') Error: '.$e->getMessage())
 			->with('judul', 'Tambah data')
 			->with('tipe', 'error');
 		}
@@ -164,7 +164,7 @@ class PenggunaController extends Controller
 			->with('tipe', 'success');
 		}catch(\Exception $e){
 			return redirect($req->get('redirect')? $req->get('redirect'): 'datapengguna')
-			->with('pesan', 'Gagal mengedit data pengguna (nip:'.$req->get('pengguna_nip').') Error: '.$e)
+			->with('pesan', 'Gagal mengedit data pengguna (nip:'.$req->get('pengguna_nip').') Error: '.$e->getMessage())
 			->with('judul', 'Edit data')
 			->with('tipe', 'error');
 		}
@@ -180,7 +180,7 @@ class PenggunaController extends Controller
 			->with('tipe', 'success');
 		}catch(\Exception $e){
 			return redirect()->back()
-			->with('pesan', 'Gagal menghapus data pengguna (nip:'.$req->get('pengguna_nip').') Error: '.$e)
+			->with('pesan', 'Gagal menghapus data pengguna (nip:'.$nip.') Error: '.$e->getMessage())
 			->with('judul', 'Hapus data')
 			->with('tipe', 'error');
 		}

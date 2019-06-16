@@ -78,6 +78,7 @@
     "nvd3": "^1.8.6",
     "parsleyjs": "^2.9.1",
     "popper.js": "^1.15.0",
+    "print-this": "^1.15.0",
     "raphael": "^2.2.8",
     "select2": "^4.0.5",
     "simple-line-icons": "^2.4.1",

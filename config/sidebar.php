@@ -31,6 +31,9 @@ return [
 		],[
 			'url' => '/datakantor',
 			'title' => 'Data Kantor'
+		],[
+			'url' => '/aturan',
+			'title' => 'Aturan'
 		]]
 	],[
 		'icon' => 'fa fa-database',
@@ -41,8 +44,11 @@ return [
 			'url' => '/dataanggota',
 			'title' => 'Data Anggota'
 		],[
-			'url' => '/datagrup',
-			'title' => 'Data Grup'
+			'url' => '/harilibur',
+			'title' => 'Hari Libur'
+		],[
+			'url' => '/harikhusus',
+			'title' => 'Hari Khusus'
 		]]
 	],[
 		'icon' => 'fa fa-calendar-alt',
@@ -62,11 +68,8 @@ return [
 		'url' => 'javascript:;',
 		'caret' => true,
 		'sub_menu' => [[
-			'url' => '/datakehadiran',
-			'title' => 'Data Kehadiran'
-		],[
-			'url' => '/dataizin',
-			'title' => 'Data Izin'
+			'url' => '/rinciankehadiran',
+			'title' => 'Rincian Kehadiran'
 		]]
 	]]
 ];

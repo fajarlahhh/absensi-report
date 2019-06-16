@@ -7,6 +7,7 @@ use Absensi\Kehadiran;
 use Absensi\Anggota;
 use Absensi\Mesin;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class DatakehadiranController extends Controller
 {
@@ -25,10 +26,12 @@ class DatakehadiranController extends Controller
     		$pegawai = $req->pegawai;
     	}
     	$tgl1 = ($req->tgl1? date('Y-m-d', strtotime($req->tgl1)): date('Y-m-1'));
-    	$tgl2 = ($req->tgl2? date('Y-m-d', strtotime($req->tgl2)): date('Y-m-t'));
+    	$tgl2 = ($req->tgl2? date('Y-m-d', strtotime($req->tgl2)): date('Y-m-d'));
     	$kehadiran = Kehadiran::when($pegawai != null, function ($q) use ($req){
     		return $q->where('pegawai_id', $req->pegawai);
-    	})->whereRaw("date(kehadiran_tgl) between '".$tgl1."' and '".$tgl2."'")->paginate(10);
+    	})
+    	->whereIn('kehadiran_status', ['M', 'T'])
+    	->whereRaw("date(kehadiran_tgl) between '".$tgl1."' and '".$tgl2."'")->paginate(10);
 
 		$kehadiran->appends($req->tgl1);
 		$kehadiran->appends($req->tgl2);
@@ -96,12 +99,11 @@ class DatakehadiranController extends Controller
 			}
 			$buffer = $this->parse($buffer,"<GetAttLogResponse>","</GetAttLogResponse>");
 			$buffer = explode("\r\n",$buffer);
-			Kehadiran::where('kantor_id', $mesin->kantor_id)->delete();
+			Kehadiran::where('kantor_id', $mesin->kantor_id)->delete();  
 			for($i=0;$i<count($buffer);$i++){
 				$data = $this->parse($buffer[$i],"<Row>","</Row>");
 				if($data){
 					$kehadiran = new Kehadiran();
-					$kehadiran->kehadiran_id = date('Ymd', strtotime($this->parse($data,"<DateTime>","</DateTime>"))).$mesin->kantor_id.substr('00000'.$i, -4);
 					$kehadiran->kantor_id = $mesin->kantor_id;
 					$kehadiran->pegawai_id = (int)$this->parse($data,"<PIN>","</PIN>");
 					$kehadiran->kehadiran_tgl = date_create_from_format('Y-m-d H:i:s', $this->parse($data,"<DateTime>","</DateTime>"));
@@ -128,8 +130,54 @@ class DatakehadiranController extends Controller
 			->with('tipe', 'success');
 		}catch(\Exception $e){
 			return redirect($req->get('redirect')? $req->get('redirect'): 'datakehadiran/download')
-			->with('pesan', 'Gagal mendownload data kehadiran '.$mesin->mesin_lokasi.'. Error: '.$e)
+			->with('pesan', 'Gagal mendownload data kehadiran '.$mesin->mesin_lokasi.'. Error: '.$e->getMessage())
 			->with('judul', 'Download data')
+			->with('tipe', 'error');
+		}
+	}
+
+
+    public function tambah()
+	{
+    	$anggota = Anggota::all();
+		return view('pages.absensi.datakehadiran.form',[
+    		'anggota' => $anggota
+		]);
+	}
+
+	public function do_tambah(Request $req)
+	{
+		$req->validate(
+			[
+				'pegawai_id' => 'required',
+				'kehadiran_tgl' => 'required',
+				'kehadiran_kode' => 'required',
+				'kehadiran_keterangan' => 'required'
+			],[
+         	   'pegawai_id.required' => 'Anggota tidak boleh kosong',
+         	   'kehadiran_tgl.required' => 'Tanggal Izin tidak boleh kosong',
+         	   'kehadiran_kode.required' => 'Alasan tidak boleh kosong',
+         	   'kehadiran_keterangan.required' => 'Keterangan tidak boleh kosong',
+        	]
+		);
+		try{
+			$kehadiran = new Kehadiran(); 
+			$kehadiran->pegawai_id = $req->get('pegawai_id');
+			$kehadiran->kehadiran_tgl = date('Y-m-d H:i:s', strtotime($req->get('kehadiran_tgl')));
+			$kehadiran->kehadiran_kode = $req->get('kehadiran_kode');
+			$kehadiran->kehadiran_keterangan = $req->get('kehadiran_keterangan');
+			$kehadiran->kehadiran_status = 'T';
+    		$kehadiran->operator = Auth::user()->pegawai->nm_pegawai;
+
+			$kehadiran->save();
+			return redirect($req->get('redirect')? $req->get('redirect'): 'datakehadiran')
+			->with('pesan', 'Berhasil menambah data kehadiran')
+			->with('judul', 'Tambah data')
+			->with('tipe', 'success');
+		}catch(\Exception $e){
+			return redirect($req->get('redirect')? $req->get('redirect'): 'datakehadiran')
+			->with('pesan', 'Gagal menambah data kehadiran. Error: '.$e->getMessage())
+			->with('judul', 'Tambah data')
 			->with('tipe', 'error');
 		}
 	}
@@ -139,12 +187,12 @@ class DatakehadiranController extends Controller
 		try{
 			Kehadiran::destroy($id);
 			return redirect()->back()
-			->with('pesan', 'Berhasil menghapus data kehadiran (lokasi:'.$id.')')
+			->with('pesan', 'Berhasil menghapus data kehadiran (ID:'.$id.')')
 			->with('judul', 'Hapus data')
 			->with('tipe', 'success');
 		}catch(\Exception $e){
 			return redirect()->back()
-			->with('pesan', 'Gagal menghapus data kehadiran (lokasi:'.$req->get('kehadiran_id').') Error: '.$e)
+			->with('pesan', 'Gagal menghapus data kehadiran (ID:'.$id.') Error: '.$e->getMessage())
 			->with('judul', 'Hapus data')
 			->with('tipe', 'error');
 		}

@@ -33,6 +33,9 @@ mix.copy('node_modules/jquery-migrate/dist/', 'public/assets/plugins/jquery-migr
 // flot
 mix.copy('node_modules/flot/', 'public/assets/plugins/flot/');
 
+// printthis
+mix.copy('node_modules/print-this/', 'public/assets/plugins/print-this/');
+
 // nvd3
 mix.js('resources/js/nvd3.js', 'public/assets/plugins/nvd3/nvd3.min.js');
 mix.copy('node_modules/nvd3/build/nv.d3.min.css', 'public/assets/plugins/nvd3/nvd3.min.css');

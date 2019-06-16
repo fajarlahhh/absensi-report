@@ -127,7 +127,7 @@ class Dataanggotacontroller extends Controller
 			}
 		}catch(\Exception $e){
 			return redirect($req->get('redirect'))
-			->with('pesan', 'Gagal menambah data anggota (NIP:'.$req->get('anggota_nip').') Error: '.$e)
+			->with('pesan', 'Gagal menambah data anggota (NIP:'.$req->get('anggota_nip').') Error: '.$e->getMessage())
 			->with('judul', 'Tambah data')
 			->with('tipe', 'error');
 		}
@@ -136,11 +136,13 @@ class Dataanggotacontroller extends Controller
 	public function hapus($id)
 	{
 		try{
-			$mesin = Mesin::where('kantor_id', $req->kantor_id)->get();
+
+			$anggota = Anggota::findorfail($id);
+			$mesin = Mesin::where('kantor_id', $anggota->kantor_id)->get();
 			if(count($mesin) > 0){
 				$Connect = fsockopen($mesin[0]->mesin_ip, "80", $errno, $errstr, 1);
 				if($Connect){
-					$soap_request="<DeleteUser><ArgComKey xsi:type=\"xsd:integer\">".$mesin[0]->mesin_key."</ArgComKey><Arg><PIN xsi:type=\"xsd:integer\">".$angg->pegawai_id."</PIN></Arg></DeleteUser>";
+					$soap_request="<DeleteUser><ArgComKey xsi:type=\"xsd:integer\">".$mesin[0]->mesin_key."</ArgComKey><Arg><PIN xsi:type=\"xsd:integer\">".$anggota->pegawai_id."</PIN></Arg></DeleteUser>";
 					$newLine="\r\n";
 					fputs($Connect, "POST /iWsService HTTP/1.0".$newLine);
 				    fputs($Connect, "Content-Type: text/xml".$newLine);
@@ -151,10 +153,9 @@ class Dataanggotacontroller extends Controller
 						$buffer=$buffer.$Response;
 					}
 			
-					$data = Anggota::findorfail($id);
 					Anggota::destroy($id);
 					return redirect()->back()
-					->with('pesan', 'Berhasil menghapus data anggota (NIP:'.$data->anggota_nip.')')
+					->with('pesan', 'Berhasil menghapus data anggota (NIP:'.$anggota->anggota_nip.')')
 					->with('judul', 'Hapus data')
 					->with('tipe', 'success');
 				}
@@ -166,7 +167,7 @@ class Dataanggotacontroller extends Controller
 			}
 		}catch(\Exception $e){
 			return redirect()->back()
-			->with('pesan', 'Gagal menghapus data anggota (NIP:'.$id->get('anggota_nip').') Error: '.$e)
+			->with('pesan', 'Gagal menghapus data anggota (NIP:'.$id.') Error: '.$e->getMessage())
 			->with('judul', 'Hapus data')
 			->with('tipe', 'error');
 		}
@@ -225,7 +226,7 @@ class Dataanggotacontroller extends Controller
 			}
 		}catch(\Exception $e){
 			return redirect()->back()
-			->with('pesan', 'Gagal mendownload data fingerprint. Error: '.$e)
+			->with('pesan', 'Gagal mendownload data fingerprint. Error: '.$e->getMessage())
 			->with('judul', 'Download Fingerprint')
 			->with('tipe', 'error');
 		}
