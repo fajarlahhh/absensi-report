@@ -43,7 +43,7 @@
 			</div>
 			<div class="panel-footer">
 	            <input type="submit" value="Simpan" class="btn btn-sm btn-success"  />
-	            <a href="/datakehadiran" class="btn btn-sm btn-danger">Batal</a>
+	            <a href="/harikhusus" class="btn btn-sm btn-danger">Batal</a>
 	        </div>
 		</form>
 	</div>	
