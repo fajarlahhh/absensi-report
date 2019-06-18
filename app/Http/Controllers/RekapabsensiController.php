@@ -12,11 +12,11 @@ use Illuminate\Support\Facades\DB;
 class RekapabsensiController extends Controller
 {
     //
-     public function __construct()
-	{
-		$this->middleware('auth');
-    	$this->middleware('permission:rincian kehadiran');
-	}
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('permission:rekap absensi');
+    }
 
     public function index(Request $req)
     {

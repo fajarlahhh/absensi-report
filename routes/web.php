@@ -10,6 +10,7 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('/absensikaryawan', 'RinciankehadiranController@tampil')->name('absensikaryawan');
 
 Route::group(['middleware' => ['auth']], function () {
 	Route::get('/', 'DashboardController@index')->name('dashboard');

@@ -26,17 +26,11 @@
 	            		@csrf
 	                	<div class="form-inline pull-right">
 							<div class="form-group">
-								<select class="form-control selectpicker cari" data-live-search="true" name="hari" data-width="100%">
-									<option value="1" {{ $hari == 1 ? 'selected': ''}}>Hari Biasa</option>
-									<option value="2" {{ $hari == 2 ? 'selected': ''}}>Hari Khusus</option>
-								</select>
-							</div>&nbsp;
-							<div class="form-group">
-								<input type="text" readonly class="form-control cari" id="datepicker1" name="tgl1" placeholder="Tgl. Mulai" value="{{ date('d M Y', strtotime($tgl1)) }}"/>
+								<input type="text" readonly class="form-control cari" id="datepicker1" name="tgl1" placeholder="Tgl. Mulai" value="{{ date('d F Y', strtotime($tgl1)) }}"/>
 							</div>
 		                    &nbsp;s/d&nbsp;
 							<div class="form-group">
-								<input type="text" readonly class="form-control cari" id="datepicker2" name="tgl2" placeholder="Tgl. Akhir" value="{{ date('d M Y', strtotime($tgl2)) }}" data-date-end-date="0d"/>
+								<input type="text" readonly class="form-control cari" id="datepicker2" name="tgl2" placeholder="Tgl. Akhir" value="{{ date('d F Y', strtotime($tgl2)) }}" data-date-end-date="0d"/>
 		                    </div>
 	                	</div>
 					</form>
@@ -61,7 +55,7 @@
 					        <td>{{ $absensi[$i][0] }}</td>
 					        <td>{{ $absensi[$i][1] }}</td>
 							@for($j=2; $j <= $diff+1; $j++)
-							<td class="text-center {{ (strpos($aturan->aturan_hari_libur, date('N', strtotime($tgl1. ' + '.($j-2).' days'))) !== false? 'bg-red-transparent-3': ($libur->find(date('Y-m-d', strtotime($tgl1. ' + '.($j-2).' days')))? 'bg-red-transparent-3': (strpos($absensi[$i][$j], '-') !== false? (substr($absensi[$i][$j], 0, 2) == 11 || substr($absensi[$i][$j], 0, 2) == 12? 'bg-blue-transparent-3': (substr($absensi[$i][$j], 0, 2) == 13 || substr($absensi[$i][$j], 0, 2) == 14? 'bg-yellow-transparent-3': 'bg-grey-transparent-3')): (strlen($absensi[$i][$j]) == 8? ((int)str_replace(':','',$absensi[$i][$j]) <= (int)str_replace(':','',($hari == 1? $aturan->aturan_masuk: $aturan->aturan_masuk_khusus))? 'bg-green-transparent-3': 'bg-orange-transparent-3'): '')) )) }}">{{ strpos($absensi[$i][$j], '-') !== false? (substr($absensi[$i][$j], 0, 2) == 11? 'Sakit ('.substr($absensi[$i][$j], 5).')': (substr($absensi[$i][$j], 0, 2) == 12? 'Izin ('.substr($absensi[$i][$j], 5).')': (substr($absensi[$i][$j], 0, 2) == 13? 'Dispensasi ('.substr($absensi[$i][$j], 5).')': (substr($absensi[$i][$j], 0, 2) == 14? 'Tugas Dinas ('.substr($absensi[$i][$j], 5).')': (substr($absensi[$i][$j], 0, 2) == 15? 'Cuti': 'Lain-lain'))))): $absensi[$i][$j] }}</td>
+							<td class="text-center {{ (strpos($aturan->aturan_hari_libur, date('N', strtotime($tgl1. ' + '.($j-2).' days'))) !== false? 'bg-red-transparent-3': ($libur->find(date('Y-m-d', strtotime($tgl1. ' + '.($j-2).' days')))? 'bg-red-transparent-3': (strpos($absensi[$i][$j], '-') !== false? (substr($absensi[$i][$j], 0, 2) == 11 || substr($absensi[$i][$j], 0, 2) == 12? 'bg-blue-transparent-3': (substr($absensi[$i][$j], 0, 2) == 13 || substr($absensi[$i][$j], 0, 2) == 14? 'bg-yellow-transparent-3': 'bg-grey-transparent-3')): (strlen($absensi[$i][$j]) == 8? ((int)str_replace(':','',$absensi[$i][$j]) <= (int)str_replace(':','',($khusus->filter(function($item) use ($tgl1, $j){ return $item->tgl_khusus_waktu == date('Y-m-d', strtotime($tgl1. ' + '.($j-2).' days')); })->first()? $aturan->aturan_masuk_khusus: $aturan->aturan_masuk))? 'bg-green-transparent-3': 'bg-orange-transparent-3'): '')) )) }}">{{ strpos($absensi[$i][$j], '-') !== false? (substr($absensi[$i][$j], 0, 2) == 11? 'Sakit ('.substr($absensi[$i][$j], 5).')': (substr($absensi[$i][$j], 0, 2) == 12? 'Izin ('.substr($absensi[$i][$j], 5).')': (substr($absensi[$i][$j], 0, 2) == 13? 'Dispensasi ('.substr($absensi[$i][$j], 5).')': (substr($absensi[$i][$j], 0, 2) == 14? 'Tugas Dinas ('.substr($absensi[$i][$j], 5).')': (substr($absensi[$i][$j], 0, 2) == 15? 'Cuti': 'Lain-lain'))))): $absensi[$i][$j] }}</td>
 							@endfor
 				      	</tr>
 					    @endfor
