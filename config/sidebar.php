@@ -70,6 +70,9 @@ return [
 		'sub_menu' => [[
 			'url' => '/rinciankehadiran',
 			'title' => 'Rincian Kehadiran'
+		],[
+			'url' => '/rekapabsensi',
+			'title' => 'Rekap Absensi'
 		]]
 	]]
 ];

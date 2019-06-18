@@ -42,6 +42,10 @@ Route::group(['middleware' => ['auth']], function () {
 		Route::get('/rinciankehadiran', 'RinciankehadiranController@index')->name('rinciankehadiran');
 	});
 
+	Route::group(['middleware' => ['auth', 'permission:rekap absensi']], function () {
+		Route::get('/rekapabsensi', 'RekapabsensiController@index')->name('rekapabsensi');
+	});
+
 	Route::group(['middleware' => ['auth', 'permission:data izin']], function () {
 		Route::get('/dataizin', 'DataizinController@index')->name('dataizin');
 		Route::get('/dataizin/tambah', 'DataizinController@tambah')->middleware(['role:administrator|user']);

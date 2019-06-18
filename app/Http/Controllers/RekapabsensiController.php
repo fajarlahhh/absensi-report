@@ -9,10 +9,10 @@ use Absensi\Aturan;
 use Absensi\Libur;
 use Illuminate\Support\Facades\DB;
 
-class RinciankehadiranController extends Controller
+class RekapabsensiController extends Controller
 {
     //
-    public function __construct()
+     public function __construct()
 	{
 		$this->middleware('auth');
     	$this->middleware('permission:rincian kehadiran');
@@ -49,7 +49,7 @@ class RinciankehadiranController extends Controller
     		$j++;   	
         }
 
-    	return view('pages.laporan.rincianabsensi.index',[
+    	return view('pages.laporan.rekapabsensi.index',[
     		'absensi' => $absensi,
             'aturan' => $aturan,
             'libur' => $libur,

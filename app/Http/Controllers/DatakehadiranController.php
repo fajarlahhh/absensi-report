@@ -99,15 +99,16 @@ class DatakehadiranController extends Controller
 			}
 			$buffer = $this->parse($buffer,"<GetAttLogResponse>","</GetAttLogResponse>");
 			$buffer = explode("\r\n",$buffer);
-			Kehadiran::where('kantor_id', $mesin->kantor_id)->delete();  
 			for($i=0;$i<count($buffer);$i++){
 				$data = $this->parse($buffer[$i],"<Row>","</Row>");
 				if($data){
 					$kehadiran = new Kehadiran();
 					$kehadiran->kantor_id = $mesin->kantor_id;
 					$kehadiran->pegawai_id = (int)$this->parse($data,"<PIN>","</PIN>");
-					$kehadiran->kehadiran_tgl = date_create_from_format('Y-m-d H:i:s', $this->parse($data,"<DateTime>","</DateTime>"));
+					$kehadiran->kehadiran_tgl =  $this->parse($data,"<DateTime>","</DateTime>");
 					$kehadiran->kehadiran_kode = $this->parse($data,"<Status>","</Status>");
+    				$kehadiran->kehadiran_status = 'M';
+    				$kehadiran->operator = Auth::user()->pegawai->nm_pegawai;
 					$kehadiran->save();
 				}
 			}

@@ -81,43 +81,43 @@
 					</div>
 					<div class="col-md-1">
 						<div class="checkbox checkbox-css">
-							<input type="checkbox" id="Senin"  value="mo" name="aturan_hari_libur[]" {{ $data && strpos($data->aturan_hari_libur, 'mo') !== false? 'checked': '' }} />
+							<input type="checkbox" id="Senin"  value="1" name="aturan_hari_libur[]" {{ $data && strpos($data->aturan_hari_libur, '2') !== false? 'checked': '' }} />
 							<label for="Senin">Senin</label>
 						</div>
 					</div>
 					<div class="col-md-1">
 						<div class="checkbox checkbox-css">
-							<input type="checkbox" id="Selasa"  value="tu" name="aturan_hari_libur[]" {{ $data && strpos($data->aturan_hari_libur, 'tu') !== false? 'checked': '' }} />
+							<input type="checkbox" id="Selasa"  value="2" name="aturan_hari_libur[]" {{ $data && strpos($data->aturan_hari_libur, '2') !== false? 'checked': '' }} />
 							<label for="Selasa">Selasa</label>
 						</div>
 					</div>
 					<div class="col-md-1">
 						<div class="checkbox checkbox-css">
-							<input type="checkbox" id="Rabu"  value="we" name="aturan_hari_libur[]" {{ $data && strpos($data->aturan_hari_libur, 'we') !== false? 'checked': '' }} />
+							<input type="checkbox" id="Rabu"  value="3" name="aturan_hari_libur[]" {{ $data && strpos($data->aturan_hari_libur, '3') !== false? 'checked': '' }} />
 							<label for="Rabu">Rabu</label>
 						</div>
 					</div>
 					<div class="col-md-1">
 						<div class="checkbox checkbox-css">
-							<input type="checkbox" id="Kamis"  value="th" name="aturan_hari_libur[]" {{ $data && strpos($data->aturan_hari_libur, 'th') !== false? 'checked': '' }} />
+							<input type="checkbox" id="Kamis"  value="4" name="aturan_hari_libur[]" {{ $data && strpos($data->aturan_hari_libur, '4') !== false? 'checked': '' }} />
 							<label for="Kamis">Kamis</label>
 						</div>
 					</div>
 					<div class="col-md-1">
 						<div class="checkbox checkbox-css">
-							<input type="checkbox" id="Jumat"  value="fr" name="aturan_hari_libur[]" {{ $data && strpos($data->aturan_hari_libur, 'fr') !== false? 'checked': '' }} />
+							<input type="checkbox" id="Jumat"  value="5" name="aturan_hari_libur[]" {{ $data && strpos($data->aturan_hari_libur, '5') !== false? 'checked': '' }} />
 							<label for="Jumat">Jum'at</label>
 						</div>
 					</div>
 					<div class="col-md-1">
 						<div class="checkbox checkbox-css">
-							<input type="checkbox" id="Sabtu" value="sa" name="aturan_hari_libur[]" {{ $data && strpos($data->aturan_hari_libur, 'sa') !== false? 'checked': '' }} />
+							<input type="checkbox" id="Sabtu" value="6" name="aturan_hari_libur[]" {{ $data && strpos($data->aturan_hari_libur, '6') !== false? 'checked': '' }} />
 							<label for="Sabtu">Sabtu</label>
 						</div>
 					</div>
 					<div class="col-md-1">
 						<div class="checkbox checkbox-css">
-							<input type="checkbox" id="Minggu" value="su" name="aturan_hari_libur[]" {{ $data && strpos($data->aturan_hari_libur, 'su') !== false? 'checked': '' }} />
+							<input type="checkbox" id="Minggu" value="7" name="aturan_hari_libur[]" {{ $data && strpos($data->aturan_hari_libur, '7') !== false? 'checked': '' }} />
 							<label for="Minggu">Minggu</label>
 						</div>
 					</div>

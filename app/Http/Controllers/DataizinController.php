@@ -5,6 +5,7 @@ namespace Absensi\Http\Controllers;
 use Illuminate\Http\Request;
 use Absensi\Kehadiran;
 use Absensi\Anggota;
+use Illuminate\Support\Facades\Auth;
 
 class DataizinController extends Controller
 {
@@ -59,7 +60,7 @@ class DataizinController extends Controller
 		);
 		try{
 			$tanggal = explode(' - ', $req->get('kehadiran_tgl'));
-			$diff = date_diff(date_create($tanggal[0]), date_create($tanggal[1]))->format("%a");
+			$diff = date_diff(date_create($tanggal[0]), date_create($tanggal[1]))->format("%a") + 1;
 			for ($i=0; $i < $diff; $i++) { 
 				$kehadiran = new Kehadiran(); 
 				$kehadiran->pegawai_id = $req->get('pegawai_id');
@@ -67,7 +68,7 @@ class DataizinController extends Controller
 				$kehadiran->kehadiran_kode = $req->get('kehadiran_kode');
 				$kehadiran->kehadiran_keterangan = $req->get('kehadiran_keterangan');
 				$kehadiran->kehadiran_status = 'I';
-
+    			$kehadiran->operator = Auth::user()->pegawai->nm_pegawai;
 				$kehadiran->save();
 			}
 			return redirect($req->get('redirect')? $req->get('redirect'): 'dataizin')

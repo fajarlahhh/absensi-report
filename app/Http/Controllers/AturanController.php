@@ -44,7 +44,7 @@ class AturanController extends Controller
 			$aturan->aturan_pulang = $req->get('aturan_pulang');
 			$aturan->aturan_masuk_khusus = $req->get('aturan_masuk_khusus');
 			$aturan->aturan_pulang_khusus = $req->get('aturan_pulang_khusus');
-			$aturan->aturan_hari_libur = implode($req->get('aturan_hari_libur'), ',');
+			$aturan->aturan_hari_libur = implode($req->get('aturan_hari_libur'), '');
 			$aturan->save();
 			return redirect($req->get('redirect')? $req->get('redirect'): 'aturan')
 			->with('pesan', 'Berhasil mengubah aturan')

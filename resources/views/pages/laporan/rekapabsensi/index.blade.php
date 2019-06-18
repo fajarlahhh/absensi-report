@@ -6,11 +6,11 @@
 @endpush
 
 @section('page')
-	<li class="breadcrumb-item active">Rincian Kehadiran</li>
+	<li class="breadcrumb-item active">Rekap Absensi</li>
 @endsection
 
 @section('header')
-	<h1 class="page-header">Rincian Kehadiran</h1>
+	<h1 class="page-header">Rekap Absensi</h1>
 @endsection
 
 @section('subcontent')
@@ -22,7 +22,7 @@
                 	<a href="#" class="btn btn-warning" onclick="cetak()">Cetak</a>&nbsp;
                 </div>
                 <div class="col-md-12 col-lg-9 col-xl-9 col-xs-12">
-	            	<form id="frm-cari" action="/rinciankehadiran" method="GET">
+	            	<form id="frm-cari" action="/rekapabsensi" method="GET">
 	            		@csrf
 	                	<div class="form-inline pull-right">
 							<div class="form-group">
@@ -50,41 +50,68 @@
 						<tr>
 							<th>NIP</th>
 							<th width="300">Nama</th>
-							@for($i=0; $i < $diff; $i++)
-							<th width="220" class="{{ strpos($aturan->aturan_hari_libur, date('N', strtotime($tgl1. ' + '.$i.' days')))  !== false?'bg-red-transparent-3': ($libur->find(date('Y-m-d', strtotime($tgl1. ' + '.$i.' days')))? 'bg-red-transparent-3': '' ) }}">{{ date('d M Y', strtotime($tgl1. ' + '.$i.' days')) }}</th>
-							@endfor
+							<th>Jumlah Terlambat</th>
+							<th>Jumlah Kehadiran</th>
+							<th>Sakit</th>
+							<th>Izin</th>
+							<th>Dispensasi</th>
+							<th>Tugas Dinas</th>
+							<th>Cuti</th>
+							<th>Lain-lain</th>
 						</tr>
 					</thead>
 					<tbody>
 					    @for($i = 0; $i < count($absensi); $i++)
 					    <tr>
+							@php
+								$jmlTerlambat = 0;
+								$jmlMasuk = 0;
+								$jmlSakit = 0;
+								$jmlIzin = 0;
+								$jmlDispensasi = 0;
+								$jmlDinas = 0;
+								$jmlCuti = 0;
+								$jmlLain = 0;
+							@endphp
 					        <td>{{ $absensi[$i][0] }}</td>
 					        <td>{{ $absensi[$i][1] }}</td>
 							@for($j=2; $j <= $diff+1; $j++)
-							<td class="text-center {{ (strpos($aturan->aturan_hari_libur, date('N', strtotime($tgl1. ' + '.($j-2).' days'))) !== false? 'bg-red-transparent-3': ($libur->find(date('Y-m-d', strtotime($tgl1. ' + '.($j-2).' days')))? 'bg-red-transparent-3': (strpos($absensi[$i][$j], '-') !== false? (substr($absensi[$i][$j], 0, 2) == 11 || substr($absensi[$i][$j], 0, 2) == 12? 'bg-blue-transparent-3': (substr($absensi[$i][$j], 0, 2) == 13 || substr($absensi[$i][$j], 0, 2) == 14? 'bg-yellow-transparent-3': 'bg-grey-transparent-3')): (strlen($absensi[$i][$j]) == 8? ((int)str_replace(':','',$absensi[$i][$j]) <= (int)str_replace(':','',($hari == 1? $aturan->aturan_masuk: $aturan->aturan_masuk_khusus))? 'bg-green-transparent-3': 'bg-orange-transparent-3'): '')) )) }}">{{ strpos($absensi[$i][$j], '-') !== false? (substr($absensi[$i][$j], 0, 2) == 11? 'Sakit ('.substr($absensi[$i][$j], 5).')': (substr($absensi[$i][$j], 0, 2) == 12? 'Izin ('.substr($absensi[$i][$j], 5).')': (substr($absensi[$i][$j], 0, 2) == 13? 'Dispensasi ('.substr($absensi[$i][$j], 5).')': (substr($absensi[$i][$j], 0, 2) == 14? 'Tugas Dinas ('.substr($absensi[$i][$j], 5).')': (substr($absensi[$i][$j], 0, 2) == 15? 'Cuti': 'Lain-lain'))))): $absensi[$i][$j] }}</td>
+							@php
+								if(strpos($aturan->aturan_hari_libur, date('N', strtotime($tgl1. ' + '.($j-2).' days'))) == false){
+									if(strpos($absensi[$i][$j], '-') !== false){
+										switch(substr($absensi[$i][$j], 0, 2)){
+											case '11' : $jmlSakit++; break;
+											case '12' : $jmlIzin++; break;
+											case '13' : $jmlDispensasi++; break;
+											case '14' : $jmlDinas++; break;
+											case '15' : $jmlCuti++; break;
+											case '16' : $jmlLain++; break;
+										}
+									}else{
+										if($absensi[$i][$j]){
+											$jmlMasuk++;
+
+											if((int)str_replace(':','',$absensi[$i][$j]) > (int)str_replace(':','',($hari == 1? $aturan->aturan_masuk: $aturan->aturan_masuk_khusus))){
+												$jmlTerlambat++;
+											}
+										}
+									}
+								}
+							@endphp
 							@endfor
+							<td>{{ $jmlTerlambat }}</td>
+							<td>{{ $jmlMasuk }}</td>
+							<td>{{ $jmlSakit }}</td>
+							<td>{{ $jmlIzin }}</td>
+							<td>{{ $jmlDispensasi }}</td>
+							<td>{{ $jmlDinas }}</td>
+							<td>{{ $jmlCuti }}</td>
+							<td>{{ $jmlLain }}</td>
 				      	</tr>
 					    @endfor
 				    </tbody>
 				</table>
 			</div>
-		</div>
-		<div class="panel-footer">
-			<label>Keterangan warna:</label>
-			<table class="table">
-				<tr>
-					<td class="bg-red-transparent-3" width="50">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-					<td>Hari Libur</td>
-				</tr>
-				<tr>
-					<td class="bg-green-transparent-3" width="50">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-					<td>Masuk Tepat Waktu</td>
-				</tr>
-				<tr>
-					<td class="bg-orange-transparent-3" width="50">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-					<td>Masuk Terlambat</td>
-				</tr>
-			</table>
 		</div>
 	</div>
 @endsection
