@@ -57,7 +57,6 @@ class Dataanggotacontroller extends Controller
 		$kantor = Kantor::all();
 		$pegawai = Pegawai::select('id', 'nm_pegawai', 'nip')
 		->orderBy('nm_pegawai', 'asc')
-		->whereNotIn('nip', Anggota::select('anggota_nip')->get())
 		->where('kd_status', '!=', '07')
 		->get();
 		return view('pages.master.dataanggota.form',[
@@ -82,8 +81,11 @@ class Dataanggotacontroller extends Controller
         	]
 		);
 		try{
-			if (Anggota::find($req->get('pegawai_id'))) {
-				return redirect('dataanggota/tambah')->with('eror', 'Anggota '.$req->get('pegawai_id').' sudah ada');
+			if (Anggota::where('pegawai_id', $req->get('pegawai_id'))->where('kantor_id', $req->get('kantor_id'))->first() !== null) {
+				return redirect('dataanggota/tambah')
+						->with('pesan', 'Anggota sudah ada')
+						->with('judul', 'Tambah data')
+						->with('tipe', 'error');
 			}else{
 				$mesin = Mesin::where('kantor_id', $req->kantor_id)->get();
 				if(count($mesin) > 0){
@@ -108,18 +110,18 @@ class Dataanggotacontroller extends Controller
 						$anggota->anggota_hak_akses = $req->get('anggota_hak_akses');
 						$anggota->save();
 
-						return redirect($req->get('redirect'))
+						return redirect('dataanggota')
 						->with('pesan', 'Berhasil menambah data anggota (NIP:'.$req->get('anggota_nip').')')
 						->with('judul', 'Tambah data')
 						->with('tipe', 'success');
 					}else {
-						return redirect()->back()
+						return redirect('dataanggota')
 						->with('pesan', 'Gagal menambah data anggota ('.$errno.')')
 						->with('judul', 'Upload data')
 						->with('tipe', 'error');
 					}
 				}else{
-					return redirect()->back()
+					return redirect('dataanggota')
 					->with('pesan', 'Gagal menambah data anggota. Data mesin tidak tersedia untuk kantor ini')
 					->with('judul', 'Upload data')
 					->with('tipe', 'error');
