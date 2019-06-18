@@ -77,7 +77,7 @@
 					        <td>{{ (($data->currentPage() - 1 ) * $data->perPage() ) + $loop->iteration }}</td>
 					        <td>{{ $absen->kehadiran_id }}</td>
 					        <td>{{ date('d M Y h:m:s', strtotime($absen->kehadiran_tgl)) }}</td>
-					        <td>{{ $absen->anggota->anggota_nip }}</td>
+					        <td>{{ $absen->pegawai->nip }}</td>
 					        <td>{{ $absen->pegawai->nm_pegawai }}</td>
 					        <td>
 				        	@php
