@@ -26,12 +26,6 @@
 	            		@csrf
 	                	<div class="form-inline pull-right">
 							<div class="form-group">
-								<select class="form-control selectpicker cari" data-live-search="true" name="hari" data-width="100%">
-									<option value="1" {{ $hari == 1 ? 'selected': ''}}>Hari Biasa</option>
-									<option value="2" {{ $hari == 2 ? 'selected': ''}}>Hari Khusus</option>
-								</select>
-							</div>&nbsp;
-							<div class="form-group">
 								<input type="text" readonly class="form-control cari" id="datepicker1" name="tgl1" placeholder="Tgl. Mulai" value="{{ date('d M Y', strtotime($tgl1)) }}"/>
 							</div>
 		                    &nbsp;s/d&nbsp;
