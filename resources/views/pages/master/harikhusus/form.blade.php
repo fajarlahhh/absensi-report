@@ -28,7 +28,7 @@
 			@csrf
 			<div class="panel-body">
 				<div class="form-group">
-					<label class="control-label">Tanggal Izin</label>
+					<label class="control-label">Tanggal</label>
 					<div class="input-group" id="default-daterange">
 						<input type="text" name="tgl_khusus_waktu" class="form-control" value="{{ date('d F Y').' - '.date('d F Y') }}" readonly />
 						<span class="input-group-append">

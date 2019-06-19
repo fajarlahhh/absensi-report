@@ -88,6 +88,7 @@ class Dataanggotacontroller extends Controller
 						->with('tipe', 'error');
 			}else{
 				$mesin = Mesin::where('kantor_id', $req->kantor_id)->get();
+				//return $mesin;
 				if(count($mesin) > 0){
 					$Connect = fsockopen($mesin[0]->mesin_ip, "80", $errno, $errstr, 1);
 					if($Connect){
