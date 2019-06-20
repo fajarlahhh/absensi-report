@@ -54,6 +54,7 @@
 					</thead>
 					<tbody>
 					    @foreach ($data as $index => $pengguna)
+			        	@if(!in_array($pengguna->pengguna_nip, config('admin.nip')))
 					    <tr>
 					        <td>{{ (($data->currentPage() - 1 ) * $data->perPage() ) + $loop->iteration }}</td>
 					        <td>{{ $pengguna->pegawai_id }}</td>
@@ -71,7 +72,7 @@
 					        		<input type="hidden" name="id" value="{{ $pengguna->pengguna_nip }}">
 					        		<button class='btn btn-grey btn-xs'>
 					        			<i class='fa fa-pencil-alt'></i>
-					        		</button>	                            	
+					        		</button>
 						        	@if(!in_array($pengguna->pengguna_nip, config('admin.nip')))
 		                            <a href="javascript:;" onclick="hapus('{{ $pengguna->pengguna_nip }}')" id='btn-del' class='btn btn-danger btn-xs'><i class='fa fa-trash-alt'></i></a>
 		                            @endif
@@ -79,6 +80,7 @@
 	                    		@endrole
 					        </td>
 				      	</tr>
+                        @endif
 					    @endforeach
 				    </tbody>
 				</table>
