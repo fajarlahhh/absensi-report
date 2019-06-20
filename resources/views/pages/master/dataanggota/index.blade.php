@@ -22,7 +22,7 @@
 		                	<input type="hidden" name="kantor_id" value="{{ $kantor_id }}">
 		                </form>&nbsp; 
 		                <a href="#" class="btn btn-success" onclick="fingerprint('{{ $kantor_id }}')">Download Fingerprint</a>&nbsp;
-		                <a href="/dataanggota/face" class="btn btn-info">Download FaceID</a>
+		                <!--<a href="/dataanggota/face" class="btn btn-info">Download FaceID</a>-->
 		            </div>
                 @endrole
                 </div>
@@ -70,7 +70,7 @@
 							<th>Seksi</th>
 							<th>Hak Akses</th>
 							<th>Fingerprint</th>
-							<th>FaceID</th>
+							<!--<th>FaceID</th>-->
 							<th width="100"></th>
 						</tr>
 					</thead>
@@ -88,7 +88,7 @@
 					        <td>{{ $anggota->nm_seksi }}</td>
 					        <td>{{ $anggota->anggota_hak_akses == 14? 'Super Admin': 'User Biasa' }}</td>
 					        <td class="text-center">{{ $anggota->fingerprint->count() }}</td>
-					        <td class="text-center">0</td>
+					        <!--<td class="text-center">0</td>-->
 					        <td class="text-right">
 					        	@role('user|administrator')
                             	<a href="javascript:;" onclick="hapus('{{ $anggota->pegawai_id }}')" id='btn-del' class='btn btn-danger btn-xs'><i class='fa fa-trash-alt'></i></a>
@@ -148,7 +148,7 @@
 		function hapus(id) {
 			swal({
 				title: 'Apakah anda yakin?',
-				text: 'Anda akan menghapus anggota dengan NIP : ' + id + '',
+				text: 'Anda akan menghapus anggota dengan ID : ' + id + '',
 				icon: 'warning',
 				buttons: {
 					cancel: {
