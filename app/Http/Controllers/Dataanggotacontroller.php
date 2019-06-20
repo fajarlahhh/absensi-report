@@ -105,8 +105,7 @@ class Dataanggotacontroller extends Controller
 
 						$fingerprint = Fingerprint::where('pegawai_id', $req->get('pegawai_id'))->get();
 						foreach ($fingerprint as $key => $fgr) {
-							$soap_request="<SetUserInfo><ArgComKey Xsi:type=\"xsd:integer\">".$msn->mesin_key."</ArgComKey><Arg><PIN>".$req->get('pegawai_id')."</PIN><Name>".$req->get('anggota_nip')."</Name><Password>".$req->get('anggota_sandi')."</Password><Privilege>".$req->get('anggota_hak_akses')."</Privilege></Arg></SetUserInfo>";
-							$soap_request="<SetUserTemplate><ArgComKey xsi:type=\"xsd:integer\">".$msn->mesin_key."</ArgComKey><Arg><PIN xsi:type=\"xsd:integer\">".$req->get('pegawai_id')."</PIN><FingerID xsi:type=\"xsd:integer\">".$fgr->fingerprint_id."</FingerID><Size>".$fgr->fingerprint_size."</Size><Valid>1</Valid><Template>".$fgr->fingerprint_template."</Template></Arg></SetUserTemplate>";
+							$soap_request="<SetUserTemplate><ArgComKey xsi:type=\"xsd:integer\">".$msn->mesin_key."</ArgComKey><Arg><PIN xsi:type=\"xsd:integer\">".$req->get('pegawai_id')."</PIN><FingerID xsi:type=\"xsd:integer\">".$fgr->fingerprint_id."</FingerID><Size>".strlen($fgr->fingerprint_template)."</Size><Valid>1</Valid><Template>".$fgr->fingerprint_template."</Template></Arg></SetUserTemplate>";
 							$newLine="\r\n";
 							fputs($Connect, "POST /iWsService HTTP/1.0".$newLine);
 						    fputs($Connect, "Content-Type: text/xml".$newLine);
