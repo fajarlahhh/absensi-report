@@ -42,7 +42,6 @@
                     <thead>
 						<tr>
 							<th>No.</th>
-							<th>ID</th>
 							<th>NIP</th>
 							<th>Nama</th>
 							<th>Unit</th>
