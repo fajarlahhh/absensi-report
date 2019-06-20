@@ -42,6 +42,7 @@
                     <thead>
 						<tr>
 							<th>No.</th>
+							<th>ID</th>
 							<th>NIP</th>
 							<th>Nama</th>
 							<th>Unit</th>
@@ -56,6 +57,7 @@
 					    @foreach ($data as $index => $pengguna)
 					    <tr>
 					        <td>{{ (($data->currentPage() - 1 ) * $data->perPage() ) + $loop->iteration }}</td>
+					        <td>{{ $pengguna->pegawai_id }}</td>
 					        <td>{{ $pengguna->pengguna_nip }}</td>
 					        <td>{{ $pengguna->nm_pegawai }}</td>
 					        <td>{{ $pengguna->nm_unit }}</td>

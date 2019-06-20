@@ -89,10 +89,10 @@ class Dataanggotacontroller extends Controller
 			}else{
 				$mesin = Mesin::where('kantor_id', $req->kantor_id)->get();
 				//return $mesin;
-				if(count($mesin) > 0){
-					$Connect = fsockopen($mesin[0]->mesin_ip, "80", $errno, $errstr, 1);
+				foreach ($mesin as $key => $msn) {
+					$Connect = fsockopen($msn->mesin_ip, "80", $errno, $errstr, 1);
 					if($Connect){
-						$soap_request="<SetUserInfo><ArgComKey Xsi:type=\"xsd:integer\">".$mesin[0]->mesin_key."</ArgComKey><Arg><PIN>".$req->get('pegawai_id')."</PIN><Name>".$req->get('anggota_nip')."</Name><Password>".$req->get('anggota_sandi')."</Password><Privilege>".$req->get('anggota_hak_akses')."</Privilege></Arg></SetUserInfo>";
+						$soap_request="<SetUserInfo><ArgComKey Xsi:type=\"xsd:integer\">".$msn->mesin_key."</ArgComKey><Arg><PIN>".$req->get('pegawai_id')."</PIN><Name>".$req->get('anggota_nip')."</Name><Password>".$req->get('anggota_sandi')."</Password><Privilege>".$req->get('anggota_hak_akses')."</Privilege></Arg></SetUserInfo>";
 						$newLine="\r\n";
 						fputs($Connect, "POST /iWsService HTTP/1.0".$newLine);
 					    fputs($Connect, "Content-Type: text/xml".$newLine);
@@ -101,6 +101,21 @@ class Dataanggotacontroller extends Controller
 						$buffer="";
 						while($Response=fgets($Connect, 1024)){
 							$buffer=$buffer.$Response;
+						}
+
+						$fingerprint = Fingerprint::where('pegawai_id', $req->get('pegawai_id'))->get();
+						foreach ($fingerprint as $key => $fgr) {
+							$soap_request="<SetUserInfo><ArgComKey Xsi:type=\"xsd:integer\">".$msn->mesin_key."</ArgComKey><Arg><PIN>".$req->get('pegawai_id')."</PIN><Name>".$req->get('anggota_nip')."</Name><Password>".$req->get('anggota_sandi')."</Password><Privilege>".$req->get('anggota_hak_akses')."</Privilege></Arg></SetUserInfo>";
+							$soap_request="<SetUserTemplate><ArgComKey xsi:type=\"xsd:integer\">".$msn->mesin_key."</ArgComKey><Arg><PIN xsi:type=\"xsd:integer\">".$req->get('pegawai_id')."</PIN><FingerID xsi:type=\"xsd:integer\">".$fgr->fingerprint_id."</FingerID><Size>".$fgr->fingerprint_size."</Size><Valid>1</Valid><Template>".$fgr->fingerprint_template."</Template></Arg></SetUserTemplate>";
+							$newLine="\r\n";
+							fputs($Connect, "POST /iWsService HTTP/1.0".$newLine);
+						    fputs($Connect, "Content-Type: text/xml".$newLine);
+						    fputs($Connect, "Content-Length: ".strlen($soap_request).$newLine.$newLine);
+						    fputs($Connect, $soap_request.$newLine);
+							$buffer="";
+							while($Response=fgets($Connect, 1024)){
+								$buffer=$buffer.$Response;
+							}
 						}
 
 						$anggota = new Anggota();
@@ -115,17 +130,7 @@ class Dataanggotacontroller extends Controller
 						->with('pesan', 'Berhasil menambah data anggota (NIP:'.$req->get('anggota_nip').')')
 						->with('judul', 'Tambah data')
 						->with('tipe', 'success');
-					}else {
-						return redirect('dataanggota')
-						->with('pesan', 'Gagal menambah data anggota ('.$errno.')')
-						->with('judul', 'Upload data')
-						->with('tipe', 'error');
 					}
-				}else{
-					return redirect('dataanggota')
-					->with('pesan', 'Gagal menambah data anggota. Data mesin tidak tersedia untuk kantor ini')
-					->with('judul', 'Upload data')
-					->with('tipe', 'error');
 				}
 			}
 		}catch(\Exception $e){
