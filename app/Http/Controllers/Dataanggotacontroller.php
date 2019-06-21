@@ -146,25 +146,27 @@ class Dataanggotacontroller extends Controller
 			$anggota = Anggota::findorfail($id);
 			$mesin = Mesin::where('kantor_id', $anggota->kantor_id)->get();
 			if(count($mesin) > 0){
-				$Connect = fsockopen($mesin[0]->mesin_ip, "80", $errno, $errstr, 1);
-				if($Connect){
-					$soap_request="<DeleteUser><ArgComKey xsi:type=\"xsd:integer\">".$mesin[0]->mesin_key."</ArgComKey><Arg><PIN xsi:type=\"xsd:integer\">".$anggota->pegawai_id."</PIN></Arg></DeleteUser>";
-					$newLine="\r\n";
-					fputs($Connect, "POST /iWsService HTTP/1.0".$newLine);
-				    fputs($Connect, "Content-Type: text/xml".$newLine);
-				    fputs($Connect, "Content-Length: ".strlen($soap_request).$newLine.$newLine);
-				    fputs($Connect, $soap_request.$newLine);
-					$buffer="";
-					while($Response=fgets($Connect, 1024)){
-						$buffer=$buffer.$Response;
+				foreach ($mesin as $key => $msn) {
+					$Connect = fsockopen($msn->mesin_ip, "80", $errno, $errstr, 1);
+					if($Connect){
+						$soap_request="<DeleteUser><ArgComKey xsi:type=\"xsd:integer\">".$msn->mesin_key."</ArgComKey><Arg><PIN xsi:type=\"xsd:integer\">".$anggota->pegawai_id."</PIN></Arg></DeleteUser>";
+						$newLine="\r\n";
+						fputs($Connect, "POST /iWsService HTTP/1.0".$newLine);
+					    fputs($Connect, "Content-Type: text/xml".$newLine);
+					    fputs($Connect, "Content-Length: ".strlen($soap_request).$newLine.$newLine);
+					    fputs($Connect, $soap_request.$newLine);
+						$buffer="";
+						while($Response=fgets($Connect, 1024)){
+							$buffer=$buffer.$Response;
+						}
+						
+						$anggota->delete();
 					}
-					
-					$anggota->delete();
-					return redirect()->back()
-					->with('pesan', 'Berhasil menghapus data anggota (NIP:'.$anggota->anggota_nip.')')
-					->with('judul', 'Hapus data')
-					->with('tipe', 'success');
 				}
+				return redirect()->back()
+				->with('pesan', 'Berhasil menghapus data anggota (NIP:'.$anggota->anggota_nip.')')
+				->with('judul', 'Hapus data')
+				->with('tipe', 'success');
 			}else{
 				return redirect()->back()
 				->with('pesan', 'Gagal menghapus data anggota. Data mesin tidak tersedia untuk kantor ini')
@@ -183,44 +185,49 @@ class Dataanggotacontroller extends Controller
 	{
 		try{
 			$mesin = Mesin::where('kantor_id', $req->kantor_id)->get();
-			if(count($mesin) > 0){$Connect = fsockopen($mesin[0]->mesin_ip, "80", $errno, $errstr, 1);
+			if(count($mesin) > 0){
 				$anggota = Anggota::where('kantor_id', $req->kantor_id)->get();
 				$template = [];
 				$i = 0;
-				foreach ($anggota as $key => $angg) {
-					$buffer="";
-					$Connect = fsockopen($mesin[0]->mesin_ip, "80", $errno, $errstr, 1);
-					if($Connect){
-						$soap_request="<GetUserTemplate><ArgComKey xsi:type=\"xsd:integer\">".$mesin[0]->mesin_key."</ArgComKey><Arg><PIN xsi:type=\"xsd:integer\">".$angg->pegawai_id."</PIN></Arg></GetUserTemplate>";
-						$newLine="\r\n";
-						fputs($Connect, "POST /iWsService HTTP/1.0".$newLine);
-					    fputs($Connect, "Content-Type: text/xml".$newLine);
-					    fputs($Connect, "Content-Length: ".strlen($soap_request).$newLine.$newLine);
-					    fputs($Connect, $soap_request.$newLine);
-						while($Response=fgets($Connect, 1024)){
-							$buffer=$buffer.$Response;
-						}
-					}
-					$buffer=$this->parse($buffer,"<GetUserTemplateResponse>","</GetUserTemplateResponse>");
-					$buffer=explode("\r\n",$buffer);
-					$template[$i] = $buffer;
 
-					$i++;
+				foreach ($mesin as $key => $msn) {
+					foreach ($anggota as $key => $angg) {
+						$buffer="";
+						$Connect = fsockopen($msn->mesin_ip, "80", $errno, $errstr, 1);
+						if($Connect){
+							$soap_request="<GetUserTemplate><ArgComKey xsi:type=\"xsd:integer\">".$msn->mesin_key."</ArgComKey><Arg><PIN xsi:type=\"xsd:integer\">".$angg->pegawai_id."</PIN></Arg></GetUserTemplate>";
+							$newLine="\r\n";
+							fputs($Connect, "POST /iWsService HTTP/1.0".$newLine);
+						    fputs($Connect, "Content-Type: text/xml".$newLine);
+						    fputs($Connect, "Content-Length: ".strlen($soap_request).$newLine.$newLine);
+						    fputs($Connect, $soap_request.$newLine);
+							while($Response=fgets($Connect, 1024)){
+								$buffer=$buffer.$Response;
+							}
+						}
+						$buffer=$this->parse($buffer,"<GetUserTemplateResponse>","</GetUserTemplateResponse>");
+						$buffer=explode("\r\n",$buffer);
+						$template[$i] = $buffer;
+
+						$i++;
+					}
+					$data = [];
+					for($a = 0; $a < count($template); $a++){
+						if((int)$this->parse($template[$a][1],"<PIN>","</PIN>") != 0){
+							Fingerprint::where('pegawai_id', (int)$this->parse($template[$a][1],"<PIN>","</PIN>"))->delete();
+							$data[$a] = array(
+								'pegawai_id' => (int)$this->parse($template[$a][1],"<PIN>","</PIN>"),
+								'fingerprint_id' => (int)$this->parse($template[$a][1],"<FingerID>","</FingerID>"),
+								'fingerprint_size' => (int)$this->parse($template[$a][1],"<Size>","</Size>"),
+								'fingerprint_valid' => (int)$this->parse($template[$a][1],"<Valid>","</Valid>"),
+								'fingerprint_template' => $this->parse($template[$a][1],"<Template>","</Template>")
+							);
+						}						
+					}
+					Fingerprint::insert($data);
 				}
-				$data = [];
-				for($a = 0; $a < count($template); $a++){
-					Fingerprint:: where('pegawai_id', (int)$this->parse($template[$a][1],"<PIN>","</PIN>"))->delete();
-					$data[$a] = array(
-						'pegawai_id' => (int)$this->parse($template[$a][1],"<PIN>","</PIN>"),
-						'fingerprint_id' => (int)$this->parse($template[$a][1],"<FingerID>","</FingerID>"),
-						'fingerprint_size' => (int)$this->parse($template[$a][1],"<Size>","</Size>"),
-						'fingerprint_valid' => (int)$this->parse($template[$a][1],"<Valid>","</Valid>"),
-						'fingerprint_template' => $this->parse($template[$a][1],"<Template>","</Template>")
-					);
-				}
-				Fingerprint::insert($data);
 				return redirect()->back()
-				->with('pesan', 'Berhasil mendownload data fingerprint (Mesin:'.$mesin[0]->mesin_lokasi.')')
+				->with('pesan', 'Berhasil mendownload data fingerprint')
 				->with('judul', 'Download Fingerprint')
 				->with('tipe', 'success');
 			}else{
