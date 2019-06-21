@@ -216,8 +216,7 @@ class Dataanggotacontroller extends Controller
 						'fingerprint_id' => (int)$this->parse($template[$a][1],"<FingerID>","</FingerID>"),
 						'fingerprint_size' => (int)$this->parse($template[$a][1],"<Size>","</Size>"),
 						'fingerprint_valid' => (int)$this->parse($template[$a][1],"<Valid>","</Valid>"),
-						'fingerprint_template' => $this->parse($template[$a][1],"<Template>","</Template>"),
-						'kantor_id' => $req->kantor_id
+						'fingerprint_template' => $this->parse($template[$a][1],"<Template>","</Template>")
 					);
 				}
 				Fingerprint::insert($data);

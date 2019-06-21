@@ -54,7 +54,6 @@
 					</thead>
 					<tbody>
 					    @foreach ($data as $index => $pengguna)
-			        	@if(!in_array($pengguna->pengguna_nip, config('admin.nip')) && )
 					    <tr>
 					        <td>{{ (($data->currentPage() - 1 ) * $data->perPage() ) + $loop->iteration }}</td>
 					        <td>{{ $pengguna->pengguna_nip }}</td>
@@ -79,7 +78,6 @@
 	                    		@endrole
 					        </td>
 				      	</tr>
-                        @endif
 					    @endforeach
 				    </tbody>
 				</table>

@@ -30,12 +30,13 @@
 				<input type="hidden" name="redirect" value="{{ url()->previous() }}">
 				<div class="row">
 					<div class="col-md-5">
+						<input type="hidden" name="pegawai_id" id="id" value="{{ $data? $data->pegawai_id: $pegawai{0}->id }}">
 						@if(!$data)
 						<div class="form-group input-group-sm">
 							<label class="control-label">Nama Pegawai</label>
-							<select class="form-control selectpicker" data-live-search="true" name="pengguna_nip" data-style="btn-info" data-width="100%">
+							<select class="form-control selectpicker" onchange="getId()" data-live-search="true" name="pengguna_nip" id="nip" data-style="btn-info" data-width="100%">
 								@foreach($pegawai as $peg)
-								<option value="{{ $peg->nip }}" 
+								<option value="{{ $peg->nip }}" data-id="{{ $peg->id }}"
 									@if($data && $data->pegawai_nip == $peg->nip)
 										selected
 									@endif
@@ -124,6 +125,10 @@
 		$(document).ready(function() {
 			hakakses();
 		});
+
+		function getId() {
+			$("#id").val($("#nip option:selected").data("id"));
+		}		
 
 		function hakakses() {
 			if ($('#pengguna_level').val() == 1) {

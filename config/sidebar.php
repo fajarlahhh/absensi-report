@@ -32,6 +32,9 @@ return [
 			'url' => '/datakantor',
 			'title' => 'Data Kantor'
 		],[
+			'url' => '/shift',
+			'title' => 'Data Shift'
+		],[
 			'url' => '/aturan',
 			'title' => 'Aturan'
 		]]
@@ -73,6 +76,18 @@ return [
 		],[
 			'url' => '/rekapabsensi',
 			'title' => 'Rekap Absensi'
+		]]
+	],[
+		'icon' => 'fa fa-gavel',
+		'title' => 'Administrator',
+		'url' => 'javascript:;',
+		'caret' => true,
+		'sub_menu' => [[
+			'url' => '/postingabsensi',
+			'title' => 'Posting Absensi'
+		],[
+			'url' => '/shiftkaryawan',
+			'title' => 'Shift Karyawan'
 		]]
 	]]
 ];

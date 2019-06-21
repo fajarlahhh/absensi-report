@@ -4,6 +4,7 @@ namespace Absensi\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Absensi\Aturan;
+use Illuminate\Support\Facades\Auth;
 
 class AturanController extends Controller
 {
@@ -45,6 +46,7 @@ class AturanController extends Controller
 			$aturan->aturan_masuk_khusus = $req->get('aturan_masuk_khusus');
 			$aturan->aturan_pulang_khusus = $req->get('aturan_pulang_khusus');
 			$aturan->aturan_hari_libur = implode($req->get('aturan_hari_libur'), '');
+    		$aturan->operator = Auth::user()->pegawai->nm_pegawai;
 			$aturan->save();
 			return redirect($req->get('redirect')? $req->get('redirect'): 'aturan')
 			->with('pesan', 'Berhasil mengubah aturan')

@@ -8,6 +8,7 @@ use Absensi\Pegawai;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class PenggunaController extends Controller
 {
@@ -43,7 +44,7 @@ class PenggunaController extends Controller
 
 	public function tambah()
 	{
-		$pegawai = Pegawai::select('nip', 'nm_pegawai')
+		$pegawai = Pegawai::select('id', 'nip', 'nm_pegawai')
 		->orderBy('nm_pegawai', 'asc')
 		->whereNotIn('nip', Pengguna::select('pengguna_nip')->get())
 		->where('kd_status', '!=', '07')
@@ -82,6 +83,7 @@ class PenggunaController extends Controller
 					return redirect('datapengguna/tambah')->with('eror', 'Pengguna '.$req->get('pengguna_nip').' sudah ada');
 				}else{
 					$pengguna = new Pengguna();
+					$pengguna->pegawai_id = $req->get('pegawai_id');
 					$pengguna->pengguna_nip = $req->get('pengguna_nip');
 					$pengguna->pengguna_hp = $req->get('pengguna_hp');
 					$pengguna->pengguna_sandi = Hash::make($req->get('pengguna_sandi'));
@@ -165,6 +167,50 @@ class PenggunaController extends Controller
 		}catch(\Exception $e){
 			return redirect($req->get('redirect')? $req->get('redirect'): 'datapengguna')
 			->with('pesan', 'Gagal mengedit data pengguna (nip:'.$req->get('pengguna_nip').') Error: '.$e->getMessage())
+			->with('judul', 'Edit data')
+			->with('tipe', 'error');
+		}
+	}
+
+
+	public function sandi(Request $req)
+	{
+		$req->validate(
+			[
+				'pengguna_sandi_baru' => 'required',
+				'pengguna_sandi_lama' => 'required',
+			],[
+         	   'pengguna_sandi_lama.required' => 'Sandi Lama tidak boleh kosong',
+         	   'pengguna_sandi_baru.required'  => 'Sandi Baru tidak boleh kosong',
+        	]
+		);
+		try{
+			$pengguna = Pengguna::find(Auth::user()->pegawai->nip);
+			if($pengguna){
+				if(!Hash::check($req->get('pengguna_sandi_lama'), $pengguna->pengguna_sandi)){
+					return redirect()->back()
+					->with('pesan', 'Gagal mengubah kata sandi. Kata sandi lama salah')
+					->with('judul', 'Edit data')
+					->with('tipe', 'error');
+				}
+			}else{
+				return redirect()->back()
+				->with('pesan', 'Gagal mengubah kata sandi. Data pengguna tidak tersedia')
+				->with('judul', 'Edit data')
+				->with('tipe', 'error');
+			}
+			$pengguna = new Pengguna();
+			$pengguna->exists = true;
+			$pengguna->pengguna_nip = Auth::user()->pegawai->nip;
+			$pengguna->pengguna_sandi = Hash::make($req->get('pengguna_sandi_baru'));
+			$pengguna->save();
+			return redirect()->back()
+			->with('pesan', 'Berhasil mengubah kata sandi')
+			->with('judul', 'Edit data')
+			->with('tipe', 'success');
+		}catch(\Exception $e){
+			return redirect($req->get('redirect')? $req->get('redirect'): 'datapengguna')
+			->with('pesan', 'Gagal mengubah  kata sandi. Error: '.$e->getMessage())
 			->with('judul', 'Edit data')
 			->with('tipe', 'error');
 		}

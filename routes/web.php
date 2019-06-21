@@ -15,6 +15,7 @@ Route::get('/absensikaryawan', 'RinciankehadiranController@tampil')->name('absen
 Route::group(['middleware' => ['auth']], function () {
 	Route::get('/', 'DashboardController@index')->name('dashboard');
 	Route::get('/home', 'DashboardController@index');
+	Route::post('/gantisandi', 'PenggunaController@sandi');
 
 	Route::group(['middleware' => ['auth', 'permission:data kehadiran']], function () {
 		Route::get('/datakehadiran', 'DatakehadiranController@index')->name('datakehadiran');
