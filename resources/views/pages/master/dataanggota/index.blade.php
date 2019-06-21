@@ -91,7 +91,7 @@
 					        <!--<td class="text-center">0</td>-->
 					        <td class="text-right">
 					        	@role('user|administrator')
-                            	<a href="javascript:;" onclick="hapus('{{ $anggota->pegawai_id }}')" id='btn-del' class='btn btn-danger btn-xs'><i class='fa fa-trash-alt'></i></a>
+                            	<a href="javascript:;" onclick="hapus('{{ $anggota->anggota_id }}', '{{ $anggota->pegawai_id }}')" id='btn-del' class='btn btn-danger btn-xs'><i class='fa fa-trash-alt'></i></a>
 	                    		@endrole
 					        </td>
 				      	</tr>
@@ -145,10 +145,10 @@
 		    });
 		}	
 
-		function hapus(id) {
+		function hapus(id, peg) {
 			swal({
 				title: 'Apakah anda yakin?',
-				text: 'Anda akan menghapus anggota dengan ID : ' + id + '',
+				text: 'Anda akan menghapus anggota dengan ID : ' + peg + '',
 				icon: 'warning',
 				buttons: {
 					cancel: {

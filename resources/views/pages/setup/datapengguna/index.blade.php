@@ -72,7 +72,7 @@
 					        			<i class='fa fa-pencil-alt'></i>
 					        		</button>
 						        	@if(!in_array($pengguna->pengguna_nip, config('admin.nip')))
-		                            <a href="javascript:;" onclick="hapus('{{ $pengguna->anggota_id, $pengguna->pegawai_id }}')" id='btn-del' class='btn btn-danger btn-xs'><i class='fa fa-trash-alt'></i></a>
+		                            <a href="javascript:;" onclick="hapus('{{ $pengguna->pengguna_nip }}')" id='btn-del' class='btn btn-danger btn-xs'><i class='fa fa-trash-alt'></i></a>
 		                            @endif
 					        	</form>
 	                    		@endrole
@@ -96,10 +96,10 @@
 
 @push('scripts')
 	<script>
-		function hapus(id, peg) {
+		function hapus(id) {
 			swal({
 				title: 'Apakah anda yakin?',
-				text: 'Anda akan menghapus pengguna dengan ID : ' + peg + '',
+				text: 'Anda akan menghapus pengguna dengan NIP : ' + id + '',
 				icon: 'warning',
 				buttons: {
 					cancel: {

@@ -143,7 +143,6 @@ class Dataanggotacontroller extends Controller
 	public function hapus($id)
 	{
 		try{
-
 			$anggota = Anggota::findorfail($id);
 			$mesin = Mesin::where('kantor_id', $anggota->kantor_id)->get();
 			if(count($mesin) > 0){
@@ -210,8 +209,7 @@ class Dataanggotacontroller extends Controller
 				}
 				$data = [];
 				for($a = 0; $a < count($template); $a++){
-					$fingerprint = Fingerprint::where((int)$this->parse($template[$a][1],"<PIN>","</PIN>"))->first();
-					$fingerprint->delete();
+					$fingerprint->where('pegawai_id', (int)$this->parse($template[$a][1],"<PIN>","</PIN>"))->delete();
 					$data[$a] = array(
 						'pegawai_id' => (int)$this->parse($template[$a][1],"<PIN>","</PIN>"),
 						'fingerprint_id' => (int)$this->parse($template[$a][1],"<FingerID>","</FingerID>"),
