@@ -209,8 +209,9 @@ class Dataanggotacontroller extends Controller
 					$i++;
 				}
 				$data = [];
-				Fingerprint::where('kantor_id', $req->kantor_id)->delete();
 				for($a = 0; $a < count($template); $a++){
+					$fingerprint = Fingerprint::where((int)$this->parse($template[$a][1],"<PIN>","</PIN>"))->first();
+					$fingerprint->delete();
 					$data[$a] = array(
 						'pegawai_id' => (int)$this->parse($template[$a][1],"<PIN>","</PIN>"),
 						'fingerprint_id' => (int)$this->parse($template[$a][1],"<FingerID>","</FingerID>"),
