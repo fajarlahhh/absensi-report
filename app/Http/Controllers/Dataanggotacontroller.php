@@ -209,7 +209,7 @@ class Dataanggotacontroller extends Controller
 				}
 				$data = [];
 				for($a = 0; $a < count($template); $a++){
-					$fingerprint->where('pegawai_id', (int)$this->parse($template[$a][1],"<PIN>","</PIN>"))->delete();
+					Fingerprint:: where('pegawai_id', (int)$this->parse($template[$a][1],"<PIN>","</PIN>"))->delete();
 					$data[$a] = array(
 						'pegawai_id' => (int)$this->parse($template[$a][1],"<PIN>","</PIN>"),
 						'fingerprint_id' => (int)$this->parse($template[$a][1],"<FingerID>","</FingerID>"),
