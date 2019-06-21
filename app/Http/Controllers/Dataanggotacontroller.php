@@ -159,8 +159,8 @@ class Dataanggotacontroller extends Controller
 					while($Response=fgets($Connect, 1024)){
 						$buffer=$buffer.$Response;
 					}
-			
-					Anggota::destroy($id);
+					
+					$anggota->delete();
 					return redirect()->back()
 					->with('pesan', 'Berhasil menghapus data anggota (NIP:'.$anggota->anggota_nip.')')
 					->with('judul', 'Hapus data')
