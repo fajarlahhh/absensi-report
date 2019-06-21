@@ -8,7 +8,7 @@ class Anggota extends Model
 {
     //
     protected $table = 'm_anggota';
-    protected $primaryKey = 'pegawai_id';
+    protected $primaryKey = 'anggota_id';
     public $incrementing = false;
 
     protected $fillable = [

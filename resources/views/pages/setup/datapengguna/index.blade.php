@@ -72,7 +72,7 @@
 					        			<i class='fa fa-pencil-alt'></i>
 					        		</button>
 						        	@if(!in_array($pengguna->pengguna_nip, config('admin.nip')))
-		                            <a href="javascript:;" onclick="hapus('{{ $pengguna->pengguna_nip }}')" id='btn-del' class='btn btn-danger btn-xs'><i class='fa fa-trash-alt'></i></a>
+		                            <a href="javascript:;" onclick="hapus('{{ $pengguna->anggota_id }}')" id='btn-del' class='btn btn-danger btn-xs'><i class='fa fa-trash-alt'></i></a>
 		                            @endif
 					        	</form>
 	                    		@endrole
