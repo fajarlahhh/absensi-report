@@ -120,7 +120,7 @@
 		function fingerprint(id) {
 			swal({
 				title: 'Download fingerprint',
-				text: 'Anda akan menimpa data fingerprint di kantor ini?',
+				text: 'Aapakah anda akan menimpa data fingerprint anggota yang sudah tersimpan?',
 				icon: 'warning',
 				buttons: {
 					cancel: {
