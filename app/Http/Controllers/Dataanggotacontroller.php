@@ -102,7 +102,9 @@ class Dataanggotacontroller extends Controller
 						while($Response=fgets($Connect, 1024)){
 							$buffer=$buffer.$Response;
 						}
-
+					}
+					$Connect = fsockopen($msn->mesin_ip, "80", $errno, $errstr, 1);
+					if($Connect){
 						$fingerprint = Fingerprint::where('pegawai_id', $req->get('pegawai_id'))->get();
 						foreach ($fingerprint as $key => $fgr) {
 							$soap_request="<SetUserTemplate><ArgComKey xsi:type=\"xsd:integer\">".$msn->mesin_key."</ArgComKey><Arg><PIN xsi:type=\"xsd:integer\">".$req->get('pegawai_id')."</PIN><FingerID xsi:type=\"xsd:integer\">".$fgr->fingerprint_id."</FingerID><Size>".strlen($fgr->fingerprint_template)."</Size><Valid>1</Valid><Template>".$fgr->fingerprint_template."</Template></Arg></SetUserTemplate>";
@@ -111,12 +113,13 @@ class Dataanggotacontroller extends Controller
 						    fputs($Connect, "Content-Type: text/xml".$newLine);
 						    fputs($Connect, "Content-Length: ".strlen($soap_request).$newLine.$newLine);
 						    fputs($Connect, $soap_request.$newLine);
-							$buffer="";
-							while($Response=fgets($Connect, 1024)){
-								$buffer=$buffer.$Response;
+							$buffer1="";
+							while($Response1=fgets($Connect, 1024)){
+								$buffer1=$buffer1.$Response1;
 							}
 						}
 
+							return $buffer1;
 						$anggota = new Anggota();
 						$anggota->anggota_nip = $req->get('anggota_nip');
 						$anggota->pegawai_id = $req->get('pegawai_id');
