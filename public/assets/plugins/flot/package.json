@@ -1,36 +1,34 @@
 {
-  "_args": [
-    [
-      "flot@3.0.2",
-      "D:\\www\\absensi"
-    ]
-  ],
-  "_from": "flot@3.0.2",
-  "_id": "flot@3.0.2",
+  "_from": "flot@3.2.0",
+  "_id": "flot@3.2.0",
   "_inBundle": false,
-  "_integrity": "sha512-zi2iWlFQYx4RBax3FAQiFFBP+Ao5VIrBwjZvtTdySTl+N/hiZe6Rr/0/XWhDAdUI8jVGQdbUpOmEf55EvMKbKQ==",
+  "_integrity": "sha512-D5TYvE7oa5lbNymjkIrjAyzSas+ZpEgYGPNCHo6e/zMQkWR6hwWzwDaKZ2UP/0/sZ11rh70qoBanH+N/Tp8ubg==",
   "_location": "/flot",
   "_phantomChildren": {},
   "_requested": {
     "type": "version",
     "registry": true,
-    "raw": "flot@3.0.2",
+    "raw": "flot@3.2.0",
     "name": "flot",
     "escapedName": "flot",
-    "rawSpec": "3.0.2",
+    "rawSpec": "3.2.0",
     "saveSpec": null,
-    "fetchSpec": "3.0.2"
+    "fetchSpec": "3.2.0"
   },
   "_requiredBy": [
+    "#USER",
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/flot/-/flot-3.0.2.tgz",
-  "_spec": "3.0.2",
+  "_resolved": "https://registry.npmjs.org/flot/-/flot-3.2.0.tgz",
+  "_shasum": "1001ffda3b81ee47c6716e5d31665443c8760c1f",
+  "_spec": "flot@3.2.0",
   "_where": "D:\\www\\absensi",
   "bugs": {
     "url": "https://github.com/flot/flot/issues"
   },
+  "bundleDependencies": false,
   "dependencies": {},
+  "deprecated": false,
   "description": "## About ##",
   "devDependencies": {
     "@babel/cli": "^7.2.3",
@@ -74,7 +72,8 @@
     "coverage": "node node_modules/karma/bin/karma start --single-run --coverage --no-auto-watch --concurrency=1",
     "docs": "node ./update_docs.js",
     "dont-break": "dont-break --timeout 300",
+    "karma": "node node_modules/karma/bin/karma start --no-auto-watch",
     "test": "node node_modules/karma/bin/karma start --single-run --no-auto-watch --concurrency=1 --stopOnEsLintError"
   },
-  "version": "3.0.2"
+  "version": "3.2.0"
 }

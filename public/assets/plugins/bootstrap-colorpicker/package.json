@@ -1,31 +1,27 @@
 {
-  "_args": [
-    [
-      "bootstrap-colorpicker@3.1.1",
-      "D:\\www\\absensi"
-    ]
-  ],
-  "_from": "bootstrap-colorpicker@3.1.1",
-  "_id": "bootstrap-colorpicker@3.1.1",
+  "_from": "bootstrap-colorpicker@3.1.2",
+  "_id": "bootstrap-colorpicker@3.1.2",
   "_inBundle": false,
-  "_integrity": "sha512-LgHvdXVzJ6O/Jbc/ngc33aX+CAnJ5WAx06L+psP2cYuwXSy0wHsGFrHrYYq+lJKScYRV9kIGAyqDkkeb5NZzhQ==",
+  "_integrity": "sha512-yUWegXox8GYoXVtYdrEIN3QMOeEFbcSFGDadZu2pWmmMgTaw4ECX9T8GvYQzJkRusvK9uzi39FjE0W2k8lQECA==",
   "_location": "/bootstrap-colorpicker",
   "_phantomChildren": {},
   "_requested": {
     "type": "version",
     "registry": true,
-    "raw": "bootstrap-colorpicker@3.1.1",
+    "raw": "bootstrap-colorpicker@3.1.2",
     "name": "bootstrap-colorpicker",
     "escapedName": "bootstrap-colorpicker",
-    "rawSpec": "3.1.1",
+    "rawSpec": "3.1.2",
     "saveSpec": null,
-    "fetchSpec": "3.1.1"
+    "fetchSpec": "3.1.2"
   },
   "_requiredBy": [
+    "#USER",
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/bootstrap-colorpicker/-/bootstrap-colorpicker-3.1.1.tgz",
-  "_spec": "3.1.1",
+  "_resolved": "https://registry.npmjs.org/bootstrap-colorpicker/-/bootstrap-colorpicker-3.1.2.tgz",
+  "_shasum": "42737d7fb3f52b42ad9e33ac97f021252307dfae",
+  "_spec": "bootstrap-colorpicker@3.1.2",
   "_where": "D:\\www\\absensi",
   "author": {
     "name": "Javi Aguilar"
@@ -50,10 +46,12 @@
   "bugs": {
     "url": "https://github.com/farbelous/bootstrap-colorpicker/issues"
   },
+  "bundleDependencies": false,
   "dependencies": {
-    "bootstrap": "^4.0",
+    "bootstrap": ">=4.0",
     "jquery": ">=2.1.0"
   },
+  "deprecated": false,
   "description": "Bootstrap Colorpicker is a modular color picker plugin for Bootstrap 4.",
   "devDependencies": {
     "ava": "^0.23.0",
@@ -81,6 +79,7 @@
     "http-server": "^0.10.0",
     "jsdoc": "^3.5.5",
     "jsdom": "^11.3.0",
+    "run-sequence": "^2.2.1",
     "uglifyjs-webpack-plugin": "^1.0.1",
     "webpack": "^3.8.1",
     "webpack-stream": "^4.0.0"
@@ -108,5 +107,5 @@
     "start": "http-server ./build/docs",
     "test": "npm run lint && ava --color --verbose"
   },
-  "version": "3.1.1"
+  "version": "3.1.2"
 }

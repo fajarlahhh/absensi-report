@@ -24,12 +24,12 @@ class Dataanggotacontroller extends Controller
     {
 		$kantor = Kantor::all();
 		$kantor_id = $req->kantor? $req->kantor: $kantor{0}->kantor_id;
-    	$anggota = Anggota::join('m_kantor', 'm_anggota.kantor_id', '=', 'm_kantor.kantor_id')
-		->join('personalia.pegawai', 'pegawai.id', '=', 'pegawai_id')
-		->join('personalia.jabatan', 'pegawai.kd_jabatan', '=', 'jabatan.kd_jabatan')
-		->join('personalia.bagian', 'pegawai.kd_bagian', '=', 'bagian.kd_bagian')
-		->join('personalia.unit', 'pegawai.kd_unit', '=', 'unit.kd_unit')
-		->join('personalia.seksi', 'pegawai.kd_seksi', '=', 'seksi.kd_seksi')
+    	$anggota = Anggota::leftJoin('m_kantor', 'm_anggota.kantor_id', '=', 'm_kantor.kantor_id')
+		->leftJoin('personalia.pegawai', 'pegawai.id', '=', 'pegawai_id')
+		->leftJoin('personalia.jabatan', 'pegawai.kd_jabatan', '=', 'jabatan.kd_jabatan')
+		->leftJoin('personalia.bagian', 'pegawai.kd_bagian', '=', 'bagian.kd_bagian')
+		->leftJoin('personalia.unit', 'pegawai.kd_unit', '=', 'unit.kd_unit')
+		->leftJoin('personalia.seksi', 'pegawai.kd_seksi', '=', 'seksi.kd_seksi')
 		->where('m_anggota.kantor_id', $kantor_id)
 		->where(
 			function($q) use ($req){

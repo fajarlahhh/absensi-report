@@ -1,31 +1,27 @@
 {
-  "_args": [
-    [
-      "select2@4.0.6",
-      "D:\\www\\absensi"
-    ]
-  ],
-  "_from": "select2@4.0.6",
-  "_id": "select2@4.0.6",
+  "_from": "select2@4.0.7",
+  "_id": "select2@4.0.7",
   "_inBundle": false,
-  "_integrity": "sha512-P5NqUcH+FFBwHAbC2mEWMDS446YdIGvXRM9tSGFLuNIFRP/ng0IOtjJ4zkzVyCl43RM/NyXJa6SAPT9MGg634A==",
+  "_integrity": "sha512-t46Z2nkEEYnBYdRpLNw5dj9qqO+YTiTlWKnpJ/B5e1Q3hPND00JRgcLJxYRzqpeLZd+ZkszkHEMagLKIfbTjVA==",
   "_location": "/select2",
   "_phantomChildren": {},
   "_requested": {
     "type": "version",
     "registry": true,
-    "raw": "select2@4.0.6",
+    "raw": "select2@4.0.7",
     "name": "select2",
     "escapedName": "select2",
-    "rawSpec": "4.0.6",
+    "rawSpec": "4.0.7",
     "saveSpec": null,
-    "fetchSpec": "4.0.6"
+    "fetchSpec": "4.0.7"
   },
   "_requiredBy": [
+    "#USER",
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/select2/-/select2-4.0.6.tgz",
-  "_spec": "4.0.6",
+  "_resolved": "https://registry.npmjs.org/select2/-/select2-4.0.7.tgz",
+  "_shasum": "7b80473ef7900f4dc2b988623275fe569204ae8d",
+  "_spec": "select2@4.0.7",
   "_where": "D:\\www\\absensi",
   "author": {
     "name": "Kevin Brown",
@@ -34,6 +30,7 @@
   "bugs": {
     "url": "https://github.com/select2/select2/issues"
   },
+  "bundleDependencies": false,
   "contributors": [
     {
       "name": "Igor Vaynberg",
@@ -44,12 +41,11 @@
       "url": "https://github.com/alexweissman"
     }
   ],
-  "dependencies": {
-    "almond": "~0.3.1",
-    "jquery-mousewheel": "~3.1.13"
-  },
+  "dependencies": {},
+  "deprecated": false,
   "description": "Select2 is a jQuery based replacement for select boxes. It supports searching, remote data sets, and infinite scrolling of results.",
   "devDependencies": {
+    "almond": "~0.3.1",
     "grunt": "^0.4.5",
     "grunt-cli": "^0.1.13",
     "grunt-contrib-concat": "^0.4.0",
@@ -60,6 +56,7 @@
     "grunt-contrib-uglify": "~0.4.0",
     "grunt-contrib-watch": "~0.6.0",
     "grunt-sass": "^1.0.0",
+    "jquery-mousewheel": "~3.1.13",
     "node-sass": "^4.5.3"
   },
   "files": [
@@ -90,5 +87,5 @@
     "url": "git://github.com/select2/select2.git"
   },
   "style": "dist/css/select2.css",
-  "version": "4.0.6"
+  "version": "4.0.7"
 }

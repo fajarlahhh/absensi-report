@@ -20,14 +20,14 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">69.74% </span>
+        <span class="strong">70.13% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>53/76</span>
+        <span class='fraction'>54/77</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">38.89% </span>
+        <span class="strong">40% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>7/18</span>
+        <span class='fraction'>8/20</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">52.63% </span>
@@ -35,9 +35,9 @@
         <span class='fraction'>10/19</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">69.74% </span>
+        <span class="strong">70.13% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>53/76</span>
+        <span class='fraction'>54/77</span>
       </div>
     </div>
   </div>
@@ -218,29 +218,29 @@
 173
 174
 175
-176</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1×</span>
+176
+177</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-yes">1×</span>
-<span class="cline-any cline-yes">94×</span>
+<span class="cline-any cline-yes">96×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">94×</span>
-<span class="cline-any cline-yes">94×</span>
-<span class="cline-any cline-yes">94×</span>
-<span class="cline-any cline-yes">94×</span>
-<span class="cline-any cline-yes">94×</span>
+<span class="cline-any cline-yes">96×</span>
+<span class="cline-any cline-yes">96×</span>
+<span class="cline-any cline-yes">96×</span>
+<span class="cline-any cline-yes">96×</span>
+<span class="cline-any cline-yes">96×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">94×</span>
+<span class="cline-any cline-yes">96×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
-<span class="cline-any cline-yes">94×</span>
+<span class="cline-any cline-yes">96×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">94×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">96×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -256,10 +256,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">94×</span>
-<span class="cline-any cline-yes">94×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">94×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">96×</span>
+<span class="cline-any cline-yes">96×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">96×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -396,6 +398,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import $ from 'jquery';
 import env from '../core/env';
 import key from '../core/key';
+import func from '../core/func';
 &nbsp;
 export default class LinkDialog {
   constructor(context) {
@@ -426,9 +429,9 @@ export default class LinkDialog {
         ? $('&lt;div/&gt;').append(this.ui.checkbox({
           className: 'sn-checkbox-open-in-new-window',
           text: this.lang.link.openInNewWindow,
-          checked: true
+          checked: true,
         }).render()).html()
-        : <span class="branch-1 cbranch-no" title="branch not covered" >''</span>
+        : <span class="branch-1 cbranch-no" title="branch not covered" >'',</span>
     ].join('');
 &nbsp;
     const buttonClass = 'btn btn-primary note-btn note-btn-primary note-link-btn';
@@ -439,7 +442,7 @@ export default class LinkDialog {
       title: this.lang.link.insert,
       fade: this.options.dialogsFade,
       body: body,
-      footer: footer
+      footer: footer,
     }).render().appendTo($container);
   }
 &nbsp;
@@ -481,8 +484,8 @@ export default class LinkDialog {
       this.ui.onDialogShown(this.$dialog, () =&gt; {
         this.context.triggerEvent('dialog.shown');
 &nbsp;
-        // if no url was given, copy text to url
-        <span class="missing-if-branch" title="if path not taken" >I</span>if (!linkInfo.url) {
+        // if no url was given and given text is valid URL then copy that into URL Field
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (!linkInfo.url &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >func.isValidUrl(linkInfo.text))</span> {
 <span class="cstat-no" title="statement not covered" >          linkInfo.url = linkInfo.text;</span>
         }
 &nbsp;
@@ -532,7 +535,7 @@ export default class LinkDialog {
             range: linkInfo.range,
             url: $linkUrl.val(),
             text: $linkText.val(),
-            isNewWindow: $openInNewWindow.is(':checked')
+            isNewWindow: $openInNewWindow.is(':checked'),
           });
 <span class="cstat-no" title="statement not covered" >          this.ui.hideDialog(this.$dialog);</span>
         });
@@ -574,7 +577,7 @@ export default class LinkDialog {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Sat Nov 24 2018 21:14:15 GMT+0900 (KST)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu Mar 07 2019 19:06:13 GMT+0900 (Korean Standard Time)
 </div>
 </div>
 <script src="../../../../prettify.js"></script>

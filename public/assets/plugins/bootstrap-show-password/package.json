@@ -1,27 +1,27 @@
 {
-  "_from": "bootstrap-show-password@1.2.0",
-  "_id": "bootstrap-show-password@1.2.0",
+  "_from": "bootstrap-show-password@1.2.1",
+  "_id": "bootstrap-show-password@1.2.1",
   "_inBundle": false,
-  "_integrity": "sha512-jBOafHiRXeWfS2l9hcY4UHAYUdDk5PStcb1SOMtigABAFWDJyQp3nKTS/W7aCxvNRpkzbF6J/g5j6WRS/YIgSw==",
+  "_integrity": "sha512-AAKUC1MrXowakbP9nJBUTzUmG5XrG4/fc4abhXrBGxkutp9aK6/XlyqiuFJ04gDFhslDt/nncWNQ+pxGZYdRNQ==",
   "_location": "/bootstrap-show-password",
   "_phantomChildren": {},
   "_requested": {
     "type": "version",
     "registry": true,
-    "raw": "bootstrap-show-password@1.2.0",
+    "raw": "bootstrap-show-password@1.2.1",
     "name": "bootstrap-show-password",
     "escapedName": "bootstrap-show-password",
-    "rawSpec": "1.2.0",
+    "rawSpec": "1.2.1",
     "saveSpec": null,
-    "fetchSpec": "1.2.0"
+    "fetchSpec": "1.2.1"
   },
   "_requiredBy": [
     "#USER",
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/bootstrap-show-password/-/bootstrap-show-password-1.2.0.tgz",
-  "_shasum": "1d637ee14e7b41182632176f7bf24939db08eaa6",
-  "_spec": "bootstrap-show-password@1.2.0",
+  "_resolved": "https://registry.npmjs.org/bootstrap-show-password/-/bootstrap-show-password-1.2.1.tgz",
+  "_shasum": "96112a9f20ac3bf6340c03ef9538147ab17c15af",
+  "_spec": "bootstrap-show-password@1.2.1",
   "_where": "D:\\www\\absensi",
   "author": {
     "name": "zhixin wen",
@@ -67,5 +67,5 @@
     "docs-serve": "bundle exec jekyll serve",
     "lint": "eslint src"
   },
-  "version": "1.2.0"
+  "version": "1.2.1"
 }

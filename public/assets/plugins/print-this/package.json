@@ -1,27 +1,31 @@
 {
-  "_from": "print-this",
+  "_args": [
+    [
+      "print-this@1.15.0",
+      "D:\\www\\absensi"
+    ]
+  ],
+  "_from": "print-this@1.15.0",
   "_id": "print-this@1.15.0",
   "_inBundle": false,
   "_integrity": "sha512-G5GaBLzMZvC8tc3b8LFVsRVVcbR+d8lGpIoUvW1d0SB4iOtrwMt7wClGmZAAjDoBqKA11maxSiwNZg5gm0rPHA==",
   "_location": "/print-this",
   "_phantomChildren": {},
   "_requested": {
-    "type": "tag",
+    "type": "version",
     "registry": true,
-    "raw": "print-this",
+    "raw": "print-this@1.15.0",
     "name": "print-this",
     "escapedName": "print-this",
-    "rawSpec": "",
+    "rawSpec": "1.15.0",
     "saveSpec": null,
-    "fetchSpec": "latest"
+    "fetchSpec": "1.15.0"
   },
   "_requiredBy": [
-    "#USER",
     "/"
   ],
   "_resolved": "https://registry.npmjs.org/print-this/-/print-this-1.15.0.tgz",
-  "_shasum": "a6e9633f7068e94cbb947e5509c8f18e023bca70",
-  "_spec": "print-this",
+  "_spec": "1.15.0",
   "_where": "D:\\www\\absensi",
   "author": {
     "name": "Jason Day"
@@ -29,11 +33,9 @@
   "bugs": {
     "url": "https://github.com/jasonday/printThis/issues"
   },
-  "bundleDependencies": false,
   "dependencies": {
     "jquery": ">=1.11"
   },
-  "deprecated": false,
   "description": "Printing plug-in for jQuery",
   "homepage": "https://github.com/jasonday/printThis#readme",
   "license": "MIT",
