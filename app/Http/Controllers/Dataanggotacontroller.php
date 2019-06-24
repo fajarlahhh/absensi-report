@@ -119,7 +119,6 @@ class Dataanggotacontroller extends Controller
 							}
 						}
 
-							return $buffer1;
 						$anggota = new Anggota();
 						$anggota->anggota_nip = $req->get('anggota_nip');
 						$anggota->pegawai_id = $req->get('pegawai_id');
