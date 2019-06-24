@@ -46,7 +46,7 @@
 						</div>
 						<div class="form-group">
 							<label class="control-label">Kata Sandi</label>
-							<input data-toggle="password" class="form-control" type="password" name="pengguna_sandi" data-parsley-minlength="8" required />
+							<input class="form-control" type="password" name="pengguna_sandi" id="pengguna_sandi" data-parsley-minlength="8" required />
 						</div>
 						@else
 						<div class="form-group">
@@ -124,6 +124,7 @@
 	<script>
 		$(document).ready(function() {
 			hakakses();
+    		$('#pengguna_sandi').password()
 		});
 
 		function getId() {
