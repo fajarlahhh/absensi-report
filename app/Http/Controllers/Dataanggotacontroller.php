@@ -88,7 +88,8 @@ class Dataanggotacontroller extends Controller
 						->with('tipe', 'error');
 			}else{
 				$mesin = Mesin::where('kantor_id', $req->kantor_id)->get();
-				//return $mesin;
+				$buffer = [];
+				$response = [];
 				foreach ($mesin as $key => $msn) {
 					$Connect = fsockopen($msn->mesin_ip, "80", $errno, $errstr, 1);
 					if($Connect){
@@ -98,9 +99,9 @@ class Dataanggotacontroller extends Controller
 					    fputs($Connect, "Content-Type: text/xml".$newLine);
 					    fputs($Connect, "Content-Length: ".strlen($soap_request).$newLine.$newLine);
 					    fputs($Connect, $soap_request.$newLine);
-						$buffer="";
-						while($Response=fgets($Connect, 1024)){
-							$buffer=$buffer.$Response;
+						$buffer[$i]="";
+						while($response[$i]=fgets($Connect, 1024)){
+							$buffer[$i]=$buffer[$i].$response[$i];
 						}
 					}
 					$Connect = fsockopen($msn->mesin_ip, "80", $errno, $errstr, 1);
@@ -113,25 +114,26 @@ class Dataanggotacontroller extends Controller
 						    fputs($Connect, "Content-Type: text/xml".$newLine);
 						    fputs($Connect, "Content-Length: ".strlen($soap_request).$newLine.$newLine);
 						    fputs($Connect, $soap_request.$newLine);
-							$buffer1="";
-							while($Response1=fgets($Connect, 1024)){
-								$buffer1=$buffer1.$Response1;
+							$buffer[$i]="";
+							while($response[$i]=fgets($Connect, 1024)){
+								$buffer[$i]=$buffer[$i].$response[$i];
 							}
 						}
-
-						$anggota = new Anggota();
-						$anggota->anggota_nip = $req->get('anggota_nip');
-						$anggota->pegawai_id = $req->get('pegawai_id');
-						$anggota->kantor_id = $req->get('kantor_id');
-						$anggota->anggota_sandi = $req->get('anggota_sandi');
-						$anggota->anggota_hak_akses = $req->get('anggota_hak_akses');
-						$anggota->save();
-
-						return redirect('dataanggota')
-						->with('pesan', 'Berhasil menambah data anggota (NIP:'.$req->get('anggota_nip').')')
-						->with('judul', 'Tambah data')
-						->with('tipe', 'success');
 					}
+
+					$anggota = new Anggota();
+					$anggota->anggota_nip = $req->get('anggota_nip');
+					$anggota->pegawai_id = $req->get('pegawai_id');
+					$anggota->kantor_id = $req->get('kantor_id');
+					$anggota->anggota_sandi = $req->get('anggota_sandi');
+					$anggota->anggota_hak_akses = $req->get('anggota_hak_akses');
+					$anggota->save();
+
+					return redirect('dataanggota')
+					->with('pesan', 'Berhasil menambah data anggota (NIP:'.$req->get('anggota_nip').')')
+					->with('judul', 'Tambah data')
+					->with('tipe', 'success');
+					$i++;
 				}
 			}
 		}catch(\Exception $e){
