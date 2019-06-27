@@ -20,6 +20,6 @@ class ShiftkaryawanController extends Controller
 	{
 		$shift = Shift::all();
 		$anggota = Anggota::whereNotIn('shift_id', ShiftKaryawan::select('shift_id')->get())->get();
-		return $anggota;
+		
 	}
 }
