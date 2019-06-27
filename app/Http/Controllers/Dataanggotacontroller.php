@@ -24,13 +24,13 @@ class Dataanggotacontroller extends Controller
     {
 		$kantor = Kantor::all();
 		$kantor_id = $req->kantor? $req->kantor: $kantor{0}->kantor_id;
-    	$anggota = Anggota::leftJoin('m_kantor', 'm_anggota.kantor_id', '=', 'm_kantor.kantor_id')
+    	$anggota = Anggota::leftJoin('kantor', 'anggota.kantor_id', '=', 'kantor.kantor_id')
 		->leftJoin('personalia.pegawai', 'pegawai.id', '=', 'pegawai_id')
 		->leftJoin('personalia.jabatan', 'pegawai.kd_jabatan', '=', 'jabatan.kd_jabatan')
 		->leftJoin('personalia.bagian', 'pegawai.kd_bagian', '=', 'bagian.kd_bagian')
 		->leftJoin('personalia.unit', 'pegawai.kd_unit', '=', 'unit.kd_unit')
 		->leftJoin('personalia.seksi', 'pegawai.kd_seksi', '=', 'seksi.kd_seksi')
-		->where('m_anggota.kantor_id', $kantor_id)
+		->where('anggota.kantor_id', $kantor_id)
 		->where(
 			function($q) use ($req){
 				$q->where('nm_pegawai', 'like', '%'.$req->cari.'%')
