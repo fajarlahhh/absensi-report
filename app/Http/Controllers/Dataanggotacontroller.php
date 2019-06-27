@@ -90,6 +90,7 @@ class Dataanggotacontroller extends Controller
 				$mesin = Mesin::where('kantor_id', $req->kantor_id)->get();
 				$buffer = [];
 				$response = [];
+				$i = 0;
 				foreach ($mesin as $key => $msn) {
 					$Connect = fsockopen($msn->mesin_ip, "80", $errno, $errstr, 1);
 					if($Connect){
