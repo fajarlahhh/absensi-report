@@ -20,12 +20,10 @@ class ShiftkaryawanController extends Controller
 	{
 		$shift = Shift::all();
 		$anggota = Anggota::whereNotIn('anggota_id', ShiftKaryawan::select('anggota_id')->get())->get();
-		$data = ShiftKaryawan::where('shift_id', $req->shift? $req->shift: $shift{0}->shift_id)->paginate(10);
-		$data->appends(['cari' => $req->cari, 'shift' => $req->shift])->links();
+		$data = ShiftKaryawan::where('shift_id', $req->shift? $req->shift: $shift{0}->shift_id)->get();
 		return view('pages.administrator.shiftkaryawan.index', [
 			'datashift' => $shift,
 			'anggota' => $anggota,
-			'cari' => $req->cari,
 			'shift' => $req->shift,
 			'data' => $data
 		]);
