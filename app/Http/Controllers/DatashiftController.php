@@ -108,10 +108,10 @@ class DatashiftController extends Controller
 		}
 	}
 
-	public function hapus($nip)
+	public function hapus($id)
 	{
 		try{
-			Shift::destroy($nip);
+			Shift::destroy($id);
 			return redirect()->back()
 			->with('pesan', 'Berhasil menghapus data shift')
 			->with('judul', 'Hapus data')

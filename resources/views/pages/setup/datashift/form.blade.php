@@ -40,7 +40,7 @@
 				<div class="form-group">
 					<label class="control-label">Jam Masuk</label>
 					<div class="input-group date">
-						<input type="text" class="form-control datetimepicker" name="shift_jam_masuk" value="{{ $data? $data->shift_jam_masuk: '' }}" />
+						<input type="text" class="form-control datetimepicker" name="shift_jam_masuk" value="{{ $data? $data->shift_jam_masuk: '' }}" required/>
 						<span class="input-group-addon">
 						<i class="fa fa-clock"></i>
 						</span>
@@ -49,7 +49,7 @@
 				<div class="form-group">
 					<label class="control-label">Jam Masuk</label>
 					<div class="input-group date">
-						<input type="text" class="form-control datetimepicker" name="shift_jam_pulang" value="{{ $data? $data->shift_jam_pulang: '' }}" />
+						<input type="text" class="form-control datetimepicker" name="shift_jam_pulang" value="{{ $data? $data->shift_jam_pulang: '' }}" required/>
 						<span class="input-group-addon">
 						<i class="fa fa-clock"></i>
 						</span>

@@ -1,5 +1,9 @@
 @extends('pages.administrator.main')
 
+@push('css')
+	<link href="/assets/plugins/bootstrap-select/dist/css/bootstrap-select.min.css" rel="stylesheet" />
+@endpush
+
 @section('page')
 	<li class="breadcrumb-item active">Shift Karyawan</li>
 @endsection
@@ -25,7 +29,7 @@
                 		@csrf
 	                	<div class="form-inline pull-right">
 	                		<div class="form-group">
-								<select class="form-control selectpicker cari" data-live-search="true" id="shift" name="shift" data-style="btn-info" data-width="100%">
+								<select class="form-control selectpicker cari" data-live-search="true" id="shift" name="shift"  data-width="100%">
 									@foreach($datashift as $shf)
 									<option value="{{ $shf->shift_id }}" 
 										@if($shift == $shf->shift_id)
@@ -90,6 +94,8 @@
 @endsection
 
 @push('scripts')
+	<script src="/assets/plugins/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
+	<script src="/assets/plugins/parsleyjs/dist/parsley.js"></script>
 	<script>
 		$(".cari").change(function() {
 		     $("#frm-cari").submit();

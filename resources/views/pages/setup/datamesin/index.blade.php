@@ -67,7 +67,7 @@
 					        		<button class='btn btn-grey btn-xs'>
 					        			<i class='fa fa-pencil-alt'></i>
 					        		</button>
-	                            	<a href="javascript:;" onclick="hapus('{{ $mesin->mesin_id }}, {{ $mesin->mesin_lokasi }}')" id='btn-del' class='btn btn-danger btn-xs'><i class='fa fa-trash-alt'></i></a>
+	                            	<a href="javascript:;" onclick="hapus('{{ $mesin->mesin_id }}', '{{ $mesin->mesin_lokasi }}')" id='btn-del' class='btn btn-danger btn-xs'><i class='fa fa-trash-alt'></i></a>
 					        	</form>
 	                    		@endrole
 					        </td>

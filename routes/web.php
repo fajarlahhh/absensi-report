@@ -30,8 +30,6 @@ Route::group(['middleware' => ['auth']], function () {
 		Route::get('/shiftkaryawan', 'ShiftkaryawanController@index')->name('shiftkaryawan');
 		Route::get('/shiftkaryawan/tambah', 'ShiftkaryawanController@tambah')->middleware(['role:administrator|user']);
 		Route::post('/shiftkaryawan/tambah', 'ShiftkaryawanController@do_tambah')->middleware(['role:administrator|user']);
-		Route::get('/shiftkaryawan/download', 'ShiftkaryawanController@download')->middleware(['role:administrator|user']);
-		Route::post('/shiftkaryawan/download', 'ShiftkaryawanController@do_download')->middleware(['role:administrator|user']);
 		Route::get('/shiftkaryawan/hapus/{post}', 'ShiftkaryawanController@hapus')->middleware(['role:administrator|user']);
 	});
 

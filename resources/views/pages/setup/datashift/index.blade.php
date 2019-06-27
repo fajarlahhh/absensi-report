@@ -49,21 +49,21 @@
 						</tr>
 					</thead>
 					<tbody>
-					    @foreach ($data as $index => $mesin)
+					    @foreach ($data as $index => $shift)
 					    <tr>
 					        <td>{{ (($data->currentPage() - 1 ) * $data->perPage() ) + $loop->iteration }}</td>
-					        <td>{{ $mesin->shift_nama }}</td>
-					        <td>{{ $mesin->shift_jam_masuk }}</td>
-					        <td>{{ $mesin->shift_jam_pulang }}</td>
+					        <td>{{ $shift->shift_nama }}</td>
+					        <td>{{ $shift->shift_jam_masuk }}</td>
+					        <td>{{ $shift->shift_jam_pulang }}</td>
 					        <td class="text-right">
 					        	@role('user|administrator')
 					        	<form action="shift/edit" method="get">
 					        		@csrf
-					        		<input type="hidden" name="id" value="{{ $mesin->shift_id }}">
+					        		<input type="hidden" name="id" value="{{ $shift->shift_id }}">
 					        		<button class='btn btn-grey btn-xs'>
 					        			<i class='fa fa-pencil-alt'></i>
 					        		</button>
-	                            	<a href="javascript:;" onclick="hapus('{{ $mesin->shift_id }}, {{ $mesin->shift_nama }}')" id='btn-del' class='btn btn-danger btn-xs'><i class='fa fa-trash-alt'></i></a>
+	                            	<a href="javascript:;" onclick="hapus('{{ $shift->shift_id }}', '{{ $shift->shift_nama }}')" id='btn-del' class='btn btn-danger btn-xs'><i class='fa fa-trash-alt'></i></a>
 					        	</form>
 	                    		@endrole
 					        </td>

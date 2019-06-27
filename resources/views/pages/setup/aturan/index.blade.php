@@ -28,7 +28,7 @@
 								<div class="form-group">
 									<label class="control-label">Jam Masuk</label>
 									<div class="input-group date" >
-										<input type="text" class="form-control datetimepicker" name="aturan_masuk" value="{{ $data? $data->aturan_masuk: '' }}" />
+										<input type="text" class="form-control datetimepicker" name="aturan_masuk" value="{{ $data? $data->aturan_masuk: '' }}" required/>
 										<span class="input-group-addon">
 										<i class="fa fa-clock"></i>
 										</span>
@@ -37,7 +37,7 @@
 								<div class="form-group">
 									<label class="control-label">Jam Pulang</label>
 									<div class="input-group date" >
-										<input type="text" class="form-control datetimepicker" name="aturan_pulang" value="{{ $data? $data->aturan_pulang: '' }}" />
+										<input type="text" class="form-control datetimepicker" name="aturan_pulang" value="{{ $data? $data->aturan_pulang: '' }}" required/>
 										<span class="input-group-addon">
 										<i class="fa fa-clock"></i>
 										</span>
@@ -55,7 +55,7 @@
 								<div class="form-group">
 									<label class="control-label">Jam Masuk</label>
 									<div class="input-group date">
-										<input type="text" class="form-control datetimepicker" name="aturan_masuk_khusus" value="{{ $data? $data->aturan_masuk_khusus: '' }}" />
+										<input type="text" class="form-control datetimepicker" name="aturan_masuk_khusus" value="{{ $data? $data->aturan_masuk_khusus: '' }}" required/>
 										<span class="input-group-addon">
 										<i class="fa fa-clock"></i>
 										</span>
@@ -64,7 +64,7 @@
 								<div class="form-group">
 									<label class="control-label">Jam Pulang</label>
 									<div class="input-group date">
-										<input type="text" class="form-control datetimepicker" name="aturan_pulang_khusus" value="{{ $data? $data->aturan_pulang_khusus: '' }}" />
+										<input type="text" class="form-control datetimepicker" name="aturan_pulang_khusus" value="{{ $data? $data->aturan_pulang_khusus: '' }}" required/>
 										<span class="input-group-addon">
 										<i class="fa fa-clock"></i>
 										</span>

@@ -8,9 +8,9 @@ class ShiftKaryawan extends Model
 {
     //
     protected $table = 'shift_karyawan';
-    protected $primaryKey = 'shift_id';
+    protected $primaryKey = 'anggota_id';
     public $incrementing = false;
-    protected $timestamp = false;
+    public $timestamps = false;
 
     public function shift()
     {
