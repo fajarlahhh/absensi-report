@@ -1,7 +1,6 @@
 @extends('pages.setup.main')
 
 @push('css')
-	<link href="/assets/plugins/password-indicator/css/password-indicator.css" rel="stylesheet" />
 	<link href="/assets/plugins/bootstrap-select/dist/css/bootstrap-select.min.css" rel="stylesheet" />
 	<link href="/assets/plugins/parsleyjs/src/parsley.css" rel="stylesheet" />
 @endpush

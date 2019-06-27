@@ -78,28 +78,22 @@ class PenggunaController extends Controller
         	]
 		);
 		try{
-			DB::transaction(function () use ($req) {
-				if (Pengguna::find($req->get('pengguna_nip'))) {
-					return redirect('datapengguna/tambah')->with('eror', 'Pengguna '.$req->get('pengguna_nip').' sudah ada');
-				}else{
-					$pengguna = new Pengguna();
-					$pengguna->pegawai_id = $req->get('pegawai_id');
-					$pengguna->pengguna_nip = $req->get('pengguna_nip');
-					$pengguna->pengguna_hp = $req->get('pengguna_hp');
-					$pengguna->pengguna_sandi = Hash::make($req->get('pengguna_sandi'));
-					$pengguna->save();
-					if(in_array($req->get('pengguna_nip'), config('admin.nip')))
-						$pengguna->assignRole('Administrator');
-					else
-						$pengguna->assignRole($req->get('pengguna_level'));
+			$pengguna = new Pengguna();
+			$pengguna->pegawai_id = $req->get('pegawai_id');
+			$pengguna->pengguna_nip = $req->get('pengguna_nip');
+			$pengguna->pengguna_hp = $req->get('pengguna_hp');
+			$pengguna->pengguna_sandi = Hash::make($req->get('pengguna_sandi'));
+			$pengguna->save();
+			if(in_array($req->get('pengguna_nip'), config('admin.nip')))
+				$pengguna->assignRole('Administrator');
+			else
+				$pengguna->assignRole($req->get('pengguna_level'));
 
-					if($req->get('izin')){
-						for ($i=0; $i < sizeof($req->get('izin')); $i++) { 
-							$pengguna->givePermissionTo($req->get('izin')[$i]);
-						}
-					}
+			if($req->get('izin')){
+				for ($i=0; $i < sizeof($req->get('izin')); $i++) { 
+					$pengguna->givePermissionTo($req->get('izin')[$i]);
 				}
-			});
+			}
 			return redirect($req->get('redirect')? $req->get('redirect'): 'datapengguna')
 			->with('pesan', 'Berhasil menambah data pengguna (nip:'.$req->get('pengguna_nip').')')
 			->with('judul', 'Tambah data')

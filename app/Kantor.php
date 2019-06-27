@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Kantor extends Model
 {
     //
-    protected $table = 'm_kantor';
+    protected $table = 'kantor';
     protected $primaryKey = 'kantor_id';
     public $timestamps = false;
 

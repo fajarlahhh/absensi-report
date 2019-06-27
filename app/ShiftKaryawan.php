@@ -4,11 +4,11 @@ namespace Absensi;
 
 use Illuminate\Database\Eloquent\Model;
 
-class TglKhusus extends Model
+class ShiftKaryawan extends Model
 {
     //
-    protected $table = 'tgl_khusus';
+    protected $table = 'shift_karyawan';
+    protected $primaryKey = 'shift_id';
     public $incrementing = false;
     protected $timestamp = false;
-    protected $primaryKey = 'tgl_khusus_waktu';
 }

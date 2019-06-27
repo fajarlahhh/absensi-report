@@ -33,7 +33,7 @@ return [
 			'title' => 'Data Kantor'
 		],[
 			'url' => '/shift',
-			'title' => 'Data Shift'
+			'title' => 'Shift'
 		],[
 			'url' => '/aturan',
 			'title' => 'Aturan'

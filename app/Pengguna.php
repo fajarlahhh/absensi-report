@@ -16,7 +16,7 @@ class Pengguna extends Authenticatable
      *
      * @var array
      */
-    protected $table = 'm_pengguna';
+    protected $table = 'pengguna';
     protected $primaryKey = 'pengguna_nip';
     public $incrementing = false;
     protected $rememberTokenName = 'pengingat';

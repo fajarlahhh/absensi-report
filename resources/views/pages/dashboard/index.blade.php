@@ -21,11 +21,18 @@
 @push('scripts')
 	<script src="/assets/plugins/gritter/js/jquery.gritter.min.js"></script>
 	<script src="/assets/plugins/jquery-sparkline/jquery.sparkline.min.js"></script>
-	<script src="/assets/js/demo/dashboard.js"></script>
 	<script>
-		$(document).ready(function() {
+		$(document).ready(function() {			
             @if(Session::get('gritter_title'))
-				handleDashboardGritterNotification("{{ Session::get('gritter_title') }}", "{{ Session::get('gritter_text') }}", "{{ Session::get('gritter_image') }}");
+		    setTimeout(function() {
+				$.gritter.add({
+					title: '{{ Session::get('judul') }}',
+					text: '{{ Session::get('teks') }}',
+					sticky: true,
+					time: '',
+					class_name: 'my-sticky-class'
+				});
+			}, 1000);
 		    @endif
 		});
 	</script>

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Fingerprint extends Model
 {
     //
-    protected $table = 'm_fingerprint';
+    protected $table = 'fingerprint';
     protected $primaryKey = ['pegawai_id', 'm_fingerprint'];
     public $incrementing = false;
 }

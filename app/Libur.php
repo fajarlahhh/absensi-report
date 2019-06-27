@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Libur extends Model
 {
     //
-    protected $table = 'm_libur';
+    protected $table = 'libur';
     protected $timestamp = false;
     public $incrementing = false;
     protected $primaryKey = 'libur_tgl';

@@ -55,17 +55,13 @@ class DatamesinController extends Controller
         	]
 		);
 		try{
-			if (Mesin::find($req->get('mesin_lokasi'))) {
-				return redirect('datamesin/tambah')->with('eror', 'Mesin '.$req->get('pengguna_nip').' sudah ada');
-			}else{
-				$mesin = new Mesin();
-				$mesin->mesin_lokasi = $req->get('mesin_lokasi');
-				$mesin->mesin_ip = $req->get('mesin_ip');
-				$mesin->mesin_key = $req->get('mesin_key');
-				$mesin->kantor_id = $req->get('kantor_id');
-				$mesin->mesin_sn = $req->get('mesin_sn');
-				$mesin->save();
-			}
+			$mesin = new Mesin();
+			$mesin->mesin_lokasi = $req->get('mesin_lokasi');
+			$mesin->mesin_ip = $req->get('mesin_ip');
+			$mesin->mesin_key = $req->get('mesin_key');
+			$mesin->kantor_id = $req->get('kantor_id');
+			$mesin->mesin_sn = $req->get('mesin_sn');
+			$mesin->save();
 			return redirect($req->get('redirect')? $req->get('redirect'): 'datamesin')
 			->with('pesan', 'Berhasil menambah data mesin (lokasi:'.$req->get('mesin_lokasi').')')
 			->with('judul', 'Tambah data')

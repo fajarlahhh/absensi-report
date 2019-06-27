@@ -56,9 +56,9 @@ class LoginController extends Controller
             'password' => Input::get('password')], $remember);
         if ($attempt) {
             return Redirect::route('dashboard')
-            ->with('gritter_title', 'Selamat datang '.ucfirst(Auth::user()->pegawai->nm_pegawai).'!')
-            ->with('gritter_text', 'Selamat bekerja dan semoga sukses')
-            ->with('gritter_image', (Auth::user()->pegawai->foto? Auth::user()->pegawai->foto: '../assets/img/user/user.png'));
+            ->with('judul', 'Selamat datang '.ucfirst(Auth::user()->pegawai->nm_pegawai).'!')
+            ->with('teks', 'Selamat bekerja dan semoga sukses')
+            ->with('gambar', (Auth::user()->pegawai->foto? Auth::user()->pegawai->foto: '../assets/img/user/user.png'));
         }
         return Redirect::back()->withInput()->with('alert', 'ID Pengguna atau Kata Sandi salah');
     }

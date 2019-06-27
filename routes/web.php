@@ -26,6 +26,15 @@ Route::group(['middleware' => ['auth']], function () {
 		Route::get('/datakehadiran/hapus/{post}', 'DatakehadiranController@hapus')->middleware(['role:administrator|user']);
 	});
 
+	Route::group(['middleware' => ['auth', 'permission:shift karyawan']], function () {
+		Route::get('/shiftkaryawan', 'ShiftkaryawanController@index')->name('shiftkaryawan');
+		Route::get('/shiftkaryawan/tambah', 'ShiftkaryawanController@tambah')->middleware(['role:administrator|user']);
+		Route::post('/shiftkaryawan/tambah', 'ShiftkaryawanController@do_tambah')->middleware(['role:administrator|user']);
+		Route::get('/shiftkaryawan/download', 'ShiftkaryawanController@download')->middleware(['role:administrator|user']);
+		Route::post('/shiftkaryawan/download', 'ShiftkaryawanController@do_download')->middleware(['role:administrator|user']);
+		Route::get('/shiftkaryawan/hapus/{post}', 'ShiftkaryawanController@hapus')->middleware(['role:administrator|user']);
+	});
+
 	Route::group(['middleware' => ['auth', 'permission:hari libur']], function(){
 		Route::get('/harilibur', 'HariliburController@index')->name('harilibur');
 		Route::get('/harilibur/tambah', 'HariliburController@tambah')->middleware(['role:administrator|user']);
@@ -78,6 +87,15 @@ Route::group(['middleware' => ['auth']], function () {
 		Route::post('/datamesin/tambah', 'DatamesinController@do_tambah')->middleware(['role:administrator|user']);
 		Route::post('/datamesin/edit', 'DatamesinController@do_edit')->middleware(['role:administrator|user']);
 		Route::get('/datamesin/hapus/{post}', 'DatamesinController@hapus')->middleware(['role:administrator|user']);
+	});
+
+	Route::group(['middleware' => ['auth', 'permission:shift']], function () {
+		Route::get('/shift', 'DatashiftController@index')->name('shift');
+		Route::get('/shift/edit', 'DatashiftController@edit')->middleware(['role:administrator|user']);
+		Route::get('/shift/tambah', 'DatashiftController@tambah')->middleware(['role:administrator|user']);
+		Route::post('/shift/tambah', 'DatashiftController@do_tambah')->middleware(['role:administrator|user']);
+		Route::post('/shift/edit', 'DatashiftController@do_edit')->middleware(['role:administrator|user']);
+		Route::get('/shift/hapus/{post}', 'DatashiftController@hapus')->middleware(['role:administrator|user']);
 	});
 
 	Route::group(['middleware' => ['auth', 'permission:data kantor']], function () {

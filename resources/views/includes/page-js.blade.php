@@ -7,11 +7,9 @@
 	$(document).ready(function() {
 		App.init();
 
-		$(document).ready(function() {
-            @if(Session::get('pesan'))
-                swal("{{ Session::get('judul') }}", "{{ Session::get('pesan') }}", "{{ Session::get('tipe') }}");
-            @endif
-		});
+		@if(Session::get('pesan'))
+            swal("{{ Session::get('judul') }}", "{{ Session::get('pesan') }}", "{{ Session::get('tipe') }}");
+        @endif
 	});
 </script>
 
