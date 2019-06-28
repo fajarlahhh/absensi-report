@@ -120,9 +120,9 @@ class DatakehadiranController extends Controller
 		    fputs($Connect, "Content-Type: text/xml".$newLine);
 		    fputs($Connect, "Content-Length: ".strlen($soap_request).$newLine.$newLine);
 		    fputs($Connect, $soap_request.$newLine);
-			$buffer="";
-			while($Response=fgets($Connect, 1024)){
-				$buffer=$buffer.$Response;
+			$buffer1="";
+			while($Response1=fgets($Connect, 1024)){
+				$buffer1=$buffer1.$Response1;
 			}
 
 			return redirect('datakehadiran/download')
