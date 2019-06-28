@@ -86,11 +86,11 @@
 					        <td>{{ $anggota->pegawai_id }}</td>
 					        <td>{{ $anggota->anggota_nip }}</td>
 					        <td>{{ $anggota->nm_pegawai }}</td>
-					        <td>{{ $anggota->kantor_nama }}</td>
-					        <td>{{ $anggota->nm_unit }}</td>
-					        <td>{{ $anggota->nm_jabatan }}</td>
-					        <td>{{ $anggota->nm_bagian }}</td>
-					        <td>{{ $anggota->nm_seksi }}</td>
+					        <td>{{ $anggota->kantor->kantor_nama }}</td>
+					        <td>{{ $anggota->pegawai->unit->nm_unit }}</td>
+					        <td>{{ $anggota->pegawai->jabatan->nm_jabatan }}</td>
+					        <td>{{ $anggota->pegawai->bagian->nm_bagian }}</td>
+					        <td>{{ $anggota->pegawai->seksi->nm_seksi }}</td>
 					        <td>{{ $anggota->anggota_hak_akses == 14? 'Super Admin': 'User Biasa' }}</td>
 					        <td class="text-center">{{ $anggota->fingerprint->count() }}</td>
 					        <!--<td class="text-center">0</td>-->

@@ -24,22 +24,12 @@ class Dataanggotacontroller extends Controller
     {
 		$kantor = Kantor::all();
 		$kantor_id = $req->kantor? $req->kantor: $kantor{0}->kantor_id;
-    	$anggota = Anggota::leftJoin('kantor', 'anggota.kantor_id', '=', 'kantor.kantor_id')
-		->leftJoin('personalia.pegawai', 'pegawai.id', '=', 'pegawai_id')
-		->leftJoin('personalia.jabatan', 'pegawai.kd_jabatan', '=', 'jabatan.kd_jabatan')
-		->leftJoin('personalia.bagian', 'pegawai.kd_bagian', '=', 'bagian.kd_bagian')
-		->leftJoin('personalia.unit', 'pegawai.kd_unit', '=', 'unit.kd_unit')
-		->leftJoin('personalia.seksi', 'pegawai.kd_seksi', '=', 'seksi.kd_seksi')
-		->where('anggota.kantor_id', $kantor_id)
+    	$anggota = Anggota::leftJoin('personalia.pegawai', 'pegawai.id', '=', 'pegawai_id')
+		->where('kantor_id', $kantor_id)
 		->where(
 			function($q) use ($req){
 				$q->where('nm_pegawai', 'like', '%'.$req->cari.'%')
-				->orwhere('pegawai_id', 'like', '%'.$req->cari.'%')
-				->orwhere('nm_pegawai', 'like', '%'.$req->cari.'%')
-				->orwhere('nm_unit', 'like', '%'.$req->cari.'%')
-				->orwhere('nm_jabatan', 'like', '%'.$req->cari.'%')
-				->orwhere('nm_bagian', 'like', '%'.$req->cari.'%')
-				->orwhere('nm_seksi', 'like', '%'.$req->cari.'%');
+				->orwhere('pegawai_id', 'like', '%'.$req->cari.'%');
 			}
 		)
 		->orderBy('nm_pegawai')->paginate(10);
