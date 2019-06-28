@@ -189,7 +189,7 @@ class Dataanggotacontroller extends Controller
 		}
 	}
 
-	public function fingerprint(Request $req)
+	public function download(Request $req)
 	{
 		try{
 			$mesin = Mesin::where('kantor_id', $req->kantor_id)->get();
@@ -223,16 +223,15 @@ class Dataanggotacontroller extends Controller
 					for($a = 0; $a < count($template); $a++){
 						if((int)$this->parse($template[$a][1],"<PIN>","</PIN>") != 0){
 							Fingerprint::where('pegawai_id', (int)$this->parse($template[$a][1],"<PIN>","</PIN>"))->delete();
-							$data[$a] = array(
+							Fingerprint::insert(array(
 								'pegawai_id' => (int)$this->parse($template[$a][1],"<PIN>","</PIN>"),
 								'fingerprint_id' => (int)$this->parse($template[$a][1],"<FingerID>","</FingerID>"),
 								'fingerprint_size' => (int)$this->parse($template[$a][1],"<Size>","</Size>"),
 								'fingerprint_valid' => (int)$this->parse($template[$a][1],"<Valid>","</Valid>"),
 								'fingerprint_template' => $this->parse($template[$a][1],"<Template>","</Template>")
-							);
+							));
 						}						
 					}
-					Fingerprint::insert($data);
 				}
 				return redirect()->back()
 				->with('pesan', 'Berhasil mendownload data fingerprint')
@@ -244,6 +243,48 @@ class Dataanggotacontroller extends Controller
 				->with('judul', 'Download Fingerprint')
 				->with('tipe', 'error');
 			}
+		}catch(\Exception $e){
+			return redirect()->back()
+			->with('pesan', 'Gagal mendownload data fingerprint. Error: '.$e->getMessage())
+			->with('judul', 'Download Fingerprint')
+			->with('tipe', 'error');
+		}
+	}
+
+	public function upload(Request $req)
+	{
+		try{
+			$buffer = [];
+			$response = [];
+			$i = 0;
+			$anggota = Anggota::where('kantor_id', $req->kantor_id)->get();
+			foreach ($anggota as $key => $angg) {
+				$mesin = Mesin::where('kantor_id', $req->kantor_id)->get();
+				foreach ($mesin as $key => $msn) {
+					$Connect = fsockopen($msn->mesin_ip, "80", $errno, $errstr, 1);
+					if($Connect){
+						$fingerprint = Fingerprint::where('pegawai_id', $angg->pegawai_id)->get();
+						foreach ($fingerprint as $key => $fgr) {
+							$soap_request="<SetUserTemplate><ArgComKey xsi:type=\"xsd:integer\">".$msn->mesin_key."</ArgComKey><Arg><PIN xsi:type=\"xsd:integer\">".$angg->pegawai_id."</PIN><FingerID xsi:type=\"xsd:integer\">".$fgr->fingerprint_id."</FingerID><Size>".strlen($fgr->fingerprint_template)."</Size><Valid>1</Valid><Template>".$fgr->fingerprint_template."</Template></Arg></SetUserTemplate>";
+							$newLine="\r\n";
+							fputs($Connect, "POST /iWsService HTTP/1.0".$newLine);
+						    fputs($Connect, "Content-Type: text/xml".$newLine);
+						    fputs($Connect, "Content-Length: ".strlen($soap_request).$newLine.$newLine);
+						    fputs($Connect, $soap_request.$newLine);
+							$buffer[$i]="";
+							while($response[$i]=fgets($Connect, 1024)){
+								$buffer[$i]=$buffer[$i].$response[$i];
+							}
+							$i++;
+						}
+					}
+				}
+			}
+
+			return redirect('dataanggota')
+			->with('pesan', 'Berhasil mengupload data fingerprint')
+			->with('judul', 'Tambah data')
+			->with('tipe', 'success');
 		}catch(\Exception $e){
 			return redirect()->back()
 			->with('pesan', 'Gagal mendownload data fingerprint. Error: '.$e->getMessage())

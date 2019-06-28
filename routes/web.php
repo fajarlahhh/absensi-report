@@ -109,10 +109,9 @@ Route::group(['middleware' => ['auth']], function () {
 		Route::get('/dataanggota', 'Dataanggotacontroller@index')->name('dataanggota');
 		Route::get('/dataanggota/tambah', 'Dataanggotacontroller@tambah')->middleware(['role:administrator|user']);
 		Route::post('/dataanggota/tambah', 'Dataanggotacontroller@do_tambah')->middleware(['role:administrator|user']);
-		Route::post('/dataanggota/fingerprint', 'Dataanggotacontroller@fingerprint')->middleware(['role:administrator|user']);
+		Route::post('/dataanggota/download', 'Dataanggotacontroller@download')->middleware(['role:administrator|user']);
+		Route::post('/dataanggota/upload', 'Dataanggotacontroller@upload')->middleware(['role:administrator|user']);
 		Route::get('/dataanggota/hapus/{post}', 'Dataanggotacontroller@hapus')->middleware(['role:administrator|user']);
-		Route::get('/dataanggota/upload', 'Dataanggotacontroller@upload')->middleware(['role:administrator|user']);
-		Route::post('/dataanggota/upload', 'Dataanggotacontroller@do_upload')->middleware(['role:administrator|user']);
 	});
 });
 

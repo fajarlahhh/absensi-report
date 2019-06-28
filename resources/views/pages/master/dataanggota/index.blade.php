@@ -17,11 +17,16 @@
             	@role('user|administrator')
                     <div class="form-inline">
 		                <a href="/dataanggota/tambah" class="btn btn-primary">Tambah</a>&nbsp;
-		                <form id="frm-fingerprint" action="/dataanggota/fingerprint" method="post">
+		                <form id="frm-download" action="/dataanggota/download" method="post">
 	                		@csrf
 		                	<input type="hidden" name="kantor_id" value="{{ $kantor_id }}">
 		                </form>&nbsp; 
-		                <a href="#" class="btn btn-success" onclick="fingerprint('{{ $kantor_id }}')">Download Fingerprint</a>&nbsp;
+		                <form id="frm-upload" action="/dataanggota/upload" method="post">
+	                		@csrf
+		                	<input type="hidden" name="kantor_id" value="{{ $kantor_id }}">
+		                </form>&nbsp; 
+		                <a href="#" class="btn btn-success" onclick="dl('{{ $kantor_id }}')">Download Fingerprint</a>&nbsp;
+		                <a href="#" class="btn btn-info" onclick="upload('{{ $kantor_id }}')">Upload Fingerprint</a>&nbsp;
 		                <!--<a href="/dataanggota/face" class="btn btn-info">Download FaceID</a>-->
 		            </div>
                 @endrole
@@ -117,10 +122,10 @@
 		     $("#frm-kantor").submit();
 		});
 
-		function fingerprint(id) {
+		function dl(id) {
 			swal({
 				title: 'Download fingerprint',
-				text: 'Aapakah anda akan menimpa data fingerprint anggota yang sudah tersimpan?',
+				text: 'Apakah anda akan menimpa data fingerprint anggota yang sudah tersimpan?',
 				icon: 'warning',
 				buttons: {
 					cancel: {
@@ -140,7 +145,35 @@
 				}
 			}).then(function(isConfirm) {
 		      	if (isConfirm) {
-		     		$("#frm-fingerprint").submit();
+		     		$("#frm-download").submit();
+		      	}
+		    });
+		}
+
+		function upload(id) {
+			swal({
+				title: 'Upload fingerprint',
+				text: 'Apakah anda akan menimpa data fingerprint anggota pada mesin?',
+				icon: 'warning',
+				buttons: {
+					cancel: {
+						text: 'Batal',
+						value: null,
+						visible: true,
+						className: 'btn btn-default',
+						closeModal: true,
+					},
+					confirm: {
+						text: 'Ya',
+						value: true,
+						visible: true,
+						className: 'btn btn-danger',
+						closeModal: true
+					}
+				}
+			}).then(function(isConfirm) {
+		      	if (isConfirm) {
+		     		$("#frm-upload").submit();
 		      	}
 		    });
 		}	
