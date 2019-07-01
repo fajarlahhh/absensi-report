@@ -27,10 +27,10 @@
 			@csrf
 			<div class="panel-body">
 				<div class="form-group input-group-sm">
-					<label class="control-label">Lokasi</label>
-					<select class="form-control selectpicker" data-live-search="true" name="mesin_id" data-style="btn-info" data-width="100%">
-						@foreach($mesin as $msn)
-						<option value="{{ $msn->mesin_id }}">{{ $msn->mesin_lokasi." - ".$msn->kantor->kantor_nama }}</option>
+					<label class="control-label">Kantor</label>
+					<select class="form-control selectpicker" data-live-search="true" name="kantor_id" data-style="btn-info" data-width="100%">
+						@foreach($kantor as $ktr)
+						<option value="{{ $ktr->kantor_id }}">{{ $ktr->kantor_nama }}</option>
 						@endforeach
 					</select>
 				</div>

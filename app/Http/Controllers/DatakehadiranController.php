@@ -5,6 +5,7 @@ namespace Absensi\Http\Controllers;
 use Illuminate\Http\Request;
 use Absensi\Kehadiran;
 use Absensi\Anggota;
+use Absensi\Kantor;
 use Absensi\Mesin;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -46,10 +47,10 @@ class DatakehadiranController extends Controller
 
     public function download()
 	{
-		$mesin = Mesin::all();
+		$kantor = Kantor::all();
 		return view('pages.absensi.datakehadiran.download',[
 			'data' => null,
-			'mesin' => $mesin
+			'kantor' => $kantor
 		]);
 	}
 
@@ -70,68 +71,86 @@ class DatakehadiranController extends Controller
 	{
 		$req->validate(
 			[
-				'mesin_id' => 'required',
+				'kantor_id' => 'required',
 			],[
-         	   'mesin_id.required' => 'Lokasi tidak boleh kosong',
+         	   	'kantor_id.required' => 'Kantor tidak boleh kosong',
         	]
 		);
 		try{
-			$mesin = Mesin::find($req->mesin_id);
+			$mesin = Mesin::where('kantor_id', $req->kantor_id)->get();
+			if(count($mesin) > 0){
+				$anggota = Anggota::where('kantor_id', $req->kantor_id)->get();
+				$template = [];
+				$i = 0;
 
-			$Connect = fsockopen($mesin->mesin_ip, "80", $errno, $errstr, 1);
-			if($Connect){
+				foreach ($mesin as $key => $msn) {
+					$Connect = fsockopen($msn->mesin_ip, "80", $errno, $errstr, 1);
+					if($Connect){
 
-				$soap_request="<GetAttLog><ArgComKey xsi:type=\"xsd:integer\">".$mesin->mesin_key."</ArgComKey><Arg><PIN xsi:type=\"xsd:integer\">All</PIN></Arg></GetAttLog>";
-				$newLine="\r\n";
-				fputs($Connect, "POST /iWsService HTTP/1.0".$newLine);
-			    fputs($Connect, "Content-Type: text/xml".$newLine);
-			    fputs($Connect, "Content-Length: ".strlen($soap_request).$newLine.$newLine);
-			    fputs($Connect, $soap_request.$newLine);
-				$buffer="";
-				while($Response=fgets($Connect, 1024)){
-					$buffer=$buffer.$Response;
+						$soap_request="<GetAttLog><ArgComKey xsi:type=\"xsd:integer\">".$msn->mesin_key."</ArgComKey><Arg><PIN xsi:type=\"xsd:integer\">All</PIN></Arg></GetAttLog>";
+						$newLine="\r\n";
+						fputs($Connect, "POST /iWsService HTTP/1.0".$newLine);
+					    fputs($Connect, "Content-Type: text/xml".$newLine);
+					    fputs($Connect, "Content-Length: ".strlen($soap_request).$newLine.$newLine);
+					    fputs($Connect, $soap_request.$newLine);
+						$buffer="";
+						while($Response=fgets($Connect, 1024)){
+							$buffer=$buffer.$Response;
+						}
+					}else {
+						return redirect('datakehadiran')
+						->with('pesan', 'Gagal mendownload data kehadiran ('.$errno.')')
+						->with('judul', 'Download data')
+						->with('tipe', 'error');
+					}
+					$buffer = $this->parse($buffer,"<GetAttLogResponse>","</GetAttLogResponse>");
+					$buffer = explode("\r\n",$buffer);
+					for($i=0;$i<count($buffer);$i++){
+						$data = $this->parse($buffer[$i],"<Row>","</Row>");
+						if($data){
+							$kehadiran = new Kehadiran();
+							$kehadiran->kantor_id = $msn->kantor_id;
+							$kehadiran->pegawai_id = (int)$this->parse($data,"<PIN>","</PIN>");
+							$kehadiran->kehadiran_tgl =  $this->parse($data,"<DateTime>","</DateTime>");
+							$kehadiran->kehadiran_kode = $this->parse($data,"<Status>","</Status>");
+		    				$kehadiran->kehadiran_status = 'M';
+		    				$kehadiran->operator = Auth::user()->pegawai->nm_pegawai;
+							$kehadiran->save();
+						}
+					}
+
+					$Connect1 = fsockopen($msn->mesin_ip, "80", $errno, $errstr, 1);
+					if($Connect1){
+						$soap_request="<ClearData><ArgComKey xsi:type=\"xsd:integer\">".$msn->mesin_key."</ArgComKey><Arg><Value xsi:type=\"xsd:integer\">3</Value></Arg></ClearData>";
+						$newLine="\r\n";
+						fputs($Connect1, "POST /iWsService HTTP/1.0".$newLine);
+					    fputs($Connect1, "Content-Type: text/xml".$newLine);
+					    fputs($Connect1, "Content-Length: ".strlen($soap_request).$newLine.$newLine);
+					    fputs($Connect1, $soap_request.$newLine);
+						$buffer1="";
+						while($Response1=fgets($Connect1, 1024)){
+							$buffer1=$buffer1.$Response1;
+						}
+					}else {
+						return redirect('datakehadiran')
+						->with('pesan', 'Gagal menghapus data kehadiran ('.$errno.')')
+						->with('judul', 'Download data')
+						->with('tipe', 'error');
+					}
 				}
-			}else {
-				return redirect('datakehadiran')
-				->with('pesan', 'Gagal mendownload data kehadiran ('.$errno.')')
-				->with('judul', 'Download data')
+				return redirect()->back()
+				->with('pesan', 'Berhasil mendownload data kehadiran')
+				->with('judul', 'Download Fingerprint')
+				->with('tipe', 'success');
+			}else{
+				return redirect()->back()
+				->with('pesan', 'Gagal mendownload data kehadiran. Data mesin tidak tersedia untuk kantor ini')
+				->with('judul', 'Download Fingerprint')
 				->with('tipe', 'error');
 			}
-			$buffer = $this->parse($buffer,"<GetAttLogResponse>","</GetAttLogResponse>");
-			$buffer = explode("\r\n",$buffer);
-			for($i=0;$i<count($buffer);$i++){
-				$data = $this->parse($buffer[$i],"<Row>","</Row>");
-				if($data){
-					$kehadiran = new Kehadiran();
-					$kehadiran->kantor_id = $mesin->kantor_id;
-					$kehadiran->pegawai_id = (int)$this->parse($data,"<PIN>","</PIN>");
-					$kehadiran->kehadiran_tgl =  $this->parse($data,"<DateTime>","</DateTime>");
-					$kehadiran->kehadiran_kode = $this->parse($data,"<Status>","</Status>");
-    				$kehadiran->kehadiran_status = 'M';
-    				$kehadiran->operator = Auth::user()->pegawai->nm_pegawai;
-					$kehadiran->save();
-				}
-			}
-
-
-			$soap_request="<ClearData><ArgComKey xsi:type=\"xsd:integer\">".$mesin->mesin_key."</ArgComKey><Arg><Value xsi:type=\"xsd:integer\">3</Value></Arg></ClearData>";
-			$newLine="\r\n";
-			fputs($Connect, "POST /iWsService HTTP/1.0".$newLine);
-		    fputs($Connect, "Content-Type: text/xml".$newLine);
-		    fputs($Connect, "Content-Length: ".strlen($soap_request).$newLine.$newLine);
-		    fputs($Connect, $soap_request.$newLine);
-			$buffer1="";
-			while($Response1=fgets($Connect, 1024)){
-				$buffer1=$buffer1.$Response1;
-			}
-
-			return redirect('datakehadiran/download')
-			->with('pesan', 'Berhasil mendownload data kehadiran '.$mesin->mesin_lokasi.'')
-			->with('judul', 'Download data')
-			->with('tipe', 'success');
 		}catch(\Exception $e){
 			return redirect($req->get('redirect')? $req->get('redirect'): 'datakehadiran/download')
-			->with('pesan', 'Gagal mendownload data kehadiran '.$mesin->mesin_lokasi.'. Error: '.$e->getMessage())
+			->with('pesan', 'Gagal mendownload data kehadiran. Error: '.$e->getMessage())
 			->with('judul', 'Download data')
 			->with('tipe', 'error');
 		}

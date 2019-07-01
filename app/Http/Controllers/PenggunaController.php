@@ -136,24 +136,22 @@ class PenggunaController extends Controller
         	]
 		);
 		try{
-			DB::transaction(function () use ($req) {
-				DB::table('m_izin_model')->where('pengguna_nip', $req->get('pengguna_nip'))->delete();
-				$pengguna = new Pengguna();
-				$pengguna->exists = true;
-				$pengguna->pengguna_nip = $req->get('pengguna_nip');
-				$pengguna->pengguna_hp = $req->get('pengguna_hp');
-				$pengguna->save();
-				$pengguna->removeRole($pengguna->getRoleNames()[0]);
-				if(in_array($req->get('pengguna_nip'), config('admin.nip')))
-					$pengguna->assignRole('Administrator');
-				else
-					$pengguna->assignRole($req->get('pengguna_level'));
-				if($req->get('izin')){
-					for ($i=0; $i < sizeof($req->get('izin')); $i++) { 
-						$pengguna->givePermissionTo($req->get('izin')[$i]);
-					}
+			DB::table('model_has_permissions')->where('pengguna_nip', $req->get('pengguna_nip'))->delete();
+			$pengguna = new Pengguna();
+			$pengguna->exists = true;
+			$pengguna->pengguna_nip = $req->get('pengguna_nip');
+			$pengguna->pengguna_hp = $req->get('pengguna_hp');
+			$pengguna->save();
+			$pengguna->removeRole($pengguna->getRoleNames()[0]);
+			if(in_array($req->get('pengguna_nip'), config('admin.nip')))
+				$pengguna->assignRole('Administrator');
+			else
+				$pengguna->assignRole($req->get('pengguna_level'));
+			if($req->get('izin')){
+				for ($i=0; $i < sizeof($req->get('izin')); $i++) { 
+					$pengguna->givePermissionTo($req->get('izin')[$i]);
 				}
-			});
+			}
 			return redirect($req->get('redirect')? $req->get('redirect'): 'datapengguna')
 			->with('pesan', 'Berhasil mengedit data pengguna (nip:'.$req->get('pengguna_nip').')')
 			->with('judul', 'Edit data')

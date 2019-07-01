@@ -32,15 +32,15 @@
 			<!-- begin nav-pills -->
 			<ul class="nav nav-pills">
 				<li class="nav-items">
-					<a href="#nav-pills-tab-1" data-toggle="tab" class="nav-link active">
-						<span class="d-sm-none">Login</span>
-						<span class="d-sm-block d-none">Login Form</span>
+					<a href="#nav-pills-tab-2" data-toggle="tab" class="nav-link active">
+						<span class="d-sm-none">Absensi</span>
+						<span class="d-sm-block d-none">Absensi Karyawan</span>
 					</a>
 				</li>
 				<li class="nav-items">
-					<a href="#nav-pills-tab-2" data-toggle="tab" class="nav-link">
-						<span class="d-sm-none">Absensi</span>
-						<span class="d-sm-block d-none">Absensi Karyawan</span>
+					<a href="#nav-pills-tab-1" data-toggle="tab" class="nav-link">
+						<span class="d-sm-none">Login</span>
+						<span class="d-sm-block d-none">Login Form</span>
 					</a>
 				</li>
 			</ul>
@@ -48,7 +48,7 @@
 			<!-- begin tab-content -->
 			<div class="tab-content bg-transparent p-0">
 				<!-- begin tab-pane -->
-				<div class="tab-pane fade active show" id="nav-pills-tab-1">
+				<div class="tab-pane fade" id="nav-pills-tab-1">
 					<br>
 					<form action="{{ route('login') }}" method="POST" class="margin-bottom-0" data-parsley-validate="true" data-parsley-errors-messages-disabled="">
 						@csrf
@@ -71,7 +71,7 @@
 				</div>
 				<!-- end tab-pane -->
 				<!-- begin tab-pane -->
-				<div class="tab-pane fade" id="nav-pills-tab-2">
+				<div class="tab-pane fade active show" id="nav-pills-tab-2">
 					<br>
 					<form action="{{ route('absensikaryawan') }}" method="get" class="margin-bottom-0" data-parsley-validate="true" data-parsley-errors-messages-disabled="">
 						@csrf
@@ -98,7 +98,7 @@
 			
 			<br>
 			© 2019 | <a href="http://www.pdamgirimenang.com" target="_blank">PDAM Giri Menang</a>
-			<small class="float-right pt-1">V2.0</small>
+			<small class="float-right pt-1">v1.0</small>
 		</div>
 		<!-- end login-content -->
 	</div>

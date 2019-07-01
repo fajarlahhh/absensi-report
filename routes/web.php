@@ -26,6 +26,11 @@ Route::group(['middleware' => ['auth']], function () {
 		Route::get('/datakehadiran/hapus/{post}', 'DatakehadiranController@hapus')->middleware(['role:administrator|user']);
 	});
 
+	Route::group(['middleware' => ['auth', 'permission:posting absensi']], function () {
+		Route::get('/postingabsensi', 'PostingabsenController@index')->name('postingabsensi');
+		Route::post('/postingabsensi', 'PostingabsenController@posting')->middleware(['role:administrator|user']);
+	});
+
 	Route::group(['middleware' => ['auth', 'permission:shift karyawan']], function () {
 		Route::get('/shiftkaryawan', 'ShiftkaryawanController@index')->name('shiftkaryawan');
 		Route::get('/shiftkaryawan/tambah', 'ShiftkaryawanController@tambah')->middleware(['role:administrator|user']);
