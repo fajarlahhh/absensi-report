@@ -4,9 +4,7 @@ namespace Absensi\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Absensi\Anggota;
-use Absensi\Kehadiran;
-use Absensi\Aturan;
-use Absensi\Libur;
+use Absensi\Absen;
 use Illuminate\Support\Facades\DB;
 
 class RekapabsensiController extends Controller
@@ -20,43 +18,36 @@ class RekapabsensiController extends Controller
 
     public function index(Request $req)
     {
-    	$tgl1 = ($req->tgl1? date('Y-m-d', strtotime($req->tgl1)): date('Y-m-1'));
-    	$tgl2 = ($req->tgl2? date('Y-m-d', strtotime($req->tgl2)): date('Y-m-d'));
-    	$diff = date_diff(date_create($tgl1), date_create($tgl2))->format("%a") + 1;
-        $hari = $req->hari ? $req->hari: 1;
-    	$absensi = [];
-    	$anggota = Anggota::select('pegawai_id')->get();
-    	$aturan = Aturan::first();
-        $libur = Libur::whereRaw("date(libur_tgl) between '".$tgl1."' and '".$tgl2."'")->get();
-    	$j = 0;
-    	foreach ($anggota as $index => $angg){
-    		$absensi[$j][0] = $angg->pegawai->nip;
-    		$absensi[$j][1] = $angg->pegawai->nm_pegawai;
-
-    		for($i=2; $i < $diff + 2; $i++){
-    			$kehadiran = Kehadiran::selectRaw('ifnull(DATE_FORMAT(kehadiran_tgl,\'%H:%i:%s\'), "") waktu, concat(kehadiran_kode, \' - \', kehadiran_keterangan) kehadiran_kode' )
-			    	->whereIn('pegawai_id', [$angg->pegawai_id])
-			    	->whereRaw("date(kehadiran_tgl) = '".date('Y-m-d', strtotime($tgl1. ' + '.($i-2).' days'))."'")
-			    	->orderBy('kehadiran_tgl', 'asc')
-                    ->where(function($query) {
-                         $query->where('kehadiran_kode', 0);
-                         $query->orWhere('kehadiran_status', 'I');
-                     })
-			    	->first();
-
-    			$absensi[$j][$i] = ($kehadiran? ($kehadiran->waktu == '00:00:00'? $kehadiran->kehadiran_kode: $kehadiran->waktu): '');
-    		}
-    		$j++;   	
+    	
+        $tanggal = explode(' - ', $req->get('tgl'));
+        $tgl1 = ($req->get('tgl')? date('Y-m-d', strtotime($tanggal[0])): date('Y-m-01'));
+        $tgl2 = ($req->get('tgl')? date('Y-m-d', strtotime($tanggal[1])): date('Y-m-d'));
+        $diff = date_diff(date_create($tgl1), date_create($tgl2))->format("%a") + 1;
+        $absensi = [];
+        $anggota = Anggota::get();
+        $x=0;
+        foreach ($anggota as $key => $angg) {
+            $absensi[$x][0] = $angg->pegawai->nip;
+            $absensi[$x][1] = $angg->pegawai->nm_pegawai;
+            $absen = Absen::selectRaw("
+                sum(if(absen_hari = 'b', 1, 0)) `hari`, 
+                sum(if(absen_masuk_telat, 1, 0)) `telat`, 
+                sum(if(absen_masuk, 1, 0)) `masuk`, 
+                sum(if(absen_izin = 'Sakit', 1, 0)) `sakit`, 
+                sum(if(absen_izin = 'Izin', 1, 0)) `izin`, 
+                sum(if(absen_izin = 'Dispensasi', 1, 0)) `dispensasi`, 
+                sum(if(absen_izin = 'Tugas Dinas', 1, 0)) `dinas`, 
+                sum(if(absen_izin = 'Cuti', 1, 0)) `cuti`, 
+                sum(if(absen_izin = 'Lain-lain', 1, 0)) `lain`")->where('pegawai_id', $angg->pegawai_id)->whereBetween('absen_tgl', [$tgl1, $tgl2])->groupBy('pegawai_id')->get();
+            $y=2;
+            foreach ($absen as $key => $abs) {
+                $absensi[$x][$y] = $absen;
+            }
         }
-
     	return view('pages.laporan.rekapabsensi.index',[
-    		'absensi' => $absensi,
-            'aturan' => $aturan,
-            'libur' => $libur,
-            'hari' => $hari,
-			'diff' => $diff,
-    		'tgl1' => $tgl1,
-    		'tgl2' => $tgl2
+            'diff' => $diff,
+            'absensi' => $absensi,
+            'tgl' => date('d F Y', strtotime($tgl1)).' - '.date('d F Y', strtotime($tgl2))
     	]);
     }
 }

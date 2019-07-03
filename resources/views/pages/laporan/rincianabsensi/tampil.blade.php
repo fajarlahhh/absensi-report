@@ -19,29 +19,73 @@
 			</div>
 		</div>
 		<div class=" bg-grey-transparent-5 p-20">
-			<div class="table-responsive  bg-grey-transparent-5 p-20" >
+			<div class="table-responsive bg-grey-transparent-5 p-20" >				
 				<table class="table table-bordered" id="laporan">
-	                <thead>
+                    <thead>
 						<tr>
-							<th>NIP</th>
-							<th width="300">Nama</th>
-							@for($i=0; $i < $diff; $i++)
-							<th width="220" class="{{ strpos($aturan->aturan_hari_libur, date('N', strtotime($tgl1. ' + '.$i.' days')))  !== false?'bg-red-transparent-3': ($libur->find(date('Y-m-d', strtotime($tgl1. ' + '.$i.' days')))? 'bg-red-transparent-3': '' ) }}">{{ date('d M Y', strtotime($tgl1. ' + '.$i.' days')) }}</th>
+							<th rowspan="2">NIP</th>
+							<th rowspan="2" width="300">Nama</th>
+							@for($i=0; $i < sizeof($absensi[0][2]); $i++)
+							@php
+								switch($absensi[0][2][$i]->absen_hari){
+									case 'l':
+										$bg = "bg-red-transparent-3";
+										break;
+									case 'k':
+										$bg = "bg-yellow-transparent-3";
+										break;
+									default:
+										$bg = "";
+										break;
+								}
+							@endphp
+					        <th colspan="2" class="{{ $bg }} text-center">{{ date('d M Y', strtotime($absensi[0][2][$i]->absen_tgl)) }}<br><small>{{ $absensi[0][2][$i]->absen_tgl_keterangan }}</small></th>
+							@endfor
+						</tr>
+						<tr>
+							@for($i=0; $i < sizeof($absensi[0][2]); $i++)
+							@php
+								switch($absensi[0][2][$i]->absen_hari){
+									case 'l':
+										$bg = "bg-red-transparent-3";
+										break;
+									case 'k':
+										$bg = "bg-yellow-transparent-3";
+										break;
+									default:
+										$bg = "";
+										break;
+								}
+							@endphp
+							<td class="text-center {{ $bg }}">Masuk</td>
+							<td class="text-center {{ $bg }}">Telat</td>
 							@endfor
 						</tr>
 					</thead>
 					<tbody>
-					    <tr>
 					    @for($i = 0; $i < count($absensi); $i++)
-					    	@if($i == 0)
-					        <td>{{ $absensi[$i] }}</td>
-					        @elseif($i == 1)
-					        <td>{{ $absensi[$i] }}</td>
-					        @else
-							<td class="text-center {{ (strpos($aturan->aturan_hari_libur, date('N', strtotime($tgl1. ' + '.($i-2).' days'))) !== false? 'bg-red-transparent-3': ($libur->find(date('Y-m-d', strtotime($tgl1. ' + '.($i-2).' days')))? 'bg-red-transparent-3': (strpos($absensi[$i], '-') !== false? (substr($absensi[$i], 0, 2) == 11 || substr($absensi[$i], 0, 2) == 12? 'bg-blue-transparent-3': (substr($absensi[$i], 0, 2) == 13 || substr($absensi[$i], 0, 2) == 14? 'bg-yellow-transparent-3': 'bg-grey-transparent-3')): (strlen($absensi[$i]) == 8? ((int)str_replace(':','',$absensi[$i]) <= (int)str_replace(':','',($khusus->filter(function($item) use ($tgl1, $i){ return $item->tgl_khusus_waktu == date('Y-m-d', strtotime($tgl1. ' + '.($i-2).' days')); })->first()? $aturan->aturan_masuk_khusus: $aturan->aturan_masuk))? 'bg-green-transparent-3': 'bg-orange-transparent-3'): '')) )) }}">{{ strpos($absensi[$i], '-') !== false? (substr($absensi[$i], 0, 2) == 11? 'Sakit ('.substr($absensi[$i], 5).')': (substr($absensi[$i], 0, 2) == 12? 'Izin ('.substr($absensi[$i], 5).')': (substr($absensi[$i], 0, 2) == 13? 'Dispensasi ('.substr($absensi[$i], 5).')': (substr($absensi[$i], 0, 2) == 14? 'Tugas Dinas ('.substr($absensi[$i], 5).')': (substr($absensi[$i], 0, 2) == 15? 'Cuti': 'Lain-lain'))))): $absensi[$i] }}</td>
-							@endif
-						@endfor
+					    <tr>
+					        <td>{{ $absensi[$i][0] }}</td>
+					        <td>{{ $absensi[$i][1] }}</td>
+							@for($j=0; $j < sizeof($absensi[$i][2]); $j++)
+							@php
+								switch($absensi[$i][2][$j]->absen_hari){
+									case 'l':
+										$bg = "bg-red-transparent-3";
+										break;
+									case 'k':
+										$bg = "bg-yellow-transparent-3";
+										break;
+									default:
+										$bg = "";
+										break;
+								}
+							@endphp
+					        <td class="text-center {{ $bg }}">{{ $absensi[$i][2][$j]->absen_masuk? date('H:i:s', strtotime($absensi[$i][2][$j]->absen_masuk)): '' }}</td>
+					        <td class="text-center {{ $bg }}">{{ $absensi[$i][2][$j]->absen_hari == "b"? $absensi[$i][2][$j]->absen_masuk_telat? date('H:i:s', strtotime($absensi[$i][2][$j]->absen_masuk_telat)): '': '' }}</td>
+							@endfor
 				      	</tr>
+					    @endfor
 				    </tbody>
 				</table>
 			</div>

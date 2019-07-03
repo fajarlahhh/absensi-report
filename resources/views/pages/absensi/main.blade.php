@@ -1,6 +1,6 @@
 @extends('layouts.default')
 
-@section(config("app.name"), ' | Setup')
+@section('title', ' | Absensi')
 
 @section('content')
 	<!-- begin breadcrumb -->

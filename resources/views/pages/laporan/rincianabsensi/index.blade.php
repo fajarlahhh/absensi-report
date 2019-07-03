@@ -1,8 +1,7 @@
 @extends('pages.laporan.main')
 
 @push('css')
-	<link href="/assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker.css" rel="stylesheet" />
-	<link href="/assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.css" rel="stylesheet" />
+	<link href="/assets/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet" />
 @endpush
 
 @section('page')
@@ -18,21 +17,18 @@
 		<!-- begin panel-heading -->
 		<div class="panel-heading">
 			<div class="row">
-                <div class="col-md-12 col-lg-3 col-xl-3 col-xs-12">
+                <div class="col-md-12 col-lg-8 col-xl-8 col-xs-12">
                 	<a href="#" class="btn btn-warning" onclick="cetak()">Cetak</a>&nbsp;
                 </div>
-                <div class="col-md-12 col-lg-9 col-xl-9 col-xs-12">
+                <div class="col-md-12 col-lg-4 col-xl-4 col-xs-12">
 	            	<form id="frm-cari" action="/rinciankehadiran" method="GET">
 	            		@csrf
-	                	<div class="form-inline pull-right">
-							<div class="form-group">
-								<input type="text" readonly class="form-control cari" id="datepicker1" name="tgl1" placeholder="Tgl. Mulai" value="{{ date('d F Y', strtotime($tgl1)) }}"/>
-							</div>
-		                    &nbsp;s/d&nbsp;
-							<div class="form-group">
-								<input type="text" readonly class="form-control cari" id="datepicker2" name="tgl2" placeholder="Tgl. Akhir" value="{{ date('d F Y', strtotime($tgl2)) }}" data-date-end-date="0d"/>
-		                    </div>
-	                	</div>
+						<div class="input-group" id="default-daterange">
+							<input type="text" name="tgl" class="form-control" value="{{ $tgl }}" placeholder="Pilih Tanggal Izin" readonly onchange="submit()" />
+							<span class="input-group-append">
+							<span class="input-group-text"><i class="fa fa-calendar"></i></span>
+							</span>
+						</div>
 					</form>
                 </div>
 			</div>
@@ -42,10 +38,43 @@
 				<table class="table table-bordered" id="laporan">
                     <thead>
 						<tr>
-							<th>NIP</th>
-							<th width="300">Nama</th>
-							@for($i=0; $i < $diff; $i++)
-							<th width="220" class="{{ strpos($aturan->aturan_hari_libur, date('N', strtotime($tgl1. ' + '.$i.' days')))  !== false?'bg-red-transparent-3': ($libur->find(date('Y-m-d', strtotime($tgl1. ' + '.$i.' days')))? 'bg-red-transparent-3': '' ) }}">{{ date('d M Y', strtotime($tgl1. ' + '.$i.' days')) }}</th>
+							<th rowspan="2">NIP</th>
+							<th rowspan="2" width="300">Nama</th>
+							@for($i=0; $i < sizeof($absensi[0][2]); $i++)
+							@php
+								switch($absensi[0][2][$i]->absen_hari){
+									case 'l':
+										$bg = "bg-red-transparent-3";
+										break;
+									case 'k':
+										$bg = "bg-yellow-transparent-3";
+										break;
+									default:
+										$bg = "";
+										break;
+								}
+							@endphp
+					        <th colspan="3" class="{{ $bg }} text-center">{{ date('d M Y', strtotime($absensi[0][2][$i]->absen_tgl)) }}<br><small>{{ $absensi[0][2][$i]->absen_tgl_keterangan }}</small></th>
+							@endfor
+						</tr>
+						<tr>
+							@for($i=0; $i < sizeof($absensi[0][2]); $i++)
+							@php
+								switch($absensi[0][2][$i]->absen_hari){
+									case 'l':
+										$bg = "bg-red-transparent-3";
+										break;
+									case 'k':
+										$bg = "bg-yellow-transparent-3";
+										break;
+									default:
+										$bg = "";
+										break;
+								}
+							@endphp
+							<td class="text-center {{ $bg }}">Masuk</td>
+							<td class="text-center {{ $bg }}">Telat</td>
+							<td class="text-center {{ $bg }}">Izin</td>
 							@endfor
 						</tr>
 					</thead>
@@ -54,8 +83,23 @@
 					    <tr>
 					        <td>{{ $absensi[$i][0] }}</td>
 					        <td>{{ $absensi[$i][1] }}</td>
-							@for($j=2; $j <= $diff+1; $j++)
-							<td class="text-center {{ (strpos($aturan->aturan_hari_libur, date('N', strtotime($tgl1. ' + '.($j-2).' days'))) !== false? 'bg-red-transparent-3': ($libur->find(date('Y-m-d', strtotime($tgl1. ' + '.($j-2).' days')))? 'bg-red-transparent-3': (strpos($absensi[$i][$j], '-') !== false? (substr($absensi[$i][$j], 0, 2) == 11 || substr($absensi[$i][$j], 0, 2) == 12? 'bg-blue-transparent-3': (substr($absensi[$i][$j], 0, 2) == 13 || substr($absensi[$i][$j], 0, 2) == 14? 'bg-yellow-transparent-3': 'bg-grey-transparent-3')): (strlen($absensi[$i][$j]) == 8? ((int)str_replace(':','',$absensi[$i][$j]) <= (int)str_replace(':','',($khusus->filter(function($item) use ($tgl1, $j){ return $item->tgl_khusus_waktu == date('Y-m-d', strtotime($tgl1. ' + '.($j-2).' days')); })->first()? $aturan->aturan_masuk_khusus: $aturan->aturan_masuk))? 'bg-green-transparent-3': 'bg-orange-transparent-3'): '')) )) }}">{{ strpos($absensi[$i][$j], '-') !== false? (substr($absensi[$i][$j], 0, 2) == 11? 'Sakit ('.substr($absensi[$i][$j], 5).')': (substr($absensi[$i][$j], 0, 2) == 12? 'Izin ('.substr($absensi[$i][$j], 5).')': (substr($absensi[$i][$j], 0, 2) == 13? 'Dispensasi ('.substr($absensi[$i][$j], 5).')': (substr($absensi[$i][$j], 0, 2) == 14? 'Tugas Dinas ('.substr($absensi[$i][$j], 5).')': (substr($absensi[$i][$j], 0, 2) == 15? 'Cuti': 'Lain-lain'))))): $absensi[$i][$j] }}</td>
+							@for($j=0; $j < sizeof($absensi[$i][2]); $j++)
+							@php
+								switch($absensi[$i][2][$j]->absen_hari){
+									case 'l':
+										$bg = "bg-red-transparent-3";
+										break;
+									case 'k':
+										$bg = "bg-yellow-transparent-3";
+										break;
+									default:
+										$bg = "";
+										break;
+								}
+							@endphp
+					        <td class="text-center {{ $bg }}">{{ $absensi[$i][2][$j]->absen_masuk && !$absensi[$i][2][$j]->absen_izin? date('H:i:s', strtotime($absensi[$i][2][$j]->absen_masuk)): '' }}</td>
+					        <td class="text-center {{ $bg }}">{{ $absensi[$i][2][$j]->absen_masuk_telat && $absensi[$i][2][$j]->absen_hari == "b"? date('H:i:s', strtotime($absensi[$i][2][$j]->absen_masuk_telat)): '' }}</td>
+					        <td class="{{ $bg }}">{{ $absensi[$i][2][$j]->absen_izin? $absensi[$i][2][$j]->absen_izin.' '.$absensi[$i][2][$j]->absen_izin_keterangan: '' }}</td>
 							@endfor
 				      	</tr>
 					    @endfor
@@ -63,30 +107,29 @@
 				</table>
 			</div>
 		</div>
-		<div class="panel-footer">
-			<label>Keterangan warna:</label>
-			<table class="table">
-				<tr>
-					<td class="bg-red-transparent-3" width="50">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-					<td>Hari Libur</td>
-				</tr>
-				<tr>
-					<td class="bg-green-transparent-3" width="50">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-					<td>Masuk Tepat Waktu</td>
-				</tr>
-				<tr>
-					<td class="bg-orange-transparent-3" width="50">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-					<td>Masuk Terlambat</td>
-				</tr>
-			</table>
-		</div>
 	</div>
 @endsection
 
 @push('scripts')
-	<script src="/assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
 	<script src="/assets/plugins/print-this/printThis.js"></script>
+	<script src="/assets/plugins/bootstrap-daterangepicker/moment.min.js"></script>	
+	<script src="/assets/plugins/bootstrap-daterangepicker/daterangepicker.js"></script>
 	<script>
+		$('#default-daterange').daterangepicker({
+			opens: 'right',
+			format: 'DD MMMM YYYY',
+			separator: ' s/d ',
+			startDate: moment('{{ date('Y-m-d') }}'),
+			endDate: moment('{{ date('Y-m-d') }}'),
+	    	dateLimit: { days: 30 },
+		}, function (start, end) {
+			$('#default-daterange input').val(start.format('DD MMMM YYYY') + ' - ' + end.format('DD MMMM YYYY'));
+		});
+
+		$('#default-daterange').on('apply.daterangepicker', function(ev, picker) {
+			$("#frm-cari").submit();
+		});
+		
 		function cetak(){
 			$("#laporan").printThis({
 				importCSS: true,
@@ -95,21 +138,5 @@
 			 	copyTagClasses: true
 			});
 		}
-
-		$(".cari").change(function() {
-		     $("#frm-cari").submit();
-		});
-
-		$('#datepicker1').datepicker({
-			todayHighlight: true,
-			format: 'dd MM yyyy',
-			autoclose: true
-		});
-
-		$('#datepicker2').datepicker({
-			todayHighlight: true,
-			format: 'dd MM yyyy',
-			autoclose: true
-		});
 	</script>
 @endpush

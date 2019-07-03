@@ -1,6 +1,6 @@
 @extends('layouts.default')
 
-@section(config("app.name"), ' | Dashboard')
+@section('title', ' | Dashboard')
 
 @push('css')
     <link href="/assets/plugins/gritter/css/jquery.gritter.css" rel="stylesheet" />

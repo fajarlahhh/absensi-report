@@ -38,7 +38,7 @@
 				<div class="form-group">
 					<label class="control-label">Tanggal Izin</label>
 					<div class="input-group" id="default-daterange">
-						<input type="text" name="kehadiran_tgl" class="form-control" value="{{ date('d F Y').' - '.date('d F Y') }}" placeholder="Pilih Tanggal Izin" readonly />
+						<input type="text" name="izin_tgl" class="form-control" value="{{ date('d F Y').' - '.date('d F Y') }}" placeholder="Pilih Tanggal Izin" readonly />
 						<span class="input-group-append">
 						<span class="input-group-text"><i class="fa fa-calendar"></i></span>
 						</span>
@@ -46,7 +46,7 @@
 				</div>
 				<div class="form-group">
 					<label class="control-label">Alasan</label>
-					<select class="form-control selectpicker " data-live-search="true" name="kehadiran_kode" data-width="100%" data-style="btn-warning">
+					<select class="form-control selectpicker " data-live-search="true" name="izin_kode" data-width="100%" data-style="btn-warning">
 						<option value="11" >Sakit</option>
 						<option value="12" >Izin</option>
 						<option value="13" >Dispensasi</option>
@@ -57,12 +57,12 @@
 				</div>
 				<div class="form-group">
 					<label class="control-label">Keterangan</label>
-					<input class="form-control" type="text" name="kehadiran_keterangan" required data-parsley-maxlength="250" autocomplete="off" />
+					<input class="form-control" type="text" name="izin_keterangan" required data-parsley-maxlength="250" autocomplete="off" />
 				</div>
 			</div>
 			<div class="panel-footer">
 	            <input type="submit" value="Simpan" class="btn btn-sm btn-success"  />
-	            <a href="/datakehadiran" class="btn btn-sm btn-danger">Batal</a>
+	            <a href="/dataizin" class="btn btn-sm btn-danger">Batal</a>
 	        </div>
 		</form>
 	</div>	

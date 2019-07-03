@@ -1,9 +1,8 @@
 @extends('pages.absensi.main')
 
 @push('css')
-	<link href="/assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker.css" rel="stylesheet" />
-	<link href="/assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.css" rel="stylesheet" />
 	<link href="/assets/plugins/bootstrap-select/dist/css/bootstrap-select.min.css" rel="stylesheet" />
+	<link href="/assets/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet" />
 @endpush
 
 @section('page')
@@ -19,25 +18,22 @@
 		<!-- begin panel-heading -->
 		<div class="panel-heading">
 			<div class="row">
-                <div class="col-md-12 col-lg-3 col-xl-3 col-xs-12">
+                <div class="col-md-12 col-lg-8 col-xl-8 col-xs-12">
                 	@role('user|administrator')
                     <div class="form-inline">
                         <a href="/dataizin/tambah" class="btn btn-primary">Tambah</a>
                     </div>
                     @endrole
                 </div>
-                <div class="col-md-12 col-lg-9 col-xl-9 col-xs-12">
+                <div class="col-md-12 col-lg-4 col-xl-4 col-xs-12">
                 	<form id="frm-cari" action="/dataizin" method="GET">
                 		@csrf
-	                	<div class="form-inline pull-right">
-							<div class="form-group">
-								<input type="text" readonly class="form-control cari" id="datepicker1" name="tgl1" placeholder="Tgl. Mulai" value="{{ date('d M Y', strtotime($tgl1)) }}"/>
-							</div>
-		                    &nbsp;s/d&nbsp;
-							<div class="form-group">
-								<input type="text" readonly class="form-control cari" id="datepicker2" name="tgl2" placeholder="Tgl. Akhir" value="{{ date('d M Y', strtotime($tgl2)) }}" data-date-end-date="0d"/>
-		                    </div>
-	                	</div>
+						<div class="input-group" id="default-daterange">
+							<input type="text" name="tgl" class="form-control" value="{{ $tgl }}" placeholder="Pilih Tanggal Izin" readonly onchange="submit()" />
+							<span class="input-group-append">
+							<span class="input-group-text"><i class="fa fa-calendar"></i></span>
+							</span>
+						</div>
 					</form>
                 </div>
             </div>
@@ -61,13 +57,13 @@
 					    @foreach ($data as $index => $absen)
 					    <tr>
 					        <td>{{ (($data->currentPage() - 1 ) * $data->perPage() ) + $loop->iteration }}</td>
-					        <td>{{ $absen->kehadiran_id }}</td>
-					        <td>{{ date('d M Y h:m:s', strtotime($absen->kehadiran_tgl)) }}</td>
+					        <td>{{ $absen->izin_id }}</td>
+					        <td>{{ date('d M Y', strtotime($absen->izin_tgl)) }}</td>
 					        <td>{{ $absen->pegawai->nip }}</td>
 					        <td>{{ $absen->pegawai->nm_pegawai }}</td>
 					        <td>
 				        	@php
-				        	switch($absen->kehadiran_kode){
+				        	switch($absen->izin_kode){
 								case "11": echo "Sakit";
 								break;
 								case "12": echo "Izin";
@@ -83,8 +79,8 @@
 				        	}
 				        	@endphp
 					        </td>
-					        <td>{{ $absen->kehadiran_keterangan }}</td>
-					        <td class="text-right"><a href='javascript:;' onclick="hapus({{ $absen->kehadiran_id }})" id='btn-del' class='btn btn-danger btn-xs'><i class='fa fa-trash-alt'></i></a></td>
+					        <td>{{ $absen->izin_keterangan }}</td>
+					        <td class="text-right"><a href='javascript:;' onclick="hapus({{ $absen->izin_id }})" id='btn-del' class='btn btn-danger btn-xs'><i class='fa fa-trash-alt'></i></a></td>
 				      	</tr>
 					    @endforeach
 				    </tbody>
@@ -104,22 +100,22 @@
 
 @push('scripts')
 	<script src="/assets/plugins/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
-	<script src="/assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+	<script src="/assets/plugins/bootstrap-daterangepicker/moment.min.js"></script>	
+	<script src="/assets/plugins/bootstrap-daterangepicker/daterangepicker.js"></script>
 	<script>
-		$(".cari").change(function() {
-		     $("#frm-cari").submit();
+		$('#default-daterange').daterangepicker({
+			opens: 'right',
+			format: 'DD MMMM YYYY',
+			separator: ' s/d ',
+			startDate: moment('{{ date('Y-m-d') }}'),
+			endDate: moment('{{ date('Y-m-d') }}'),
+	    	dateLimit: { days: 30 },
+		}, function (start, end) {
+			$('#default-daterange input').val(start.format('DD MMMM YYYY') + ' - ' + end.format('DD MMMM YYYY'));
 		});
 
-		$('#datepicker1').datepicker({
-			todayHighlight: true,
-			format: 'dd MM yyyy',
-			autoclose: true
-		});
-
-		$('#datepicker2').datepicker({
-			todayHighlight: true,
-			format: 'dd MM yyyy',
-			autoclose: true
+		$('#default-daterange').on('apply.daterangepicker', function(ev, picker) {
+			$("#frm-cari").submit();
 		});
 		
 		function hapus(id) {

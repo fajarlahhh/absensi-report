@@ -1,6 +1,6 @@
 @extends('layouts.default')
 
-@section(config("app.name"), ' | Administrator')
+@section('title', ' | Administrator')
 
 @section('content')
 	<!-- begin breadcrumb -->
