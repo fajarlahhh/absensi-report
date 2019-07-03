@@ -1,0 +1,176 @@
+<?php
+
+namespace Absensi\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Absensi\Absen;
+use Absensi\Shift;
+use Absensi\ShiftKaryawan;
+use Absensi\Izin;
+use Absensi\Kehadiran;
+use Absensi\Aturan;
+use Absensi\TglKhusus;
+use Absensi\Libur;
+use Absensi\Anggota;
+use DateTime;
+
+class PostingabsenController extends Controller
+{
+    //
+    public function __construct()
+	{
+		$this->middleware('auth');
+    	$this->middleware('permission:posting absensi');
+	}
+
+	public function index()
+	{
+		return view('pages.administrator.postingabsensi.index');
+	}
+
+	public function posting(Request $req)
+	{
+    	$req->validate(
+    		[
+    			'tanggal' => 'required'
+    		],[
+    			'tanggal.required' => 'Tanggal tidak boleh kosong'
+    		]
+    	);
+    		$tanggal = explode(' - ', $req->get('tanggal'));
+			$aturan = Aturan::first();
+			Absen::whereBetween("absen_tgl", [date('Y-m-d', strtotime($tanggal[0])),date('Y-m-d', strtotime($tanggal[1]))])->delete();
+			$diff = date_diff(date_create($tanggal[0]), date_create($tanggal[1]))->format("%a");
+			for ($i=0; $i <= $diff; $i++) {
+				$masuk = $aturan->aturan_masuk;
+				$pulang = $aturan->aturan_pulang;
+				$khusus = null;
+				$libur = null;
+
+				$absen = new Absen(); 
+
+				$absen->absen_tgl = date('Y-m-d', strtotime($tanggal[0]. ' + '.$i.' days'));
+				$absen->absen_hari = 'b';
+				$absen->absen_tgl_keterangan = '';
+				$absen->absen_masuk_telat = null;
+
+				if(strpos($aturan->aturan_hari_libur, date('N', strtotime($tanggal[0]. ' + '.($i).' days'))) !== false){
+					$absen->absen_hari = 'l';
+				}else{
+					$libur = Libur::where('libur_tgl', date('Y-m-d', strtotime($tanggal[0]. ' + '.$i.' days')))->first();
+					if($libur){
+						$absen->absen_hari = 'l';
+						$absen->absen_tgl_keterangan = $libur->libur_keterangan;
+					}else{
+						$khusus = TglKhusus::where('tgl_khusus_waktu', date('Y-m-d', strtotime($tanggal[0]. ' + '.$i.' days')))->first();
+						if($khusus){
+							$masuk = $aturan->aturan_masuk_khusus;
+							$pulang = $aturan->aturan_pulang_khusus;
+							$absen->absen_hari = 'k';
+							$absen->absen_tgl_keterangan = '<b>'.$khusus->tgl_khusus_keterangan.'</b>';
+						}
+					}
+				}
+
+				$anggota = Anggota::all();
+				foreach ($anggota as $key => $angg) {
+					$absen->pegawai_id = $angg->pegawai_id;
+					$izin = Izin::where('pegawai_id', $angg->pegawai_id)
+									->where('izin_tgl', date('Y-m-d', strtotime($tanggal[0]. ' + '.$i.' days')))
+									->first();
+					if ($izin) {
+						$absen->absen_izin_keterangan = $izin->izin_keterangan;
+						switch ($izin->izin_kode) {
+							case '11':
+								$absen->absen_izin = 'Sakit';
+								break;
+							case '12':
+								$absen->absen_izin = 'Izin';
+								break;
+							case '13':
+								$absen->absen_izin = 'Sakit';
+								break;
+							case '14':
+								$absen->absen_izin = 'Sakit';
+								break;
+							case '15':
+								$absen->absen_izin = 'Sakit';
+								break;
+							case '16':
+								$absen->absen_izin = 'Lain-lain';
+								break;
+						}
+					}else{
+						//cari masuk
+						$absen_masuk = Kehadiran::where('pegawai_id', $angg->pegawai_id)
+											->whereRaw('date(kehadiran_tgl)="'. date('Y-m-d', strtotime($tanggal[0]. ' + '.$i.' days')).'"')
+											->where('kehadiran_kode', 0)
+											->orderBy('kehadiran_tgl','asc')
+											->first();
+						//cari pulang
+						$absen_pulang = Kehadiran::where('pegawai_id', $angg->pegawai_id)
+											->whereRaw('date(kehadiran_tgl)="'. date('Y-m-d', strtotime($tanggal[0]. ' + '.$i.' days')).'"')
+											->where('kehadiran_kode', 1)
+											->orderBy('kehadiran_tgl','asc')
+											->first();
+						//cari keluar
+						$absen_istirahat = Kehadiran::where('pegawai_id', $angg->pegawai_id)
+											->whereRaw('date(kehadiran_tgl)="'. date('Y-m-d', strtotime($tanggal[0]. ' + '.$i.' days')).'"')
+											->where('kehadiran_kode', 2)
+											->orderBy('kehadiran_tgl','desc')
+											->first();
+						//cari datang
+						$absen_kembali = Kehadiran::where('pegawai_id', $angg->pegawai_id)
+											->whereRaw('date(kehadiran_tgl)="'. date('Y-m-d', strtotime($tanggal[0]. ' + '.$i.' days')).'"')
+											->where('kehadiran_kode', 3)
+											->orderBy('kehadiran_tgl','asc')
+											->first();
+						//cari lembur
+						$absen_lembur = Kehadiran::where('pegawai_id', $angg->pegawai_id)
+											->whereRaw('date(kehadiran_tgl)="'. date('Y-m-d', strtotime($tanggal[0]. ' + '.$i.' days')).'"')
+											->where('kehadiran_kode', 4)
+											->orderBy('kehadiran_tgl','asc')
+											->first();
+						//cari pulang lembur
+						$absen_pulang_lembur = Kehadiran::where('pegawai_id', $angg->pegawai_id)
+											->whereRaw('date(kehadiran_tgl)="'. date('Y-m-d', strtotime($tanggal[0]. ' + '.$i.' days')).'"')
+											->where('kehadiran_kode', 5)
+											->orderBy('kehadiran_tgl','desc')
+											->first();
+						$absen->absen_masuk = $absen_masuk? date('H:i:s', strtotime($absen_masuk->kehadiran_tgl)): null;
+						$absen->absen_pulang = $absen_pulang? date('H:i:s', strtotime($absen_pulang->kehadiran_tgl)): null;
+						$absen->absen_lembur = $absen_lembur? date('H:i:s', strtotime($absen_lembur->kehadiran_tgl)): null;
+						$absen->absen_pulang_lembur = $absen_pulang_lembur? date('H:i:s', strtotime($absen_pulang_lembur->kehadiran_tgl)): null;
+						$absen->absen_istirahat = $absen_istirahat? date('H:i:s', strtotime($absen_istirahat->kehadiran_tgl)): null;
+						$absen->absen_kembali = $absen_kembali? date('H:i:s', strtotime($absen_kembali->kehadiran_tgl)): null;
+
+						$absen->absen_masuk_keterangan = $absen_masuk? $absen_masuk->kehadiran_keterangan: null;
+						$absen->absen_pulang_keterangan = $absen_pulang? $absen_pulang->kehadiran_keterangan: null;
+						$absen->absen_lembur_keterangan = $absen_lembur? $absen_lembur->kehadiran_keterangan: null;
+						$absen->absen_pulang_lembur_keterangan = $absen_pulang_lembur? $absen_pulang_lembur->kehadiran_keterangan: null;
+						$absen->absen_istirahat_keterangan = $absen_istirahat? $absen_istirahat->kehadiran_keterangan: null;
+						$absen->absen_kembali_keterangan = $absen_kembali? $absen_kembali->kehadiran_keterangan: null;
+
+						if ($absen_masuk) {
+							$waktuMasuk = new DateTime($absen_masuk->kehadiran_tgl);
+							$shiftkaryawan = ShiftKaryawan::where('anggota_id', $angg->anggota_id)->first();
+							if ($shiftkaryawan) {
+								$aturanMasuk = new DateTime(date('Y-m-d', strtotime($absen_masuk->kehadiran_tgl)).' '.$shiftkaryawan->shift->shift_jam_masuk);
+								$absen->absen_masuk_telat = ($waktuMasuk > $aturanMasuk? date_diff($aturanMasuk, $waktuMasuk)->format("%h:%i:%S"): null);
+							}else{
+								$aturanMasuk = new DateTime(date('Y-m-d', strtotime($absen_masuk->kehadiran_tgl)).' '.$masuk);
+								$absen->absen_masuk_telat = ($waktuMasuk > $aturanMasuk? date_diff($aturanMasuk, $waktuMasuk)->format("%h:%i:%S"): null);
+							}
+						}
+					}
+					$absen->save();
+				}
+			}
+			return redirect($req->get('redirect')? $req->get('redirect'): 'postingabsensi')
+			->with('pesan', 'Posting absensi tgl '.$tanggal[0].' s/d '.$tanggal[1].' berhasil')
+			->with('judul', 'Tambah data')
+			->with('tipe', 'success')
+			->with('tgl', $tanggal[0].' - '.$tanggal[1]);
+		
+	}
+}
