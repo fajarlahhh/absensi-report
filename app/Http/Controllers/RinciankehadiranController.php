@@ -13,6 +13,7 @@ class RinciankehadiranController extends Controller
 
     public function index(Request $req)
     {
+        ini_set('memory_limit', '-1');
         $tanggal = explode(' - ', $req->get('tgl'));
         $tgl1 = ($req->get('tgl')? date('Y-m-d', strtotime($tanggal[0])): date('Y-m-1'));
         $tgl2 = ($req->get('tgl')? date('Y-m-d', strtotime($tanggal[1])): date('Y-m-d'));
@@ -35,6 +36,7 @@ class RinciankehadiranController extends Controller
 
     public function tampil(Request $req)
     {
+        ini_set('memory_limit', '-1');
         $tgl1 = ($req->tgl1? date('Y-m-d', strtotime($req->tgl1)): date('Y-m-1'));
         $tgl2 = ($req->tgl2? date('Y-m-d', strtotime($req->tgl2)): date('Y-m-d'));
         $diff = date_diff(date_create($tgl1), date_create($tgl2))->format("%a") + 1;

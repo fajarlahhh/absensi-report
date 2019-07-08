@@ -18,7 +18,7 @@ class RekapabsensiController extends Controller
 
     public function index(Request $req)
     {
-    	
+    	ini_set('memory_limit', '-1');
         $tanggal = explode(' - ', $req->get('tgl'));
         $tgl1 = ($req->get('tgl')? date('Y-m-d', strtotime($tanggal[0])): date('Y-m-01'));
         $tgl2 = ($req->get('tgl')? date('Y-m-d', strtotime($tanggal[1])): date('Y-m-d'));
