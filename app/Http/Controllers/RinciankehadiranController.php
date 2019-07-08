@@ -26,6 +26,7 @@ class RinciankehadiranController extends Controller
             $absensi[$x][1] = $angg->pegawai->nm_pegawai;
             $absen = Absen::where('pegawai_id', $angg->pegawai_id)->whereBetween('absen_tgl', [$tgl1, $tgl2])->get();
             $absensi[$x][2] = $absen;
+            $x++;
         }
         return $absensi;
     	return view('pages.laporan.rincianabsensi.index',[
@@ -49,6 +50,7 @@ class RinciankehadiranController extends Controller
             $absensi[$x][1] = $angg->pegawai->nm_pegawai;
             $absen = Absen::where('pegawai_id', $angg->pegawai_id)->whereBetween('absen_tgl', [$tgl1, $tgl2])->get();
             $absensi[$x][2] = $absen;
+            $x++;
         }
         return view('pages.laporan.rincianabsensi.tampil',[
             'absensi' => $absensi,

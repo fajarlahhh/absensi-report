@@ -40,6 +40,7 @@ class RekapabsensiController extends Controller
                 sum(if(absen_izin = 'Cuti', 1, 0)) `cuti`, 
                 sum(if(absen_izin = 'Lain-lain', 1, 0)) `lain`")->where('pegawai_id', $angg->pegawai_id)->whereBetween('absen_tgl', [$tgl1, $tgl2])->groupBy('pegawai_id')->get();
             $absensi[$x][2] = $absen;
+            $x++;
         }
     	return view('pages.laporan.rekapabsensi.index',[
             'diff' => $diff,
