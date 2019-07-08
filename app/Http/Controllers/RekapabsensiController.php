@@ -23,7 +23,7 @@ class RekapabsensiController extends Controller
         $tgl2 = ($req->get('tgl')? date('Y-m-d', strtotime($tanggal[1])): date('Y-m-d'));
         $diff = date_diff(date_create($tgl1), date_create($tgl2))->format("%a") + 1;
         $absensi = [];
-        $anggota = Anggota::get();
+        $anggota = Anggota::groupBy('anggota_id')->get();
         $x=0;
         foreach ($anggota as $key => $angg) {
             $absensi[$x][0] = $angg->pegawai->nip;
