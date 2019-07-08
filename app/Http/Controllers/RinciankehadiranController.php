@@ -28,7 +28,6 @@ class RinciankehadiranController extends Controller
             $absensi[$x][2] = $absen;
             $x++;
         }
-        return $absensi;
     	return view('pages.laporan.rincianabsensi.index',[
             'diff' => $diff,
             'absensi' => $absensi,
