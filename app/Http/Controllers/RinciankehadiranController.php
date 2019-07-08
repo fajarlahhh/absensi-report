@@ -27,6 +27,7 @@ class RinciankehadiranController extends Controller
             $absen = Absen::where('pegawai_id', $angg->pegawai_id)->whereBetween('absen_tgl', [$tgl1, $tgl2])->get();
             $absensi[$x][2] = $absen;
         }
+        return $absensi;
     	return view('pages.laporan.rincianabsensi.index',[
             'diff' => $diff,
             'absensi' => $absensi,
