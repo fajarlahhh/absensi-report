@@ -68,7 +68,7 @@
 						</tr>
 					</thead>
 					<tbody>
-					    @for($i = 0; $i < count($absensi); $i++)
+					    @for($i = 0; $i < sizeof($absensi); $i++)
 					    <tr>
 					        <td>{{ $absensi[$i][0] }}</td>
 					        <td>{{ $absensi[$i][1] }}</td>
