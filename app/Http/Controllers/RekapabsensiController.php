@@ -44,6 +44,7 @@ class RekapabsensiController extends Controller
                 $absensi[$x][2] = $absen;
             }
         }
+        
     	return view('pages.laporan.rekapabsensi.index',[
             'diff' => $diff,
             'absensi' => $absensi,
