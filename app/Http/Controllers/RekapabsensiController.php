@@ -39,9 +39,9 @@ class RekapabsensiController extends Controller
                 sum(if(absen_izin = 'Tugas Dinas', 1, 0)) `dinas`, 
                 sum(if(absen_izin = 'Cuti', 1, 0)) `cuti`, 
                 sum(if(absen_izin = 'Lain-lain', 1, 0)) `lain`")->where('pegawai_id', $angg->pegawai_id)->whereBetween('absen_tgl', [$tgl1, $tgl2])->groupBy('pegawai_id')->get();
-            $y=2;
+            $absensi[$x][2] = null;
             foreach ($absen as $key => $abs) {
-                $absensi[$x][$y] = $absen;
+                $absensi[$x][2] = $absen;
             }
         }
     	return view('pages.laporan.rekapabsensi.index',[

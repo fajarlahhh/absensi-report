@@ -67,6 +67,7 @@
 							@endphp
 					        <td>{{ $absensi[$i][0] }}</td>
 					        <td>{{ $absensi[$i][1] }}</td>
+							@if($absensi[0][2])
 							@for($j=0; $j < sizeof($absensi[$i][2]); $j++)
 							@php
 								$jmlHariKerja += $absensi[$i][2][0]->hari;
@@ -80,6 +81,7 @@
 								$jmlLain += $absensi[$i][2][0]->lain;
 							@endphp
 							@endfor
+							@endif
 							<td>{{ $jmlHariKerja }}</td>
 							<td>{{ $jmlTerlambat }}</td>
 							<td>{{ $jmlMasuk }}</td>

@@ -19,12 +19,13 @@
 			</div>
 		</div>
 		<div class=" bg-grey-transparent-5 p-20">
-			<div class="table-responsive bg-grey-transparent-5 p-20" >				
+			<div class="table-responsive bg-grey-transparent-5 p-20" >	
 				<table class="table table-bordered" id="laporan">
                     <thead>
 						<tr>
 							<th rowspan="2">NIP</th>
 							<th rowspan="2" width="300">Nama</th>
+							@if($absensi[0][2])
 							@for($i=0; $i < sizeof($absensi[0][2]); $i++)
 							@php
 								switch($absensi[0][2][$i]->absen_hari){
@@ -39,10 +40,12 @@
 										break;
 								}
 							@endphp
-					        <th colspan="2" class="{{ $bg }} text-center">{{ date('d M Y', strtotime($absensi[0][2][$i]->absen_tgl)) }}<br><small>{{ $absensi[0][2][$i]->absen_tgl_keterangan }}</small></th>
+					        <th colspan="3" class="{{ $bg }} text-center">{{ date('d M Y', strtotime($absensi[0][2][$i]->absen_tgl)) }}<br><small>{{ $absensi[0][2][$i]->absen_tgl_keterangan }}</small></th>
 							@endfor
+							@endif
 						</tr>
 						<tr>
+							@if($absensi[0][2])
 							@for($i=0; $i < sizeof($absensi[0][2]); $i++)
 							@php
 								switch($absensi[0][2][$i]->absen_hari){
@@ -59,7 +62,9 @@
 							@endphp
 							<td class="text-center {{ $bg }}">Masuk</td>
 							<td class="text-center {{ $bg }}">Telat</td>
+							<td class="text-center {{ $bg }}">Izin</td>
 							@endfor
+							@endif
 						</tr>
 					</thead>
 					<tbody>
@@ -67,6 +72,7 @@
 					    <tr>
 					        <td>{{ $absensi[$i][0] }}</td>
 					        <td>{{ $absensi[$i][1] }}</td>
+							@if($absensi[0][2])
 							@for($j=0; $j < sizeof($absensi[$i][2]); $j++)
 							@php
 								switch($absensi[$i][2][$j]->absen_hari){
@@ -81,9 +87,11 @@
 										break;
 								}
 							@endphp
-					        <td class="text-center {{ $bg }}">{{ $absensi[$i][2][$j]->absen_masuk? date('H:i:s', strtotime($absensi[$i][2][$j]->absen_masuk)): '' }}</td>
-					        <td class="text-center {{ $bg }}">{{ $absensi[$i][2][$j]->absen_hari == "b"? $absensi[$i][2][$j]->absen_masuk_telat? date('H:i:s', strtotime($absensi[$i][2][$j]->absen_masuk_telat)): '': '' }}</td>
+					        <td class="text-center {{ $bg }}">{{ $absensi[$i][2][$j]->absen_masuk && !$absensi[$i][2][$j]->absen_izin? date('H:i:s', strtotime($absensi[$i][2][$j]->absen_masuk)): '' }}</td>
+					        <td class="text-center {{ $bg }}">{{ $absensi[$i][2][$j]->absen_masuk_telat && $absensi[$i][2][$j]->absen_hari == "b"? date('H:i:s', strtotime($absensi[$i][2][$j]->absen_masuk_telat)): '' }}</td>
+					        <td class="{{ $bg }}">{{ $absensi[$i][2][$j]->absen_izin? $absensi[$i][2][$j]->absen_izin.' '.$absensi[$i][2][$j]->absen_izin_keterangan: '' }}</td>
 							@endfor
+							@endif
 				      	</tr>
 					    @endfor
 				    </tbody>
