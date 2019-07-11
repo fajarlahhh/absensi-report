@@ -251,6 +251,71 @@ class Dataanggotacontroller extends Controller
 		}
 	}
 
+    public function upload_anggota()
+	{
+		$mesin = Mesin::all();
+		return view('pages.master.dataanggota.upload',[
+			'data' => null,
+			'mesin' => $mesin
+		]);
+	}
+
+	public function do_upload_anggota(Request $req)
+	{
+		try{
+			$mesin = Mesin::where('mesin_id', $req->get('mesin_id'))->get();
+			$buffer = [];
+			$response = [];
+			$i = 0;
+			foreach ($mesin as $key => $msn) {
+				$anggota = Anggota::where('kantor_id', $msn->kantor_id)->get();
+				foreach ($anggota as $key => $angg) {
+					$Connect = fsockopen($msn->mesin_ip, "80", $errno, $errstr, 1);
+					if($Connect){
+						$soap_request="<SetUserInfo><ArgComKey Xsi:type=\"xsd:integer\">".$msn->mesin_key."</ArgComKey><Arg><PIN>".$angg->pegawai_id."</PIN><Name>".$angg->anggota_nip."</Name><Password>".$angg->anggota_sandi."</Password><Privilege>".$angg->anggota_hak_akses."</Privilege></Arg></SetUserInfo>";
+						$newLine="\r\n";
+						fputs($Connect, "POST /iWsService HTTP/1.0".$newLine);
+					    fputs($Connect, "Content-Type: text/xml".$newLine);
+					    fputs($Connect, "Content-Length: ".strlen($soap_request).$newLine.$newLine);
+					    fputs($Connect, $soap_request.$newLine);
+						$buffer[$i]="";
+						while($response[$i]=fgets($Connect, 1024)){
+							$buffer[$i]=$buffer[$i].$response[$i];
+						}
+					}
+					$Connect1 = fsockopen($msn->mesin_ip, "80", $errno, $errstr, 1);
+					if($Connect1){
+						$fingerprint = Fingerprint::where('pegawai_id', $angg->pegawai_id)->get();
+						foreach ($fingerprint as $key => $fgr) {
+							$soap_request="<SetUserTemplate><ArgComKey xsi:type=\"xsd:integer\">".$msn->mesin_key."</ArgComKey><Arg><PIN xsi:type=\"xsd:integer\">".$angg->pegawai_id."</PIN><FingerID xsi:type=\"xsd:integer\">".$fgr->fingerprint_id."</FingerID><Size>".strlen($fgr->fingerprint_template)."</Size><Valid>1</Valid><Template>".$fgr->fingerprint_template."</Template></Arg></SetUserTemplate>";
+							$newLine="\r\n";
+							fputs($Connect1, "POST /iWsService HTTP/1.0".$newLine);
+						    fputs($Connect1, "Content-Type: text/xml".$newLine);
+						    fputs($Connect1, "Content-Length: ".strlen($soap_request).$newLine.$newLine);
+						    fputs($Connect1, $soap_request.$newLine);
+							$buffer[$i]="";
+							while($response[$i]=fgets($Connect1, 1024)){
+								$buffer[$i]=$buffer[$i].$response[$i];
+							}
+						}
+					}
+
+					$i++;
+				}
+			}
+
+			return redirect('dataanggota')
+			->with('pesan', 'Berhasil mengupload data anggota')
+			->with('judul', 'Tambah data')
+			->with('tipe', 'success');
+		}catch(\Exception $e){
+			return redirect($req->get('redirect'))
+			->with('pesan', 'Gagal mengupload data anggota. Error: '.$e->getMessage())
+			->with('judul', 'Tambah data')
+			->with('tipe', 'error');
+		}
+	}
+
 	public function upload(Request $req)
 	{
 		try{

@@ -117,6 +117,8 @@ Route::group(['middleware' => ['auth']], function () {
 		Route::post('/dataanggota/download', 'Dataanggotacontroller@download')->middleware(['role:administrator|user']);
 		Route::post('/dataanggota/upload', 'Dataanggotacontroller@upload')->middleware(['role:administrator|user']);
 		Route::get('/dataanggota/hapus/{post}', 'Dataanggotacontroller@hapus')->middleware(['role:administrator|user']);
+		Route::get('/dataanggota/uploadanggota', 'Dataanggotacontroller@upload_anggota')->middleware(['role:administrator|user']);
+		Route::post('/dataanggota/uploadanggota', 'Dataanggotacontroller@do_upload_anggota')->middleware(['role:administrator|user']);
 	});
 });
 

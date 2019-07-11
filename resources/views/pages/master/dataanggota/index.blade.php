@@ -27,6 +27,7 @@
 		                </form>&nbsp; 
 		                <a href="#" class="btn btn-success" onclick="dl('{{ $kantor_id }}')">Download Fingerprint</a>&nbsp;
 		                <a href="#" class="btn btn-info" onclick="upload('{{ $kantor_id }}')">Upload Fingerprint</a>&nbsp;
+                        <a href="/dataanggota/uploadanggota" class="btn btn-primary">Upload Anggota</a>&nbsp;
 		                <!--<a href="/dataanggota/face" class="btn btn-info">Download FaceID</a>-->
 		            </div>
                 @endrole
@@ -176,7 +177,7 @@
 		     		$("#frm-upload").submit();
 		      	}
 		    });
-		}	
+		}
 
 		function hapus(id, peg) {
 			swal({
