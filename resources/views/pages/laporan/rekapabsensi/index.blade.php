@@ -23,11 +23,24 @@
                 <div class="col-md-12 col-lg-4 col-xl-4 col-xs-12">
 	            	<form id="frm-cari" action="/rekapabsensi" method="GET">
 	            		@csrf
-	                	<div class="input-group" id="default-daterange">
-							<input type="text" name="tgl" class="form-control" value="{{ $tgl }}" placeholder="Pilih Tanggal Izin" readonly onchange="submit()" />
-							<span class="input-group-append">
-							<span class="input-group-text"><i class="fa fa-calendar"></i></span>
-							</span>
+	                	<div class="form-inline pull-right">
+	                		<div class="form-group">
+								<select class="form-control selectpicker" onchange="submit()" data-live-search="true" id="ktr" name="ktr"  data-width="100%">
+									@foreach($kantor as $ktr)
+									<option value="{{ $ktr->kantor_id }}" 
+										@if($ktr->kantor_id == $idkantor)
+											selected
+										@endif
+									>{{ $ktr->kantor_nama }}</option>
+									@endforeach
+								</select>
+		                    </div>&nbsp;
+		                	<div class="input-group" id="default-daterange">
+								<input type="text" name="tgl" class="form-control" value="{{ $tgl }}" placeholder="Pilih Tanggal Izin" readonly onchange="submit()" />
+								<span class="input-group-append">
+								<span class="input-group-text"><i class="fa fa-calendar"></i></span>
+								</span>
+							</div>
 						</div>
 					</form>
                 </div>

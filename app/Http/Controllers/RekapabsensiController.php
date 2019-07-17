@@ -4,6 +4,7 @@ namespace Absensi\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Absensi\Anggota;
+use Absensi\Kantor;
 use Absensi\Absen;
 use Illuminate\Support\Facades\DB;
 
@@ -23,7 +24,9 @@ class RekapabsensiController extends Controller
         $tgl2 = ($req->get('tgl')? date('Y-m-d', strtotime($tanggal[1])): date('Y-m-d'));
         $diff = date_diff(date_create($tgl1), date_create($tgl2))->format("%a") + 1;
         $absensi = [];
-        $anggota = Anggota::groupBy('anggota_id')->get();
+        $kantor = Kantor::all();
+        $ktr = $req->get('ktr')?$req->get('ktr'):$kantor{0}->kantor_id;
+        $anggota = Anggota::where('kantor_id', $ktr)->groupBy('anggota_id')->orderBy('anggota_nip')->get();;
         $x=0;
         foreach ($anggota as $key => $angg) {
             $absensi[$x][0] = $angg->pegawai->nip;
@@ -43,6 +46,8 @@ class RekapabsensiController extends Controller
         }
     	return view('pages.laporan.rekapabsensi.index',[
             'diff' => $diff,
+            'kantor' => $kantor,
+            'idkantor' => $ktr,
             'absensi' => $absensi,
             'tgl' => date('d F Y', strtotime($tgl1)).' - '.date('d F Y', strtotime($tgl2))
     	]);

@@ -20,7 +20,8 @@ class RinciankehadiranController extends Controller
         $diff = date_diff(date_create($tgl1), date_create($tgl2))->format("%a") + 1;
         $absensi = [];
         $kantor = Kantor::all();
-        $anggota = Anggota::whereIn()->groupBy('anggota_id')->get();
+        $ktr = $req->get('ktr')?$req->get('ktr'):$kantor{0}->kantor_id;
+        $anggota = Anggota::where('kantor_id', $ktr)->groupBy('anggota_id')->orderBy('anggota_nip')->get();
         $x=0;
         foreach ($anggota as $key => $angg) {
             $absensi[$x][0] = $angg->pegawai->nip;
@@ -31,6 +32,8 @@ class RinciankehadiranController extends Controller
         }
     	return view('pages.laporan.rincianabsensi.index',[
             'diff' => $diff,
+            'kantor' => $kantor,
+            'idkantor' => $ktr,
             'absensi' => $absensi,
             'tgl' => date('d F Y', strtotime($tgl1)).' - '.date('d F Y', strtotime($tgl2))
     	]);
