@@ -32,18 +32,6 @@
                 		@csrf
 	                	<div class="form-inline pull-right">
 							<div class="form-group">
-								<select class="form-control selectpicker cari" data-live-search="true" name="pegawai" data-width="100%">
-									<option value="00">Semua Pegawai</option>
-									@foreach($anggota as $angg)
-									<option value="{{ $angg->pegawai_id }}" 
-										@if($pegawai == $angg->pegawai_id)
-											selected
-										@endif
-									>{{ ucwords(strtolower($angg->pegawai->nm_pegawai)) }}</option>
-									@endforeach
-								</select>
-							</div>&nbsp;
-							<div class="form-group">
 								<input type="text" readonly class="form-control cari" id="datepicker1" name="tgl1" placeholder="Tgl. Mulai" value="{{ date('d M Y', strtotime($tgl1)) }}"/>
 							</div>
 		                    &nbsp;s/d&nbsp;

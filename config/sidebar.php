@@ -62,6 +62,9 @@ return [
 			'url' => '/datakehadiran',
 			'title' => 'Data Kehadiran'
 		],[
+			'url' => '/downloadkehadiran',
+			'title' => 'Download Kehadiran'
+		],[
 			'url' => '/dataizin',
 			'title' => 'Data Izin'
 		]]

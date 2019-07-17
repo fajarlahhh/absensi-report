@@ -8,6 +8,7 @@ use Absensi\Anggota;
 use Absensi\Kantor;
 use Absensi\Mesin;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 
 class DatakehadiranController extends Controller
@@ -34,8 +35,7 @@ class DatakehadiranController extends Controller
     	->whereIn('kehadiran_status', ['M', 'T'])
     	->whereRaw("date(kehadiran_tgl) between '".$tgl1."' and '".$tgl2."'")->paginate(10);
 
-		$kehadiran->appends($req->tgl1);
-		$kehadiran->appends($req->tgl2);
+		$kehadiran->appends(['tgl1' => $req->tgl1, 'tgl2' => $req->tgl2]);
     	return view('pages.absensi.datakehadiran.index',[
     		'data' => $kehadiran,
     		'anggota' => $anggota,
@@ -69,14 +69,20 @@ class DatakehadiranController extends Controller
 
 	public function do_download(Request $req)
 	{
-		$req->validate(
-			[
-				'kantor_id' => 'required',
-			],[
-         	   	'kantor_id.required' => 'Kantor tidak boleh kosong',
-        	]
-		);
+		$validator = Validator::make($req->all(),[
+			'kantor_id' => 'required',
+		],[
+     	    'kantor_id.required' => 'Kantor tidak boleh kosong',
+    	]);
+
+    	if($validator->fails()){
+			return \Response::json([
+				'pesan' => $validator->errors()->first(),
+				'tipe' => 'error'
+			]);
+    	}
 		try{
+			ini_set('max_execution_time', 300);
 			$mesin = Mesin::where('kantor_id', $req->kantor_id)->get();
 			if(count($mesin) > 0){
 				$anggota = Anggota::where('kantor_id', $req->kantor_id)->get();
@@ -98,10 +104,10 @@ class DatakehadiranController extends Controller
 							$buffer=$buffer.$Response;
 						}
 					}else {
-						return redirect('datakehadiran')
-						->with('pesan', 'Gagal mendownload data kehadiran ('.$errno.')')
-						->with('judul', 'Download data')
-						->with('tipe', 'error');
+						return \Response::json([
+							'pesan' => 'Gagal menghapus data kehadiran ('.$errno.')',
+							'tipe' => 'error'
+						]);
 					}
 					$buffer = $this->parse($buffer,"<GetAttLogResponse>","</GetAttLogResponse>");
 					$buffer = explode("\r\n",$buffer);
@@ -132,27 +138,27 @@ class DatakehadiranController extends Controller
 							$buffer1=$buffer1.$Response1;
 						}
 					}else {
-						return redirect('datakehadiran')
-						->with('pesan', 'Gagal menghapus data kehadiran ('.$errno.')')
-						->with('judul', 'Download data')
-						->with('tipe', 'error');
+						return \Response::json([
+							'pesan' => 'Gagal menghapus data kehadiran ('.$errno.')',
+							'tipe' => 'error'
+						]);
 					}
 				}
-				return redirect()->back()
-				->with('pesan', 'Berhasil mendownload data kehadiran')
-				->with('judul', 'Download Fingerprint')
-				->with('tipe', 'success');
+				return \Response::json([
+					'pesan' => 'Proses download kehadiran berhasil',
+					'tipe' => 'success'
+				]);
 			}else{
-				return redirect()->back()
-				->with('pesan', 'Gagal mendownload data kehadiran. Data mesin tidak tersedia untuk kantor ini')
-				->with('judul', 'Download Fingerprint')
-				->with('tipe', 'error');
+				return \Response::json([
+					'pesan' => 'Data mesin tidak tersedia untuk kantor ini',
+					'tipe' => 'error'
+				]);	
 			}
-		}catch(\Exception $e){
-			return redirect($req->get('redirect')? $req->get('redirect'): 'datakehadiran/download')
-			->with('pesan', 'Gagal mendownload data kehadiran. Error: '.$e->getMessage())
-			->with('judul', 'Download data')
-			->with('tipe', 'error');
+		} catch (Exception $e) {
+			return \Response::json([
+				'pesan' => $e->getMessage(),
+				'tipe' => 'error'
+			]);	
 		}
 	}
 

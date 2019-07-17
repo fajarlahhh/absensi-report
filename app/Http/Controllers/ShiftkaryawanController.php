@@ -41,17 +41,17 @@ class ShiftkaryawanController extends Controller
 	{
 		$req->validate(
 			[
-				'anggota_id' => 'required',
+				'pegawai_id' => 'required',
 				'shift_id' => 'required'
 			],[
-         	   'anggota_id.required' => 'Anggota tidak boleh kosong',
+         	   'pegawai_id.required' => 'Pegawai tidak boleh kosong',
          	   'shift_id.required' => 'Shift tidak boleh kosong'
         	]
 		);
 		try{
 			
 			$shiftkaryawan = new ShiftKaryawan();
-			$shiftkaryawan->anggota_id = $req->get('anggota_id');
+			$shiftkaryawan->pegawai_id = $req->get('pegawai_id');
 			$shiftkaryawan->shift_id = $req->get('shift_id');
 			$shiftkaryawan->save();
 

@@ -21,9 +21,12 @@ Route::group(['middleware' => ['auth']], function () {
 		Route::get('/datakehadiran', 'DatakehadiranController@index')->name('datakehadiran');
 		Route::get('/datakehadiran/tambah', 'DatakehadiranController@tambah')->middleware(['role:administrator|user']);
 		Route::post('/datakehadiran/tambah', 'DatakehadiranController@do_tambah')->middleware(['role:administrator|user']);
-		Route::get('/datakehadiran/download', 'DatakehadiranController@download')->middleware(['role:administrator|user']);
-		Route::post('/datakehadiran/download', 'DatakehadiranController@do_download')->middleware(['role:administrator|user']);
 		Route::get('/datakehadiran/hapus/{post}', 'DatakehadiranController@hapus')->middleware(['role:administrator|user']);
+	});
+
+	Route::group(['middleware' => ['auth', 'permission:download kehadiran']], function () {
+		Route::get('/downloadkehadiran', 'DatakehadiranController@download')->name('downloadkehadiran');
+		Route::post('/downloadkehadiran', 'DatakehadiranController@do_download')->middleware(['role:administrator|user']);
 	});
 
 	Route::group(['middleware' => ['auth', 'permission:posting absensi']], function () {
