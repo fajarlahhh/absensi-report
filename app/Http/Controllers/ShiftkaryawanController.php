@@ -30,7 +30,7 @@ class ShiftkaryawanController extends Controller
 	public function tambah()
 	{
 		$shift = Shift::all();
-		$anggota = Anggota::whereNotIn('anggota_id', ShiftKaryawan::select('anggota_id')->get())->get();
+		$anggota = Anggota::whereNotIn('pegawai_id', ShiftKaryawan::select('pegawai_id')->get())->get();
 		return view('pages.administrator.shiftkaryawan.form', [
 			'shift' => $shift,
 			'anggota' => $anggota
@@ -73,12 +73,12 @@ class ShiftkaryawanController extends Controller
 			$anggota = Anggota::findorfail($id);
 			$anggota->delete();
 			return redirect()->back()
-			->with('pesan', 'Berhasil menghapus data shift karyawan (NIP:'.$anggota->anggota_nip.')')
+			->with('pesan', 'Berhasil menghapus data shift karyawan')
 			->with('judul', 'Hapus data')
 			->with('tipe', 'success');
 		}catch(\Exception $e){
 			return redirect()->back()
-			->with('pesan', 'Gagal menghapus data shift karyawan (NIP:'.$anggota->anggota_nip.') Error: '.$e->getMessage())
+			->with('pesan', 'Gagal menghapus data shift karyawan. Error: '.$e->getMessage())
 			->with('judul', 'Hapus data')
 			->with('tipe', 'error');
 		}
