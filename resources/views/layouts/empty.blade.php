@@ -9,7 +9,6 @@
 	$bodyClass .= (!empty($bodyExtraClass)) ? $bodyExtraClass . ' ' : '';
 @endphp
 <body class="{{ $bodyClass }}">
-	@include('includes.component.page-loader')
 	
 	@yield('content')
 			
