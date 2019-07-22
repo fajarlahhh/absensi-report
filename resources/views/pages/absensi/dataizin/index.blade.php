@@ -21,7 +21,8 @@
                 <div class="col-md-12 col-lg-8 col-xl-8 col-xs-12">
                 	@role('user|administrator')
                     <div class="form-inline">
-                        <a href="/dataizin/tambah" class="btn btn-primary">Tambah</a>
+                        <a href="/dataizin/tambah" class="btn btn-primary">Tambah</a>&nbsp;
+                        <a href="/dataizin/cetak" target="_blank" class="btn btn-warning">Cetak</a>
                     </div>
                     @endrole
                 </div>

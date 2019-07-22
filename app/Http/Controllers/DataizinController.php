@@ -17,18 +17,27 @@ class DataizinController extends Controller
 
     public function index(Request $req)
     {
-    	$pegawai = null;
-    	if ($req->pegawai && $req->pegawai != '00') {
-    		$pegawai = $req->pegawai;
-    	}
 		$tanggal = explode(' - ', $req->get('tgl'));
     	$tgl1 = ($req->get('tgl')? date('Y-m-d', strtotime($tanggal[0])): date('Y-m-1'));
     	$tgl2 = ($req->get('tgl')? date('Y-m-d', strtotime($tanggal[1])): date('Y-m-d'));
-    	$kehadiran = Izin::whereBetween("izin_tgl", [$tgl1,$tgl2])->paginate(10);
-
-		$kehadiran->appends($req->tgl1);
-		$kehadiran->appends($req->tgl2);
+    	$kehadiran = Izin::whereBetween("izin_tgl", [$tgl1,$tgl2])->orderBy('izin_tgl')->paginate(10);
+		$kehadiran->appends(['tgl' => $req->tgl, 'cari' => $req->cari])->links();
     	return view('pages.absensi.dataizin.index',[
+    		'data' => $kehadiran,
+            'tgl' => date('d F Y', strtotime($tgl1)).' - '.date('d F Y', strtotime($tgl2))
+    	]);
+    }
+
+    public function cetak(Request $req)
+    {
+		ini_set('max_execution_time', 0);
+        ini_set('memory_limit','2048M');
+		$tanggal = explode(' - ', $req->get('tgl'));
+    	$tgl1 = ($req->get('tgl')? date('Y-m-d', strtotime($tanggal[0])): date('Y-m-1'));
+    	$tgl2 = ($req->get('tgl')? date('Y-m-d', strtotime($tanggal[1])): date('Y-m-d'));
+    	$kehadiran = Izin::with('pegawai')->whereBetween("izin_tgl", [$tgl1,$tgl2])->get();
+
+    	return view('pages.absensi.dataizin.cetak',[
     		'data' => $kehadiran,
             'tgl' => date('d F Y', strtotime($tgl1)).' - '.date('d F Y', strtotime($tgl2))
     	]);

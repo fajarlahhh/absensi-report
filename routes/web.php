@@ -66,6 +66,7 @@ Route::group(['middleware' => ['auth']], function () {
 	Route::group(['middleware' => ['auth', 'permission:data izin']], function () {
 		Route::get('/dataizin', 'DataizinController@index')->name('dataizin');
 		Route::get('/dataizin/tambah', 'DataizinController@tambah')->middleware(['role:administrator|user']);
+		Route::get('/dataizin/cetak', 'DataizinController@cetak')->middleware(['role:administrator|user']);
 		Route::post('/dataizin/tambah', 'DataizinController@do_tambah')->middleware(['role:administrator|user']);
 		Route::get('/dataizin/edit', 'DataizinController@edit')->middleware(['role:administrator|user']);
 		Route::post('/dataizin/edit', 'DataizinController@do_edit')->middleware(['role:administrator|user']);
