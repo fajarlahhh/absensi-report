@@ -35,7 +35,7 @@ class DataizinController extends Controller
 		$tanggal = explode(' - ', $req->get('tgl'));
     	$tgl1 = ($req->get('tgl')? date('Y-m-d', strtotime($tanggal[0])): date('Y-m-1'));
     	$tgl2 = ($req->get('tgl')? date('Y-m-d', strtotime($tanggal[1])): date('Y-m-d'));
-    	$kehadiran = Izin::with('pegawai')->whereBetween("izin_tgl", [$tgl1,$tgl2])->get();
+    	$kehadiran = Izin::with('pegawai')->whereBetween("izin_tgl", [$tgl1,$tgl2])->orderBy('izin_tgl')->get();
 
     	return view('pages.absensi.dataizin.cetak',[
     		'data' => $kehadiran,
