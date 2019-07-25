@@ -80,30 +80,15 @@
 							@endphp
 					        <td>{{ $absen->pegawai->nip }}</td>
 					        <td>{{ $absen->pegawai->nm_pegawai }}</td>
-							@if($absensi[0][2])
-							@foreach($peg->absen as $index => $abs)
-							@php
-								$jmlHariKerja += $abs->hari;
-								$jmlTerlambat += $abs->telat;
-								$jmlMasuk += $abs->masuk;
-								$jmlSakit += $abs->sakit;
-								$jmlIzin += $abs->izin;
-								$jmlDispensasi += $abs->dispensasi;
-								$jmlDinas += $abs->dinas;
-								$jmlCuti += $abs->cuti;
-								$jmlLain += $abs->lain;
-							@endphp
-							@endforeach
-							@endif
-							<td>{{ $jmlHariKerja }}</td>
-							<td>{{ $jmlTerlambat }}</td>
-							<td>{{ $jmlMasuk }}</td>
-							<td>{{ $jmlSakit }}</td>
-							<td>{{ $jmlIzin }}</td>
-							<td>{{ $jmlDispensasi }}</td>
-							<td>{{ $jmlDinas }}</td>
-							<td>{{ $jmlCuti }}</td>
-							<td>{{ $jmlLain }}</td>
+							<td>{{ $absen->hari }}</td>
+							<td>{{ $absen->telat }}</td>
+							<td>{{ $absen->masuk }}</td>
+							<td>{{ $absen->sakit }}</td>
+							<td>{{ $absen->izin }}</td>
+							<td>{{ $absen->dispensasi }}</td>
+							<td>{{ $absen->dinas }}</td>
+							<td>{{ $absen->cuti }}</td>
+							<td>{{ $absen->lain }}</td>
 				      	</tr>
 					    @endforeach
 				    </tbody>

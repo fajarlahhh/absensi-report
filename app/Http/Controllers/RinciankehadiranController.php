@@ -18,7 +18,6 @@ class RinciankehadiranController extends Controller
         $tgl1 = ($req->get('tgl')? date('Y-m-d', strtotime($tanggal[0])): date('Y-m-1'));
         $tgl2 = ($req->get('tgl')? date('Y-m-d', strtotime($tanggal[1])): date('Y-m-d'));
         $diff = date_diff(date_create($tgl1), date_create($tgl2))->format("%a") + 1;
-        $absensi = [];
         $kantor = Kantor::all();
         $ktr = $req->get('ktr')?$req->get('ktr'):$kantor{0}->kantor_id;
         $absensi = Anggota::with('absen')->with('pegawai')->where('kantor_id', $ktr)->groupBy('anggota_id')->orderBy('anggota_nip')->get();
