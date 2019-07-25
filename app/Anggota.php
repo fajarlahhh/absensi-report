@@ -16,14 +16,18 @@ class Anggota extends Model
     ];
 
     public function pegawai(){
-        return $this->hasOne('Absensi\Pegawai', 'id', 'pegawai_id')->orderBy('nm_pegawai');
+        return $this->hasOne('Absensi\Pegawai', 'nip', 'anggota_nip')->select(['nip', 'nm_pegawai', 'kd_unit', 'kd_jabatan', 'kd_bagian'])->orderBy('nm_pegawai');
     }
 
     public function kantor(){
         return $this->hasOne('Absensi\Kantor', 'kantor_id', 'kantor_id');
     }
 
-	public function fingerprint(){
-		return $this->hasMany('Absensi\Fingerprint', 'pegawai_id', 'pegawai_id');
-	}
+    public function fingerprint(){
+        return $this->hasMany('Absensi\Fingerprint', 'pegawai_id', 'pegawai_id');
+    }
+
+    public function absen(){
+        return $this->hasMany('Absensi\Absen', 'pegawai_id', 'pegawai_id');
+    }
 }

@@ -28,7 +28,6 @@
                 </div>
                 <div class="col-md-12 col-lg-9 col-xl-9 col-xs-12">
                 	<form id="frm-cari" action="/harikhusus" method="GET">
-                		@csrf
 	                	<div class="form-inline pull-right">
 							<div class="form-group">
 								<select class="form-control selectpicker cari" data-live-search="true" name="tahun" data-style="btn-warning" data-width="100%" onchange="getnip()">

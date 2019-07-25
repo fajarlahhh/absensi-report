@@ -29,9 +29,4 @@ class Pegawai extends Model
 	{
 		return $this->hasOne('Absensi\Bagian', 'kd_bagian', 'kd_bagian');
 	}
-
-	public function seksi()
-	{
-		return $this->hasOne('Absensi\Seksi', 'kd_seksi', 'kd_seksi');
-	}
 }

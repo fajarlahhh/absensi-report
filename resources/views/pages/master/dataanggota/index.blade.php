@@ -35,7 +35,6 @@
                 <div class="col-md-10 col-lg-6 col-xl-6 col-xs-12 col-sm-12">
 					<form action="/dataanggota" method="GET" id="frm-kantor" class="pull-right">
 	                    <div class="form-inline">
-	                		@csrf
 	                        <div class="form-group">
 								<select class="form-control selectpicker" data-live-search="true" id="kantor" name="kantor" data-style="btn-info" data-width="100%">
 									@foreach($kantor as $ktr)
@@ -71,9 +70,6 @@
 							<th>Nama</th>
 							<th>Kantor</th>
 							<th>Unit</th>
-							<th>Jabatan</th>
-							<th>Bagian</th>
-							<th>Seksi</th>
 							<th>Hak Akses</th>
 							<th>Fingerprint</th>
 							<!--<th>FaceID</th>-->
@@ -86,12 +82,9 @@
 					        <td>{{ (($data->currentPage() - 1 ) * $data->perPage() ) + $loop->iteration }}</td>
 					        <td>{{ $anggota->pegawai_id }}</td>
 					        <td>{{ $anggota->anggota_nip }}</td>
-					        <td>{{ $anggota->nm_pegawai }}</td>
-					        <td>{{ $anggota->kantor_nama }}</td>
-					        <td>{{ $anggota->nm_unit }}</td>
-					        <td>{{ $anggota->nm_jabatan }}</td>
-					        <td>{{ $anggota->nm_bagian }}</td>
-					        <td>{{ $anggota->nm_seksi }}</td>
+					        <td>{{ $anggota->pegawai->nm_pegawai }}</td>
+					        <td>{{ $anggota->kantor->kantor_nama }}</td>
+					        <td>{{ $anggota->pegawai->unit->nm_unit }}</td>
 					        <td>{{ $anggota->anggota_hak_akses == 14? 'Super Admin': 'User Biasa' }}</td>
 					        <td class="text-center">{{ $anggota->fingerprint->count() }}</td>
 					        <!--<td class="text-center">0</td>-->

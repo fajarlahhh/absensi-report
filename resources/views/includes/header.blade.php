@@ -23,7 +23,7 @@
 		<ul class="navbar-nav navbar-right">
 			<li class="dropdown navbar-user">
 				<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-					<img src="{{ (Auth::user()->pegawai->foto? Auth::user()->pegawai->foto: '/assets/img/user/user.png') }}" alt="" />
+					<img src="{{ ($foto? $foto: '/assets/img/user/user.png') }}" alt="" />
 					<span class="d-none d-md-inline">{{ strtoupper(Auth::user()->pegawai->nm_pegawai) }}</span> <b class="caret"></b>
 				</a>
 				<div class="dropdown-menu dropdown-menu-right">

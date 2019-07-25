@@ -54,9 +54,6 @@
 							<th>NIP</th>
 							<th>Nama</th>
 							<th>Unit</th>
-							<th>Jabatan</th>
-							<th>Bagian</th>
-							<th>Seksi</th>
 							<th></th>
 						</tr>
 					</thead>
@@ -70,9 +67,6 @@
 					        <td>{{ $sk->anggota->anggota_nip }}</td>
 					        <td>{{ $sk->anggota->pegawai->nm_pegawai }}</td>
 					        <td>{{ $sk->anggota->pegawai->unit->nm_unit }}</td>
-					        <td>{{ $sk->anggota->pegawai->jabatan->nm_jabatan }}</td>
-					        <td>{{ $sk->anggota->pegawai->bagian->nm_bagian }}</td>
-					        <td>{{ $sk->anggota->pegawai->seksi->nm_seksi }}</td>
 					        <td class="text-right"><a href='javascript:;' onclick="hapus({{ $sk->angota_id }})" id='btn-del' class='btn btn-danger btn-xs'><i class='fa fa-trash-alt'></i></a></td>
 				      	</tr>
 						@php $no++;

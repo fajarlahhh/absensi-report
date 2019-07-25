@@ -1,8 +1,5 @@
-@php
-	$sidebarClass = (!empty($sidebarTransparent)) ? 'sidebar-transparent' : '';
-@endphp
 <!-- begin #sidebar -->
-<div id="sidebar" class="sidebar {{ $sidebarClass }}">
+<div id="sidebar" class="sidebar">
 	<!-- begin sidebar scrollbar -->
 	<div data-scrollbar="true" data-height="100%">
 		<!-- begin sidebar user -->
@@ -10,7 +7,7 @@
 			<li class="nav-profile">
 				<a href="javascript:;" data-toggle="nav-profile">
 					<div class="cover with-shadow"></div>
-					<img src="{{ (Auth::user()->pegawai->foto? Auth::user()->pegawai->foto: '../assets/img/user/user.png') }}" alt="" class="image" />
+					<img src="{{ ($foto? $foto: '../assets/img/user/user.png') }}" alt="" class="image" />
 					<div class="info">
 						<b class="caret pull-right"></b>
 						{{ Auth::user()->pegawai->nm_pegawai }}
@@ -20,7 +17,7 @@
 			</li>
 			<li>
 				<ul class="nav nav-profile">
-					<li><a href="javascript:;"><i class="fa fa-pencil-alt"></i> Feedback</a></li>
+					<li><a href="javascript:;"><i class="fa fa-pencil"></i> Feedback</a></li>
 					<li><a href="javascript:;"><i class="fa fa-question-circle"></i> Bantuan</a></li>
 				</ul>
 			</li>
@@ -38,7 +35,7 @@
 					$GLOBALS['active'][$GLOBALS['sub_level']] = '';
 					$currentLevel = $GLOBALS['sub_level'];
 					foreach ($value as $key => $menu) {
-						if(Auth::user()->can(strtolower($menu['title']))){
+						if(Auth::user()->can(substr($menu['url'], 1)) || Auth::user()->getRoleNames()[0] == 'administrator'){
 							$GLOBALS['subparent_level'] = '';
 							
 							$subSubMenu = '';
@@ -64,7 +61,7 @@
 							}
 							$subMenu .= '
 								<li class="'. $hasSub .' '. $active .'">
-									<a href="'. (Auth::user()->can(strtolower($hasTitle))? $menu['url']: '#') .'">'. $hasCaret . $hasTitle . $hasHighlight .'</a>
+									<a href="'. (Auth::user()->can(strtolower($hasTitle)) || Auth::user()->role('administrator')? $menu['url']: '#') .'">'. $hasCaret . $hasTitle . $hasHighlight .'</a>
 									'. $subSubMenu .'
 								</li>
 							';
@@ -74,38 +71,40 @@
 				}
 				
 				foreach (config('sidebar.menu') as $key => $menu) {
-					$GLOBALS['parent_active'] = '';
-					
-					$hasSub = (!empty($menu['sub_menu'])) ? 'has-sub' : '';
-					$hasCaret = (!empty($menu['caret'])) ? '<b class="caret"></b>' : '';
-					$hasIcon = (!empty($menu['icon'])) ? '<i class="'. $menu['icon'] .'"></i>' : '';
-					$hasImg = (!empty($menu['img'])) ? '<div class="icon-img"><img src="'. $menu['img'] .'" /></div>' : '';
-					$hasLabel = (!empty($menu['label'])) ? '<span class="label label-theme m-l-5">'. $menu['label'] .'</span>' : '';
-					$hasTitle = (!empty($menu['title'])) ? '<span>'. $menu['title'] . $hasLabel .'</span>' : '';
-					$hasBadge = (!empty($menu['badge'])) ? '<span class="badge pull-right">'. $menu['badge'] .'</span>' : '';
-					
-					$subMenu = '';
-					
-					if (!empty($menu['sub_menu'])) {
-						$GLOBALS['sub_level'] = 0;
-						$subMenu .= '<ul class="sub-menu">';
-						$subMenu .= renderSubMenu($menu['sub_menu'], $currentUrl);
-						$subMenu .= '</ul>';
+					if(Auth::user()->can(strtolower($menu['title'])) || Auth::user()->getRoleNames()[0] == 'administrator'){
+						$GLOBALS['parent_active'] = '';
+						
+						$hasSub = (!empty($menu['sub_menu'])) ? 'has-sub' : '';
+						$hasCaret = (!empty($menu['caret'])) ? '<b class="caret"></b>' : '';
+						$hasIcon = (!empty($menu['icon'])) ? '<i class="'. $menu['icon'] .'"></i>' : '';
+						$hasImg = (!empty($menu['img'])) ? '<div class="icon-img"><img src="'. $menu['img'] .'" /></div>' : '';
+						$hasLabel = (!empty($menu['label'])) ? '<span class="label label-theme m-l-5">'. $menu['label'] .'</span>' : '';
+						$hasTitle = (!empty($menu['title'])) ? '<span>'. $menu['title'] . $hasLabel .'</span>' : '';
+						$hasBadge = (!empty($menu['badge'])) ? '<span class="badge pull-right">'. $menu['badge'] .'</span>' : '';
+						
+						$subMenu = '';
+						
+						if (!empty($menu['sub_menu'])) {
+							$GLOBALS['sub_level'] = 0;
+							$subMenu .= '<ul class="sub-menu">';
+							$subMenu .= renderSubMenu($menu['sub_menu'], $currentUrl);
+							$subMenu .= '</ul>';
+						}
+						$active = ($currentUrl == $menu['url']) ? 'active' : '';
+						$active = (empty($active) && !empty($GLOBALS['parent_active'])) ? 'active' : $active;
+						echo '
+							<li class="'. $hasSub .' '. $active .'">
+								<a href="'. $menu['url'] .'">
+									'. $hasImg .'
+									'. $hasBadge .'
+									'. $hasCaret .'
+									'. $hasIcon .'
+									'. $hasTitle .'
+								</a>
+								'. $subMenu .'
+							</li>
+						';
 					}
-					$active = ($currentUrl == $menu['url']) ? 'active' : '';
-					$active = (empty($active) && !empty($GLOBALS['parent_active'])) ? 'active' : $active;
-					echo '
-						<li class="'. $hasSub .' '. $active .'">
-							<a href="'. $menu['url'] .'">
-								'. $hasImg .'
-								'. $hasBadge .'
-								'. $hasCaret .'
-								'. $hasIcon .'
-								'. $hasTitle .'
-							</a>
-							'. $subMenu .'
-						</li>
-					';
 				}
 			@endphp
 			<!-- begin sidebar minify button -->

@@ -12,7 +12,7 @@ class Izin extends Model
     public $incrementing = false;
     public function anggota()
     {
-    	return $this->hasOne('Absensi\Anggota', 'pegawai_id', 'pegawai_id');
+    	return $this->hasOne('Absensi\Anggota', 'pegawai_id', 'pegawai_id')->select(['nip', 'nm_pegawai', 'kd_unit', 'kd_jabatan', 'kd_bagian'])->orderBy('nm_pegawai');
     }
 
     public function pegawai(){

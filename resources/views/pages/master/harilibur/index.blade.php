@@ -28,7 +28,6 @@
                 </div>
                 <div class="col-md-12 col-lg-9 col-xl-9 col-xs-12">
                 	<form id="frm-cari" action="/harilibur" method="GET">
-                		@csrf
 	                	<div class="form-inline pull-right">
 							<div class="form-group">
 								<input type="text" readonly class="form-control cari" id="datepicker1" name="tgl1" placeholder="Tgl. Mulai" value="{{ date('d M Y', strtotime($tgl1)) }}"/>

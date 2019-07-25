@@ -29,9 +29,7 @@ class DatakehadiranController extends Controller
     	}
     	$tgl1 = ($req->tgl1? date('Y-m-d', strtotime($req->tgl1)): date('Y-m-1'));
     	$tgl2 = ($req->tgl2? date('Y-m-d', strtotime($req->tgl2)): date('Y-m-d'));
-    	$kehadiran = Kehadiran::when($pegawai != null, function ($q) use ($req){
-    		return $q->where('pegawai_id', $req->pegawai);
-    	})
+    	$kehadiran = Kehadiran::with('anggota.pegawai')
     	->whereIn('kehadiran_status', ['M', 'T'])
     	->whereRaw("date(kehadiran_tgl) between '".$tgl1."' and '".$tgl2."'")->paginate(10);
 

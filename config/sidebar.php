@@ -18,6 +18,60 @@ return [
 		'title' => 'Dashboard',
 		'url' => '/'
 	],[
+		'icon' => 'fa fa-calendar-alt',
+		'title' => 'Absensi',
+		'url' => 'javascript:;',
+		'caret' => true,
+		'sub_menu' => [[
+			'url' => '/datakehadiran',
+			'title' => 'Data Kehadiran'
+		],[
+			'url' => '/downloadkehadiran',
+			'title' => 'Download Kehadiran'
+		],[
+			'url' => '/dataizin',
+			'title' => 'Data Izin'
+		]]
+	],[
+		'icon' => 'fa fa-gavel',
+		'title' => 'Administrator',
+		'url' => 'javascript:;',
+		'caret' => true,
+		'sub_menu' => [[
+			'url' => '/postingabsensi',
+			'title' => 'Posting Absensi'
+		],[
+			'url' => '/shiftkaryawan',
+			'title' => 'Shift Karyawan'
+		]]
+	],[
+		'icon' => 'fa fa-database',
+		'title' => 'Data Master',
+		'url' => 'javascript:;',
+		'caret' => true,
+		'sub_menu' => [[
+			'url' => '/dataanggota',
+			'title' => 'Data Anggota'
+		],[
+			'url' => '/harilibur',
+			'title' => 'Hari Libur'
+		],[
+			'url' => '/harikhusus',
+			'title' => 'Hari Khusus'
+		]]
+	],[
+		'icon' => 'fa fa-file-alt',
+		'title' => 'Laporan',
+		'url' => 'javascript:;',
+		'caret' => true,
+		'sub_menu' => [[
+			'url' => '/rinciankehadiran',
+			'title' => 'Rincian Kehadiran'
+		],[
+			'url' => '/rekapabsensi',
+			'title' => 'Rekap Absensi'
+		]]
+	],[
 		'icon' => 'fa fa-cog',
 		'title' => 'Setup',
 		'url' => 'javascript:;',
@@ -37,60 +91,6 @@ return [
 		],[
 			'url' => '/aturan',
 			'title' => 'Aturan'
-		]]
-	],[
-		'icon' => 'fa fa-database',
-		'title' => 'Data Master',
-		'url' => 'javascript:;',
-		'caret' => true,
-		'sub_menu' => [[
-			'url' => '/dataanggota',
-			'title' => 'Data Anggota'
-		],[
-			'url' => '/harilibur',
-			'title' => 'Hari Libur'
-		],[
-			'url' => '/harikhusus',
-			'title' => 'Hari Khusus'
-		]]
-	],[
-		'icon' => 'fa fa-calendar-alt',
-		'title' => 'Absensi',
-		'url' => 'javascript:;',
-		'caret' => true,
-		'sub_menu' => [[
-			'url' => '/datakehadiran',
-			'title' => 'Data Kehadiran'
-		],[
-			'url' => '/downloadkehadiran',
-			'title' => 'Download Kehadiran'
-		],[
-			'url' => '/dataizin',
-			'title' => 'Data Izin'
-		]]
-	],[
-		'icon' => 'fa fa-file-alt',
-		'title' => 'Laporan',
-		'url' => 'javascript:;',
-		'caret' => true,
-		'sub_menu' => [[
-			'url' => '/rinciankehadiran',
-			'title' => 'Rincian Kehadiran'
-		],[
-			'url' => '/rekapabsensi',
-			'title' => 'Rekap Absensi'
-		]]
-	],[
-		'icon' => 'fa fa-gavel',
-		'title' => 'Administrator',
-		'url' => 'javascript:;',
-		'caret' => true,
-		'sub_menu' => [[
-			'url' => '/postingabsensi',
-			'title' => 'Posting Absensi'
-		],[
-			'url' => '/shiftkaryawan',
-			'title' => 'Shift Karyawan'
 		]]
 	]]
 ];

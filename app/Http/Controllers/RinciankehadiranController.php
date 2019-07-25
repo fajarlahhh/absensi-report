@@ -21,15 +21,7 @@ class RinciankehadiranController extends Controller
         $absensi = [];
         $kantor = Kantor::all();
         $ktr = $req->get('ktr')?$req->get('ktr'):$kantor{0}->kantor_id;
-        $anggota = Anggota::where('kantor_id', $ktr)->groupBy('anggota_id')->orderBy('anggota_nip')->get();
-        $x=0;
-        foreach ($anggota as $key => $angg) {
-            $absensi[$x][0] = $angg->pegawai->nip;
-            $absensi[$x][1] = $angg->pegawai->nm_pegawai;
-            $absen = Absen::where('pegawai_id', $angg->pegawai_id)->whereBetween('absen_tgl', [$tgl1, $tgl2])->get();
-            $absensi[$x][2] = $absen;
-            $x++;
-        }
+        $absensi = Anggota::with('absen')->with('pegawai')->where('kantor_id', $ktr)->groupBy('anggota_id')->orderBy('anggota_nip')->get();
     	return view('pages.laporan.rincianabsensi.index',[
             'diff' => $diff,
             'kantor' => $kantor,

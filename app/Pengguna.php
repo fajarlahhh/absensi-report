@@ -31,7 +31,7 @@ class Pengguna extends Authenticatable
     }
 
     public function pegawai(){
-        return $this->hasOne('Absensi\Pegawai', 'nip', 'pengguna_nip')->orderBy('nm_pegawai');
+        return $this->hasOne('Absensi\Pegawai', 'nip', 'pengguna_nip')->select(['nip', 'nm_pegawai', 'kd_unit', 'kd_jabatan', 'kd_bagian'])->orderBy('nm_pegawai');
 	}
 
     public static $admin = ['201604331'];

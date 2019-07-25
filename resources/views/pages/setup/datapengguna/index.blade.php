@@ -45,9 +45,7 @@
 							<th>NIP</th>
 							<th>Nama</th>
 							<th>Unit</th>
-							<th>Jabatan</th>
 							<th>Bagian</th>
-							<th>Seksi</th>
 							<th>Level</th>
 							<th width="100"></th>
 						</tr>
@@ -57,11 +55,9 @@
 					    <tr>
 					        <td>{{ (($data->currentPage() - 1 ) * $data->perPage() ) + $loop->iteration }}</td>
 					        <td>{{ $pengguna->pengguna_nip }}</td>
-					        <td>{{ $pengguna->nm_pegawai }}</td>
-					        <td>{{ $pengguna->nm_unit }}</td>
-					        <td>{{ $pengguna->nm_jabatan }}</td>
-					        <td>{{ $pengguna->nm_bagian }}</td>
-					        <td>{{ $pengguna->nm_seksi }}</td>
+					        <td>{{ $pengguna->pegawai->nm_pegawai }}</td>
+					        <td>{{ $pengguna->pegawai->unit->nm_unit }}</td>
+					        <td>{{ $pengguna->pegawai->bagian->nm_bagian }}</td>
 					        <td>{{ ucFirst($pengguna->getRoleNames()[0]) }}</td>
 					        <td class="text-right">
 					        	@role('user|administrator')

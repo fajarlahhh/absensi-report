@@ -21,20 +21,15 @@ class PenggunaController extends Controller
 
 	public function index(Request $req)
 	{
-		$pengguna = Pengguna::select('pengguna_nip', 'nm_pegawai', 'nm_unit', 'nm_jabatan', 'nm_bagian', 'nm_seksi')
-		->join('personalia.pegawai', 'pegawai.nip', '=', 'pengguna_nip')
-		->join('personalia.jabatan', 'pegawai.kd_jabatan', '=', 'jabatan.kd_jabatan')
-		->join('personalia.bagian', 'pegawai.kd_bagian', '=', 'bagian.kd_bagian')
-		->join('personalia.unit', 'pegawai.kd_unit', '=', 'unit.kd_unit')
-		->join('personalia.seksi', 'pegawai.kd_seksi', '=', 'seksi.kd_seksi')
-		->where('nm_pegawai', 'like', '%'.$req->cari.'%')
-		->orwhere('pengguna_nip', 'like', '%'.$req->cari.'%')
-		->orwhere('nm_pegawai', 'like', '%'.$req->cari.'%')
-		->orwhere('nm_unit', 'like', '%'.$req->cari.'%')
-		->orwhere('nm_jabatan', 'like', '%'.$req->cari.'%')
-		->orwhere('nm_bagian', 'like', '%'.$req->cari.'%')
-		->orwhere('nm_seksi', 'like', '%'.$req->cari.'%')
-		->orderBy('nm_pegawai')->paginate(10);
+		$pengguna = Pengguna::with(['pegawai' => function($q) use ($req){
+			$q->where('nm_pegawai', 'like', '%'.$req->cari.'%');
+			$q->with('unit');
+			$q->with('bagian');
+			$q->with('jabatan');
+		}])->whereHas('pegawai', function($q) use ($req){			
+			$q->where('nm_pegawai', 'like', '%'.$req->cari.'%');
+			$q->orWhere('nip', 'like', '%'.$req->cari.'%');
+		})->paginate(10);
 		$pengguna->appends($req->only('cari'));
 		return view('pages.setup.datapengguna.index',[
 			'data' => $pengguna,
@@ -44,7 +39,7 @@ class PenggunaController extends Controller
 
 	public function tambah()
 	{
-		$pegawai = Pegawai::select('id', 'nip', 'nm_pegawai')
+		$pegawai = Pegawai::select('nip', 'nm_pegawai')
 		->orderBy('nm_pegawai', 'asc')
 		->whereNotIn('nip', Pengguna::select('pengguna_nip')->get())
 		->where('kd_status', '!=', '07')
@@ -79,7 +74,6 @@ class PenggunaController extends Controller
 		);
 		try{
 			$pengguna = new Pengguna();
-			$pengguna->pegawai_id = $req->get('pegawai_id');
 			$pengguna->pengguna_nip = $req->get('pengguna_nip');
 			$pengguna->pengguna_hp = $req->get('pengguna_hp');
 			$pengguna->pengguna_sandi = Hash::make($req->get('pengguna_sandi'));
@@ -108,11 +102,11 @@ class PenggunaController extends Controller
 
 	public function edit(Request $req)
 	{
-		$pengguna = Pengguna::find($req->id);
+		$pengguna = Pengguna::findOrFail($req->id);
 		$level = (in_array($req->id, config('admin.nip'))? \Spatie\Permission\Models\Role::where('name', 'Administrator')->get(): \Spatie\Permission\Models\Role::all());
 		$izin = \Spatie\Permission\Models\Permission::all();
 		return view('pages.setup.datapengguna.form',[
-			'data' => $pengguna,
+			'pengguna' => $pengguna,
 			'izin' => $izin,
 			'level' => $level,
 			'aksi' => 'Edit'

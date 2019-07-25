@@ -18,7 +18,7 @@ class DatamesinController extends Controller
 
     public function index(Request $req)
     {
-    	$mesin = Mesin::paginate(10);
+    	$mesin = Mesin::with('kantor')->paginate(10);
 		$mesin->appends($req->only('cari'));
     	return view('pages.setup.datamesin.index',[
     		'data' => $mesin,

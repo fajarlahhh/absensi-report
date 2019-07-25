@@ -30,14 +30,13 @@
 				<input type="hidden" name="redirect" value="{{ url()->previous() }}">
 				<div class="row">
 					<div class="col-md-5">
-						<input type="hidden" name="pegawai_id" id="id" value="{{ $data? $data->pegawai_id: $pegawai{0}->id }}">
-						@if(!$data)
+						@if(!$pengguna)
 						<div class="form-group input-group-sm">
 							<label class="control-label">Nama Pegawai</label>
 							<select class="form-control selectpicker" onchange="getId()" data-live-search="true" name="pengguna_nip" id="nip" data-style="btn-info" data-width="100%">
 								@foreach($pegawai as $peg)
-								<option value="{{ $peg->nip }}" data-id="{{ $peg->id }}"
-									@if($data && $data->pegawai_nip == $peg->nip)
+								<option value="{{ $peg->nip }}" 
+									@if($pengguna && $pengguna->pegawai_nip == $peg->nip)
 										selected
 									@endif
 								>{{ $peg->nm_pegawai }}</option>
@@ -51,23 +50,23 @@
 						@else
 						<div class="form-group">
 							<label class="control-label">NIP</label>
-							<input class="form-control" type="text" name="pengguna_nip" value="{{ $data->pengguna_nip }}" required readonly />
+							<input class="form-control" type="text" name="pengguna_nip" value="{{ $pengguna->pengguna_nip }}" required readonly />
 						</div>
 						<div class="form-group">
 							<label class="control-label">Nama Pegawai</label>
-							<input  class="form-control" type="text" name="pengguna_nama" value="{{ $data->pegawai->nm_pegawai }}" required readonly />
+							<input  class="form-control" type="text" name="pengguna_nama" value="{{ $pengguna->pegawai->nm_pegawai }}" required readonly />
 						</div>
 						@endif
 						<div class="form-group">
 							<label class="control-label">No. Hp</label>
-							<input class="form-control" type="text" name="pengguna_hp" value="{{ $data? $data->pengguna_hp: '' }}" required data-parsley-minlength="10" autocomplete="off" data-parsley-type="number" />
+							<input class="form-control" type="text" name="pengguna_hp" value="{{ $pengguna? $pengguna->pengguna_hp: '' }}" required data-parsley-minlength="10" autocomplete="off" data-parsley-type="number" />
 						</div>
 						<div class="form-group">
 							<label class="control-label">Level</label>
 							<select class="form-control selectpicker" style="width : 100%" name="pengguna_level" id="pengguna_level" data-style="btn-info" onchange="hakakses()" data-width="100%">
 								@foreach($level as $lvl)
 								<option value="{{ $lvl->id }}" 
-									@if($data && $data->getRoleNames()[0] == $lvl->name)
+									@if($pengguna && $pengguna->getRoleNames()[0] == $lvl->name)
 										selected
 									@endif
 								>{{ ucfirst($lvl->name) }}</option>
@@ -76,27 +75,33 @@
 						</div>
 					</div>
 					<div class="col-md-7">
-	                     <div class="panel panel-default">
-	                        <!-- begin panel-heading -->
-	                        <div class="panel-heading">
-	                            <div class="panel-heading-btn">
-	                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
-	                            </div>
-	                            <h4 class="panel-title">Hak Akses</h4>
+	                     <div class="panel-body row">
+	                        	@php
+									$i = 0;
+									foreach (config('sidebar.menu') as $key => $menu) {
+										if ($menu['title'] != 'Dashboard') {
+											$subMenu = '';
+										
+											if (!empty($menu['sub_menu'])) {
+												foreach ($menu['sub_menu'] as $key => $sub) {
+													$subMenu .= "<div class='hakakses checkbox checkbox-css col-md-12'>
+																	<input type='checkbox' onchange='parent(\"cssCheckbox".$i."\")' class='cssCheckbox".$i."' id='cssCheckbox".substr($sub['url'], 1)."' name='izin[]' value='".substr($sub['url'], 1)."' ".($aksi == 'Edit'? ($pengguna->roles[0]->name == 'administrator'? 'checked': ($pengguna->hasPermissionTo(substr($sub['url'], 1))? 'checked': '')): '')."/>
+																	<label for='cssCheckbox".substr($sub['url'], 1)."' class='p-l-5'>".$sub['title']."</label>
+																</div>";
+												}
+											}
+								@endphp
+									<div class="hakakses checkbox checkbox-css col-md-6 col-lg-4">
+										<input type="checkbox" onchange="child('cssCheckbox{{ $i }}')" id="cssCheckbox{{ $i }}" name="izin[]" value="{{ strtolower($menu['title']) }}" {{ ($aksi == 'Edit'? ($pengguna->roles[0]->name == 'administrator'? 'checked': ($pengguna->hasPermissionTo(strtolower($menu['title']))? 'checked': '')): '') }}/>
+										<label for="cssCheckbox{{ $i }}" class="p-l-5">{{ $menu['title'] }}</label>
+										{!! $subMenu !!}
+									</div>
+	                        	@php
+											$i++;
+										}
+									}
+								@endphp
 	                        </div>
-	                        <!-- end panel-heading -->
-	                        <!-- begin panel-body -->
-	                        <div class="panel-body row">
-	                            @foreach($izin as $akses)
-								<div class="hakakses checkbox checkbox-css col-md-4 ">
-									<input type="checkbox" id="cssCheckbox{{ $akses->name }}" name="izin[]" value="{{ $akses->name }}" 
-									{{ ($data && $data->hasPermissionTo($akses->name)? 'checked': '') }} />
-									<label for="cssCheckbox{{ $akses->name }}" class="p-l-5">{{ ucwords($akses->name) }}</label>
-								</div>
-	                            @endforeach
-	                        </div>
-	                        <!-- end panel-body -->
-	                    </div>
 					</div>
 				</div>
 			</div>
@@ -127,9 +132,27 @@
     		$('#pengguna_sandi').password()
 		});
 
-		function getId() {
-			$("#id").val($("#nip option:selected").data("id"));
-		}		
+		function child(elmt) {
+			if ($('#' + elmt).is(':checked')) {
+				$('.' + elmt).prop('checked', true);
+			}else{
+				$('.' + elmt).prop('checked', false);
+			}
+		}
+
+		function parent(elmt) {
+			var i = 0;
+		    $('.' + elmt).each(function() {
+		    	if ($('.' + elmt).is(':checked')) {
+		        	i++;
+		    	}
+		    });
+		    if (i > 0) {
+		    	$('#' + elmt).prop('checked', true);
+		    }else{
+		    	$('#' + elmt).prop('checked', false);
+		    }
+		}
 
 		function hakakses() {
 			if ($('#pengguna_level').val() == 1) {

@@ -15,8 +15,4 @@ class Kehadiran extends Model
     {
     	return $this->hasOne('Absensi\Anggota', 'pegawai_id', 'pegawai_id');
     }
-
-    public function pegawai(){
-        return $this->hasOne('Absensi\Pegawai', 'id', 'pegawai_id');
-	}
 }

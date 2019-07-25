@@ -44,7 +44,7 @@ class PostingabsenController extends Controller
 			]);
     	}
 		try{
-			ini_set('max_execution_time', 500);
+			ini_set('max_execution_time', 0);
 			$tanggal = explode(' - ', $req->get('tanggal'));
 			$aturan = Aturan::first();
 			Absen::whereBetween("absen_tgl", [date('Y-m-d', strtotime($tanggal[0])),date('Y-m-d', strtotime($tanggal[1]))])->delete();

@@ -20,7 +20,7 @@ class DataizinController extends Controller
 		$tanggal = explode(' - ', $req->get('tgl'));
     	$tgl1 = ($req->get('tgl')? date('Y-m-d', strtotime($tanggal[0])): date('Y-m-1'));
     	$tgl2 = ($req->get('tgl')? date('Y-m-d', strtotime($tanggal[1])): date('Y-m-d'));
-    	$kehadiran = Izin::whereBetween("izin_tgl", [$tgl1,$tgl2])->orderBy('izin_tgl')->paginate(10);
+    	$kehadiran = Izin::with('pegawai')->whereBetween("izin_tgl", [$tgl1,$tgl2])->orderBy('izin_tgl')->paginate(10);
 		$kehadiran->appends(['tgl' => $req->tgl, 'cari' => $req->cari])->links();
     	return view('pages.absensi.dataizin.index',[
     		'data' => $kehadiran,

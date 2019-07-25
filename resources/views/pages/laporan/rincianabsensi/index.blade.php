@@ -54,10 +54,10 @@
 						<tr>
 							<th rowspan="2">NIP</th>
 							<th rowspan="2" width="300">Nama</th>
-							@if($absensi[0][2])
-							@for($i=0; $i < sizeof($absensi[0][2]); $i++)
+							@if($absensi)
+							@foreach($absensi{0}->absen as $index => $abs)
 							@php
-								switch($absensi[0][2][$i]->absen_hari){
+								switch($abs->absen_hari){
 									case 'l':
 										$bg = "bg-red-transparent-3";
 										break;
@@ -69,15 +69,15 @@
 										break;
 								}
 							@endphp
-					        <th colspan="3" class="{{ $bg }} text-center">{{ date('d M Y', strtotime($absensi[0][2][$i]->absen_tgl)) }}<br><small>{{ $absensi[0][2][$i]->absen_tgl_keterangan }}</small></th>
-							@endfor
+					        <th colspan="3" class="{{ $bg }} text-center">{{ date('d M Y', strtotime($abs->absen_tgl)) }}<br><small>{{ $abs->absen_tgl_keterangan }}</small></th>
+							@endforeach
 							@endif
 						</tr>
 						<tr>
-							@if($absensi[0][2])
-							@for($i=0; $i < sizeof($absensi[0][2]); $i++)
+							@if($absensi)
+							@foreach($absensi{0}->absen as $index => $abs)
 							@php
-								switch($absensi[0][2][$i]->absen_hari){
+								switch($abs->absen_hari){
 									case 'l':
 										$bg = "bg-red-transparent-3";
 										break;
@@ -92,19 +92,18 @@
 							<td class="text-center {{ $bg }}">Masuk</td>
 							<td class="text-center {{ $bg }}">Telat</td>
 							<td class="text-center {{ $bg }}">Izin</td>
-							@endfor
+							@endforeach
 							@endif
 						</tr>
 					</thead>
 					<tbody>
-					    @for($i = 0; $i < count($absensi); $i++)
+						@foreach($absensi as $index => $absen)
 					    <tr>
-					        <td>{{ $absensi[$i][0] }}</td>
-					        <td>{{ $absensi[$i][1] }}</td>
-							@if($absensi[0][2])
-							@for($j=0; $j < sizeof($absensi[$i][2]); $j++)
+					        <td>{{ $absen->pegawai->nip }}</td>
+					        <td>{{ $absen->pegawai->nm_pegawai }}</td>
+							@foreach($absen->absen as $index => $abs)
 							@php
-								switch($absensi[$i][2][$j]->absen_hari){
+								switch($abs->absen_hari){
 									case 'l':
 										$bg = "bg-red-transparent-3";
 										break;
@@ -116,13 +115,12 @@
 										break;
 								}
 							@endphp
-					        <td class="text-center {{ $bg }}">{{ $absensi[$i][2][$j]->absen_masuk && !$absensi[$i][2][$j]->absen_izin? date('H:i:s', strtotime($absensi[$i][2][$j]->absen_masuk)): '' }}</td>
-					        <td class="text-center {{ $bg }}">{{ $absensi[$i][2][$j]->absen_masuk_telat && $absensi[$i][2][$j]->absen_hari == "b"? date('H:i:s', strtotime($absensi[$i][2][$j]->absen_masuk_telat)): '' }}</td>
-					        <td class="{{ $bg }}">{{ $absensi[$i][2][$j]->absen_izin? $absensi[$i][2][$j]->absen_izin.' '.$absensi[$i][2][$j]->absen_izin_keterangan: '' }}</td>
-							@endfor
-							@endif
+					        <td class="text-center {{ $bg }}">{{ $abs->absen_masuk && !$abs->absen_izin? date('H:i:s', strtotime($abs->absen_masuk)): '' }}</td>
+					        <td class="text-center {{ $bg }}">{{ $abs->absen_masuk_telat && $abs->absen_hari == "b"? date('H:i:s', strtotime($abs->absen_masuk_telat)): '' }}</td>
+					        <td class="{{ $bg }}">{{ $abs->absen_izin? $abs->absen_izin.' '.$abs->absen_izin_keterangan: '' }}</td>
+							@endforeach
 				      	</tr>
-					    @endfor
+					    @endforeach
 				    </tbody>
 				</table>
 			</div>

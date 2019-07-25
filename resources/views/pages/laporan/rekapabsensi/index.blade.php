@@ -65,7 +65,7 @@
 						</tr>
 					</thead>
 					<tbody>
-					    @for($i = 0; $i < count($absensi); $i++)
+					    @foreach($absensi as $index => $absen)
 					    <tr>
 							@php
 								$jmlHariKerja = 0;
@@ -78,22 +78,22 @@
 								$jmlCuti = 0;
 								$jmlLain = 0;
 							@endphp
-					        <td>{{ $absensi[$i][0] }}</td>
-					        <td>{{ $absensi[$i][1] }}</td>
+					        <td>{{ $absen->pegawai->nip }}</td>
+					        <td>{{ $absen->pegawai->nm_pegawai }}</td>
 							@if($absensi[0][2])
-							@for($j=0; $j < sizeof($absensi[$i][2]); $j++)
+							@foreach($peg->absen as $index => $abs)
 							@php
-								$jmlHariKerja += $absensi[$i][2][0]->hari;
-								$jmlTerlambat += $absensi[$i][2][0]->telat;
-								$jmlMasuk += $absensi[$i][2][0]->masuk;
-								$jmlSakit += $absensi[$i][2][0]->sakit;
-								$jmlIzin += $absensi[$i][2][0]->izin;
-								$jmlDispensasi += $absensi[$i][2][0]->dispensasi;
-								$jmlDinas += $absensi[$i][2][0]->dinas;
-								$jmlCuti += $absensi[$i][2][0]->cuti;
-								$jmlLain += $absensi[$i][2][0]->lain;
+								$jmlHariKerja += $abs->hari;
+								$jmlTerlambat += $abs->telat;
+								$jmlMasuk += $abs->masuk;
+								$jmlSakit += $abs->sakit;
+								$jmlIzin += $abs->izin;
+								$jmlDispensasi += $abs->dispensasi;
+								$jmlDinas += $abs->dinas;
+								$jmlCuti += $abs->cuti;
+								$jmlLain += $abs->lain;
 							@endphp
-							@endfor
+							@endforeach
 							@endif
 							<td>{{ $jmlHariKerja }}</td>
 							<td>{{ $jmlTerlambat }}</td>
@@ -105,7 +105,7 @@
 							<td>{{ $jmlCuti }}</td>
 							<td>{{ $jmlLain }}</td>
 				      	</tr>
-					    @endfor
+					    @endforeach
 				    </tbody>
 				</table>
 			</div>

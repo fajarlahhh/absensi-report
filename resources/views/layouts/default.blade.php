@@ -23,6 +23,7 @@
 	
 	$contentClass = (!empty($contentFullWidth) || !empty($contentFullHeight)) ? 'content-full-width ' : '';
 	$contentClass .= (!empty($contentInverseMode)) ? 'content-inverse-mode ' : '';
+	$foto = null;
 @endphp
 <body class="{{ $bodyClass }}">
 	@include('includes.component.page-loader')
