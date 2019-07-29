@@ -30,4 +30,12 @@ class Anggota extends Model
     public function absen(){
         return $this->hasMany('Absensi\Absen', 'pegawai_id', 'pegawai_id')->orderBy('absen_tgl');
     }
+
+    public function izin(){
+        return $this->hasMany('Absensi\Izin', 'pegawai_id', 'pegawai_id')->orderBy('izin_tgl');
+    }
+
+    public function kehadiran(){
+        return $this->hasMany('Absensi\Kehadiran', 'pegawai_id', 'pegawai_id')->orderBy('kehadiran_tgl');
+    }
 }
