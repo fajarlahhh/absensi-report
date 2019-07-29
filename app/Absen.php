@@ -39,5 +39,5 @@ class Absen extends Model
 
     public function pegawai(){
         return $this->hasOne('Absensi\Pegawai', 'id', 'pegawai_id');
-	}
+    }
 }
