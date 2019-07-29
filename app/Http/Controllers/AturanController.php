@@ -8,13 +8,6 @@ use Illuminate\Support\Facades\Auth;
 
 class AturanController extends Controller
 {
-    //
-    public function __construct()
-	{
-		$this->middleware('auth');
-    	$this->middleware('permission:aturan');
-	}
-
     public function index(Request $req)
     {
     	$aturan = Aturan::first();

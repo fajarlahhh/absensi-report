@@ -17,13 +17,6 @@ use Illuminate\Support\Facades\Validator;
 
 class PostingabsenController extends Controller
 {
-    //
-    public function __construct()
-	{
-		$this->middleware('auth');
-    	$this->middleware('permission:posting absensi');
-	}
-
 	public function index()
 	{
 		return view('pages.administrator.postingabsensi.index');

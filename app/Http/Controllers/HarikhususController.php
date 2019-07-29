@@ -8,13 +8,6 @@ use Illuminate\Support\Facades\Auth;
 
 class HarikhususController extends Controller
 {
-    //
-    public function __construct()
-    {
-    	$this->middleware('auth');
-    	$this->middleware('permission:hari khusus');
-    }
-
     public function index(Request $req)
     {
     	$tahun = ($req->tahun? $req->tahun: date('Y'));

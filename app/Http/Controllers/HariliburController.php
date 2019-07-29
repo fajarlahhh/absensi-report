@@ -8,13 +8,6 @@ use Illuminate\Support\Facades\Auth;
 
 class HariliburController extends Controller
 {
-    //
-    public function __construct()
-    {
-    	$this->middleware('auth');
-    	$this->middleware('permission:hari libur');
-    }
-
     public function index(Request $req){
     	$tgl1 = ($req->tgl1? date('Y-m-d', strtotime($req->tgl1)): date('Y-m-1'));
     	$tgl2 = ($req->tgl2? date('Y-m-d', strtotime($req->tgl2)): date('Y-m-d'));

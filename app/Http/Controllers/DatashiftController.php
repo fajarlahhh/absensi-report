@@ -8,13 +8,6 @@ use Illuminate\Support\Facades\DB;
 
 class DatashiftController extends Controller
 {
-    //
-	public function __construct()
-	{
-		$this->middleware('auth');
-    	$this->middleware('permission:shift');
-	}
-
     public function index(Request $req)
     {
     	$shift = Shift::paginate(10);

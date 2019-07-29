@@ -77,6 +77,7 @@
 					<div class="col-md-7">
 	                     <div class="panel-body row">
 	                        	@php
+	                        		$permission = $pengguna->getAllPermissions();
 									$i = 0;
 									foreach (config('sidebar.menu') as $key => $menu) {
 										if ($menu['title'] != 'Dashboard') {
@@ -85,14 +86,14 @@
 											if (!empty($menu['sub_menu'])) {
 												foreach ($menu['sub_menu'] as $key => $sub) {
 													$subMenu .= "<div class='hakakses checkbox checkbox-css col-md-12'>
-																	<input type='checkbox' onchange='parent(\"cssCheckbox".$i."\")' class='cssCheckbox".$i."' id='cssCheckbox".substr($sub['url'], 1)."' name='izin[]' value='".substr($sub['url'], 1)."' ".($aksi == 'Edit'? ($pengguna->roles[0]->name == 'administrator'? 'checked': ($pengguna->hasPermissionTo(substr($sub['url'], 1))? 'checked': '')): '')."/>
+																	<input type='checkbox' onchange='parent(\"cssCheckbox".$i."\")' class='cssCheckbox".$i."' id='cssCheckbox".substr($sub['url'], 1)."' name='izin[]' value='".substr($sub['url'], 1)."' ".($aksi == 'Edit'? ($pengguna->roles[0]->name == 'administrator'? 'checked': (sizeof($permission) > 0 && $pengguna->hasPermissionTo(substr($sub['url'], 1))? 'checked': '')): '')."/>
 																	<label for='cssCheckbox".substr($sub['url'], 1)."' class='p-l-5'>".$sub['title']."</label>
 																</div>";
 												}
 											}
 								@endphp
 									<div class="hakakses checkbox checkbox-css col-md-6 col-lg-4">
-										<input type="checkbox" onchange="child('cssCheckbox{{ $i }}')" id="cssCheckbox{{ $i }}" name="izin[]" value="{{ strtolower($menu['title']) }}" {{ ($aksi == 'Edit'? ($pengguna->roles[0]->name == 'administrator'? 'checked': ($pengguna->hasPermissionTo(strtolower($menu['title']))? 'checked': '')): '') }}/>
+										<input type="checkbox" onchange="child('cssCheckbox{{ $i }}')" id="cssCheckbox{{ $i }}" name="izin[]" value="{{ strtolower($menu['title']) }}" {{ ($aksi == 'Edit'? ($pengguna->roles[0]->name == 'administrator'? 'checked': (sizeof($permission) > 0 && $pengguna->hasPermissionTo(strtolower($menu['title']))? 'checked': '')): '') }}/>
 										<label for="cssCheckbox{{ $i }}" class="p-l-5">{{ $menu['title'] }}</label>
 										{!! $subMenu !!}
 									</div>

@@ -10,12 +10,6 @@ use Illuminate\Support\Facades\DB;
 
 class DatamesinController extends Controller
 {
-	public function __construct()
-	{
-		$this->middleware('auth');
-    	$this->middleware('permission:data mesin');
-	}
-
     public function index(Request $req)
     {
     	$mesin = Mesin::with('kantor')->paginate(10);

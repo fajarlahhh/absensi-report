@@ -10,8 +10,6 @@ use Illuminate\Support\Facades\DB;
 
 class RinciankehadiranController extends Controller
 {
-    //
-
     public function index(Request $req)
     {
         $tanggal = explode(' - ', $req->get('tgl'));

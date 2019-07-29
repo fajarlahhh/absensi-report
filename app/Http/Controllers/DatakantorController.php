@@ -9,12 +9,6 @@ use Illuminate\Support\Facades\DB;
 
 class DatakantorController extends Controller
 {
-    public function __construct()
-	{
-		$this->middleware('auth');
-    	$this->middleware('permission:data kantor');
-	}
-
     public function index(Request $req)
     {
     	$kantor = Kantor::where('kantor_nama', 'like', '%'.$req->cari.'%')->paginate(10);

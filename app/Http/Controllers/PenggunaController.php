@@ -12,13 +12,6 @@ use Illuminate\Support\Facades\Auth;
 
 class PenggunaController extends Controller
 {
-    //
-	public function __construct()
-	{
-		$this->middleware('auth');
-    	$this->middleware('permission:data pengguna');
-	}
-
 	public function index(Request $req)
 	{
 		$pengguna = Pengguna::with(['pegawai' => function($q) use ($req){

@@ -13,13 +13,6 @@ use Illuminate\Support\Facades\Auth;
 
 class DatakehadiranController extends Controller
 {
-    //
-    public function __construct()
-	{
-		$this->middleware('auth');
-    	$this->middleware('permission:data kehadiran');
-	}
-
     public function index(Request $req)
     {
     	$anggota = Anggota::all();

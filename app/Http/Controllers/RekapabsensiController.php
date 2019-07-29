@@ -10,13 +10,6 @@ use Illuminate\Support\Facades\DB;
 
 class RekapabsensiController extends Controller
 {
-    //
-    public function __construct()
-    {
-        $this->middleware('auth');
-        $this->middleware('permission:rekap absensi');
-    }
-
     public function index(Request $req)
     {
         $tanggal = explode(' - ', $req->get('tgl'));

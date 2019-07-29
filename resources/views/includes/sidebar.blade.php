@@ -7,7 +7,7 @@
 			<li class="nav-profile">
 				<a href="javascript:;" data-toggle="nav-profile">
 					<div class="cover with-shadow"></div>
-					<img src="{{ ($foto? $foto: '../assets/img/user/user.png') }}" alt="" class="image" />
+					<img src="{{ (Auth::user()->pegawai->foto? Auth::user()->pegawai->foto: '../assets/img/user/user.png') }}" alt="" class="image" />
 					<div class="info">
 						<b class="caret pull-right"></b>
 						{{ Auth::user()->pegawai->nm_pegawai }}

@@ -17,53 +17,53 @@ Route::group(['middleware' => ['auth']], function () {
 	Route::get('/home', 'DashboardController@index');
 	Route::post('/gantisandi', 'PenggunaController@sandi');
 
-	Route::group(['middleware' => ['auth', 'permission:data kehadiran']], function () {
+	Route::group(['middleware' => ['role_or_permission:administrator|datakehadiran']], function () {
 		Route::get('/datakehadiran', 'DatakehadiranController@index')->name('datakehadiran');
 		Route::get('/datakehadiran/tambah', 'DatakehadiranController@tambah')->middleware(['role:administrator|user']);
 		Route::post('/datakehadiran/tambah', 'DatakehadiranController@do_tambah')->middleware(['role:administrator|user']);
 		Route::get('/datakehadiran/hapus/{post}', 'DatakehadiranController@hapus')->middleware(['role:administrator|user']);
 	});
 
-	Route::group(['middleware' => ['auth', 'permission:download kehadiran']], function () {
+	Route::group(['middleware' => ['role_or_permission:administrator|downloadkehadiran']], function () {
 		Route::get('/downloadkehadiran', 'DatakehadiranController@download')->name('downloadkehadiran');
 		Route::post('/downloadkehadiran', 'DatakehadiranController@do_download')->middleware(['role:administrator|user']);
 	});
 
-	Route::group(['middleware' => ['auth', 'permission:posting absensi']], function () {
+	Route::group(['middleware' => ['role_or_permission:administrator|postingabsensi']], function () {
 		Route::get('/postingabsensi', 'PostingabsenController@index')->name('postingabsensi');
 		Route::post('/postingabsensi', 'PostingabsenController@posting')->middleware(['role:administrator|user']);
 	});
 
-	Route::group(['middleware' => ['auth', 'permission:shift karyawan']], function () {
+	Route::group(['middleware' => ['role_or_permission:administrator|shiftkaryawan']], function () {
 		Route::get('/shiftkaryawan', 'ShiftkaryawanController@index')->name('shiftkaryawan');
 		Route::get('/shiftkaryawan/tambah', 'ShiftkaryawanController@tambah')->middleware(['role:administrator|user']);
 		Route::post('/shiftkaryawan/tambah', 'ShiftkaryawanController@do_tambah')->middleware(['role:administrator|user']);
 		Route::get('/shiftkaryawan/hapus/{post}', 'ShiftkaryawanController@hapus')->middleware(['role:administrator|user']);
 	});
 
-	Route::group(['middleware' => ['auth', 'permission:hari libur']], function(){
+	Route::group(['middleware' => ['role_or_permission:administrator|harilibur']], function () {
 		Route::get('/harilibur', 'HariliburController@index')->name('harilibur');
 		Route::get('/harilibur/tambah', 'HariliburController@tambah')->middleware(['role:administrator|user']);
 		Route::post('/harilibur/tambah', 'HariliburController@do_tambah')->middleware(['role:administrator|user']);
 		Route::get('/harilibur/hapus/{post}', 'HariliburController@hapus')->middleware(['role:administrator|user']);
 	});
 
-	Route::group(['middleware' => ['auth', 'permission:hari khusus']], function(){
+	Route::group(['middleware' => ['role_or_permission:administrator|harikhusus']], function () {
 		Route::get('/harikhusus', 'HarikhususController@index')->name('harikhusus');
 		Route::get('/harikhusus/tambah', 'HarikhususController@tambah')->middleware(['role:administrator|user']);
 		Route::post('/harikhusus/tambah', 'HarikhususController@do_tambah')->middleware(['role:administrator|user']);
 		Route::get('/harikhusus/hapus/{post}', 'HarikhususController@hapus')->middleware(['role:administrator|user']);
 	});
 
-	Route::group(['middleware' => ['auth', 'permission:rincian kehadiran']], function () {
+	Route::group(['middleware' => ['role_or_permission:administrator|rinciankehadiran']], function () {
 		Route::get('/rinciankehadiran', 'RinciankehadiranController@index')->name('rinciankehadiran');
 	});
 
-	Route::group(['middleware' => ['auth', 'permission:rekap absensi']], function () {
+	Route::group(['middleware' => ['role_or_permission:administrator|rekapabsensi']], function () {
 		Route::get('/rekapabsensi', 'RekapabsensiController@index')->name('rekapabsensi');
 	});
 
-	Route::group(['middleware' => ['auth', 'permission:data izin']], function () {
+	Route::group(['middleware' => ['role_or_permission:administrator|dataizin']], function () {
 		Route::get('/dataizin', 'DataizinController@index')->name('dataizin');
 		Route::get('/dataizin/tambah', 'DataizinController@tambah')->middleware(['role:administrator|user']);
 		Route::get('/dataizin/cetak', 'DataizinController@cetak')->middleware(['role:administrator|user']);
@@ -73,12 +73,12 @@ Route::group(['middleware' => ['auth']], function () {
 		Route::get('/dataizin/hapus/{post}', 'DataizinController@hapus')->middleware(['role:administrator|user']);
 	});
 
-	Route::group(['middleware' => ['auth', 'permission:aturan']], function () {
+	Route::group(['middleware' => ['role_or_permission:administrator|aturan']], function () {
 		Route::get('/aturan', 'AturanController@index')->name('aturan');
 		Route::post('/aturan', 'AturanController@edit')->middleware(['role:administrator|user']);
 	});
 
-	Route::group(['middleware' => ['auth', 'permission:data pengguna']], function () {
+	Route::group(['middleware' => ['role_or_permission:administrator|datapengguna']], function () {
 		Route::get('/datapengguna', 'PenggunaController@index')->name('datapengguna');
 		Route::get('/datapengguna/edit', 'PenggunaController@edit')->middleware(['role:administrator|user']);
 		Route::get('/datapengguna/tambah', 'PenggunaController@tambah')->middleware(['role:administrator|user']);
@@ -87,7 +87,7 @@ Route::group(['middleware' => ['auth']], function () {
 		Route::get('/datapengguna/hapus/{post}', 'PenggunaController@hapus')->middleware(['role:administrator|user']);
 	});
 
-	Route::group(['middleware' => ['auth', 'permission:data mesin']], function () {
+	Route::group(['middleware' => ['role_or_permission:administrator|datamesin']], function () {
 		Route::get('/datamesin', 'DatamesinController@index')->name('datamesin');
 		Route::get('/datamesin/edit', 'DatamesinController@edit')->middleware(['role:administrator|user']);
 		Route::get('/datamesin/tambah', 'DatamesinController@tambah')->middleware(['role:administrator|user']);
@@ -96,7 +96,8 @@ Route::group(['middleware' => ['auth']], function () {
 		Route::get('/datamesin/hapus/{post}', 'DatamesinController@hapus')->middleware(['role:administrator|user']);
 	});
 
-	Route::group(['middleware' => ['auth', 'permission:shift']], function () {
+
+	Route::group(['middleware' => ['role_or_permission:administrator|shift']], function () {
 		Route::get('/shift', 'DatashiftController@index')->name('shift');
 		Route::get('/shift/edit', 'DatashiftController@edit')->middleware(['role:administrator|user']);
 		Route::get('/shift/tambah', 'DatashiftController@tambah')->middleware(['role:administrator|user']);
@@ -105,7 +106,7 @@ Route::group(['middleware' => ['auth']], function () {
 		Route::get('/shift/hapus/{post}', 'DatashiftController@hapus')->middleware(['role:administrator|user']);
 	});
 
-	Route::group(['middleware' => ['auth', 'permission:data kantor']], function () {
+	Route::group(['middleware' => ['role_or_permission:administrator|datakantor']], function () {
 		Route::get('/datakantor', 'DatakantorController@index')->name('datakantor');
 		Route::get('/datakantor/edit', 'DatakantorController@edit')->middleware(['role:administrator|user']);
 		Route::get('/datakantor/tambah', 'DatakantorController@tambah')->middleware(['role:administrator|user']);
@@ -114,7 +115,7 @@ Route::group(['middleware' => ['auth']], function () {
 		Route::get('/datakantor/hapus/{post}', 'DatakantorController@hapus')->middleware(['role:administrator|user']);
 	});
 
-	Route::group(['middleware' => ['auth', 'permission:data anggota']], function () {
+	Route::group(['middleware' => ['role_or_permission:administrator|dataanggota']], function () {
 		Route::get('/dataanggota', 'Dataanggotacontroller@index')->name('dataanggota');
 		Route::get('/dataanggota/tambah', 'Dataanggotacontroller@tambah')->middleware(['role:administrator|user']);
 		Route::post('/dataanggota/tambah', 'Dataanggotacontroller@do_tambah')->middleware(['role:administrator|user']);

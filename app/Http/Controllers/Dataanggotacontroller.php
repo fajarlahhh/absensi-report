@@ -13,13 +13,6 @@ use Illuminate\Support\Facades\DB;
 
 class Dataanggotacontroller extends Controller
 {
-    //
-    public function __construct()
-	{
-		$this->middleware('auth');
-    	$this->middleware('permission:data anggota');
-	}
-
     public function index(Request $req)
     {
 		$kantor = Kantor::all();
