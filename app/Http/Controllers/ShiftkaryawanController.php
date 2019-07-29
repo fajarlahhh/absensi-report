@@ -12,7 +12,7 @@ class ShiftkaryawanController extends Controller
 	public function index(Request $req)
 	{
 		$shift = Shift::all();
-		$data = ShiftKaryawan::with('anggota.pegawai.unit')where('shift_id', $req->shift? $req->shift: (count($shift) > 0? $shift{0}->shift_id: ''))->get();
+		$data = ShiftKaryawan::with('anggota.pegawai.unit')->where('shift_id', $req->shift? $req->shift: (count($shift) > 0? $shift{0}->shift_id: ''))->get();
 		return view('pages.administrator.shiftkaryawan.index', [
 			'datashift' => $shift,
 			'shift' => $req->shift,

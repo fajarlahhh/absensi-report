@@ -1,4 +1,4 @@
-@extends('pages.laporan.main')
+@extends('pages.administrator.main')
 
 @push('css')
 	<link href="/assets/plugins/parsleyjs/src/parsley.css" rel="stylesheet" />
@@ -22,7 +22,7 @@
 				<div class="form-group">
 					<label class="control-label">Tanggal Kehadiran</label>
 					<div class="input-group" id="default-daterange">
-						<input type="text" name="tanggal" id="tanggal" class="form-control" value="{{ Session::get('tgl')? Session::get('tgl'): date('d F Y').' - '.date('d F Y') }}" placeholder="Pilih Tanggal Izin" readonly />
+						<input type="text" name="tanggal" id="tanggal" class="form-control" value="{{ date('01 F Y').' - '.date('d F Y') }}" placeholder="Pilih Tanggal Izin" readonly />
 						<span class="input-group-append">
 						<span class="input-group-text"><i class="fa fa-calendar"></i></span>
 						</span>

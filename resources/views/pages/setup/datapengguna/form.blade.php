@@ -30,22 +30,18 @@
 				<input type="hidden" name="redirect" value="{{ url()->previous() }}">
 				<div class="row">
 					<div class="col-md-5">
-						@if(!$pengguna)
+						@if($aksi == "Tambah")
 						<div class="form-group input-group-sm">
 							<label class="control-label">Nama Pegawai</label>
 							<select class="form-control selectpicker" onchange="getId()" data-live-search="true" name="pengguna_nip" id="nip" data-style="btn-info" data-width="100%">
 								@foreach($pegawai as $peg)
-								<option value="{{ $peg->nip }}" 
-									@if($pengguna && $pengguna->pegawai_nip == $peg->nip)
-										selected
-									@endif
-								>{{ $peg->nm_pegawai }}</option>
+								<option value="{{ $peg->nip }}">{{ $peg->nm_pegawai }}</option>
 								@endforeach
 							</select>
 						</div>
 						<div class="form-group">
 							<label class="control-label">Kata Sandi</label>
-							<input class="form-control" type="password" name="pengguna_sandi" id="pengguna_sandi" data-parsley-minlength="8" required />
+							<input class="form-control" type="password" name="pengguna_sandi" id="pengguna_sandi" data-parsley-minlength="8" required autocomplete="off" />
 						</div>
 						@else
 						<div class="form-group">
@@ -59,14 +55,14 @@
 						@endif
 						<div class="form-group">
 							<label class="control-label">No. Hp</label>
-							<input class="form-control" type="text" name="pengguna_hp" value="{{ $pengguna? $pengguna->pengguna_hp: '' }}" required data-parsley-minlength="10" autocomplete="off" data-parsley-type="number" />
+							<input class="form-control" type="text" name="pengguna_hp" value="{{ $aksi == 'Edit'? $pengguna->pengguna_hp: '' }}" required data-parsley-minlength="10" autocomplete="off" data-parsley-type="number" />
 						</div>
 						<div class="form-group">
 							<label class="control-label">Level</label>
 							<select class="form-control selectpicker" style="width : 100%" name="pengguna_level" id="pengguna_level" data-style="btn-info" onchange="hakakses()" data-width="100%">
 								@foreach($level as $lvl)
 								<option value="{{ $lvl->id }}" 
-									@if($pengguna && $pengguna->getRoleNames()[0] == $lvl->name)
+									@if($aksi == 'Edit' && $pengguna->getRoleNames()[0] == $lvl->name)
 										selected
 									@endif
 								>{{ ucfirst($lvl->name) }}</option>
@@ -76,33 +72,33 @@
 					</div>
 					<div class="col-md-7">
 	                     <div class="panel-body row">
-	                        	@php
-	                        		$permission = $pengguna->getAllPermissions();
-									$i = 0;
-									foreach (config('sidebar.menu') as $key => $menu) {
-										if ($menu['title'] != 'Dashboard') {
-											$subMenu = '';
-										
-											if (!empty($menu['sub_menu'])) {
-												foreach ($menu['sub_menu'] as $key => $sub) {
-													$subMenu .= "<div class='hakakses checkbox checkbox-css col-md-12'>
-																	<input type='checkbox' onchange='parent(\"cssCheckbox".$i."\")' class='cssCheckbox".$i."' id='cssCheckbox".substr($sub['url'], 1)."' name='izin[]' value='".substr($sub['url'], 1)."' ".($aksi == 'Edit'? ($pengguna->roles[0]->name == 'administrator'? 'checked': (sizeof($permission) > 0 && $pengguna->hasPermissionTo(substr($sub['url'], 1))? 'checked': '')): '')."/>
-																	<label for='cssCheckbox".substr($sub['url'], 1)."' class='p-l-5'>".$sub['title']."</label>
-																</div>";
-												}
+                        	@php
+                        		$permission = ($aksi == 'Edit'? $pengguna->getAllPermissions(): []);
+								$i = 0;
+								foreach (config('sidebar.menu') as $key => $menu) {
+									if ($menu['title'] != 'Dashboard') {
+										$subMenu = '';
+									
+										if (!empty($menu['sub_menu'])) {
+											foreach ($menu['sub_menu'] as $key => $sub) {
+												$subMenu .= "<div class='hakakses checkbox checkbox-css col-md-12'>
+																<input type='checkbox' onchange='parent(\"cssCheckbox".$i."\")' class='cssCheckbox".$i."' id='cssCheckbox".substr($sub['url'], 1)."' name='izin[]' value='".substr($sub['url'], 1)."' ".($aksi == 'Edit'? ($pengguna->roles[0]->name == 'administrator'? 'checked': (sizeof($permission) > 0 && $pengguna->hasPermissionTo(substr($sub['url'], 1))? 'checked': '')): '')."/>
+																<label for='cssCheckbox".substr($sub['url'], 1)."' class='p-l-5'>".$sub['title']."</label>
+															</div>";
 											}
-								@endphp
-									<div class="hakakses checkbox checkbox-css col-md-6 col-lg-4">
-										<input type="checkbox" onchange="child('cssCheckbox{{ $i }}')" id="cssCheckbox{{ $i }}" name="izin[]" value="{{ strtolower($menu['title']) }}" {{ ($aksi == 'Edit'? ($pengguna->roles[0]->name == 'administrator'? 'checked': (sizeof($permission) > 0 && $pengguna->hasPermissionTo(strtolower($menu['title']))? 'checked': '')): '') }}/>
-										<label for="cssCheckbox{{ $i }}" class="p-l-5">{{ $menu['title'] }}</label>
-										{!! $subMenu !!}
-									</div>
-	                        	@php
-											$i++;
 										}
+							@endphp
+								<div class="hakakses checkbox checkbox-css col-md-6 col-lg-4">
+									<input type="checkbox" onchange="child('cssCheckbox{{ $i }}')" id="cssCheckbox{{ $i }}" name="izin[]" value="{{ strtolower($menu['title']) }}" {{ ($aksi == 'Edit'? ($pengguna->roles[0]->name == 'administrator'? 'checked': (sizeof($permission) > 0 && $pengguna->hasPermissionTo(strtolower($menu['title']))? 'checked': '')): '') }}/>
+									<label for="cssCheckbox{{ $i }}" class="p-l-5">{{ $menu['title'] }}</label>
+									{!! $subMenu !!}
+								</div>
+                        	@php
+										$i++;
 									}
-								@endphp
-	                        </div>
+								}
+							@endphp
+                        </div>
 					</div>
 				</div>
 			</div>

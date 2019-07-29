@@ -37,7 +37,8 @@ class PostingabsenController extends Controller
 			]);
     	}
 		try{
-			ini_set('max_execution_time', 0);
+			ini_set('max_execution_time', 1000);
+			ini_set('max_input_time', 1000);
 			$tanggal = explode(' - ', $req->get('tanggal'));
 			$aturan = Aturan::first();
 			Absen::whereBetween("absen_tgl", [date('Y-m-d', strtotime($tanggal[0])),date('Y-m-d', strtotime($tanggal[1]))])->delete();
@@ -95,13 +96,13 @@ class PostingabsenController extends Controller
 								$absen->absen_izin = 'Izin';
 								break;
 							case '13':
-								$absen->absen_izin = 'Sakit';
+								$absen->absen_izin = 'Dispensasi';
 								break;
 							case '14':
-								$absen->absen_izin = 'Sakit';
+								$absen->absen_izin = 'Tugas Dinas';
 								break;
 							case '15':
-								$absen->absen_izin = 'Sakit';
+								$absen->absen_izin = 'Cuti';
 								break;
 							case '16':
 								$absen->absen_izin = 'Lain-lain';
