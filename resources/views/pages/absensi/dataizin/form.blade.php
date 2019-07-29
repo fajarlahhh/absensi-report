@@ -52,7 +52,6 @@
 						<option value="13" >Dispensasi</option>
 						<option value="14" >Tugas Dinas</option>
 						<option value="15" >Cuti</option>
-						<option value="16" >Lain-lain</option>
 					</select>
 				</div>
 				<div class="form-group">

@@ -118,6 +118,7 @@
 		                waitingDialog.show('Mohon tunggu...');
 		            },
 		            success: function(data){
+		            	console.log(data);
 		                waitingDialog.hide();
 		            	swal("Posting", data['pesan'], data['tipe']);
 		            },			

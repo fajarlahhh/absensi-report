@@ -17,10 +17,10 @@
 		<!-- begin panel-heading -->
 		<div class="panel-heading">
 			<div class="row">
-                <div class="col-md-12 col-lg-8 col-xl-8 col-xs-12">
+                <div class="col-md-12 col-lg-4 col-xl-4 col-xs-12">
                 	<a href="#" class="btn btn-warning" onclick="cetak()">Cetak</a>&nbsp;
                 </div>
-                <div class="col-md-12 col-lg-4 col-xl-4 col-xs-12">
+                <div class="col-md-12 col-lg-8 col-xl-8 col-xs-12">
 	            	<form id="frm-cari" action="/rekapabsensi" method="GET">
 	            		@csrf
 	                	<div class="form-inline pull-right">
@@ -54,30 +54,19 @@
 							<th>NIP</th>
 							<th width="300">Nama</th>
 							<th>Jumlah Hari Kerja</th>
-							<th>Jumlah Terlambat</th>
-							<th>Jumlah Kehadiran</th>
-							<th>Sakit</th>
-							<th>Izin</th>
-							<th>Dispensasi</th>
-							<th>Tugas Dinas</th>
-							<th>Cuti</th>
-							<th>Lain-lain</th>
+							<th>TL</th>
+							<th>M</th>
+							<th>S</th>
+							<th>I</th>
+							<th>D</th>
+							<th>TD</th>
+							<th>C</th>
+							<th>TK</th>
 						</tr>
 					</thead>
 					<tbody>
 					    @foreach($absensi as $index => $absen)
 					    <tr>
-							@php
-								$jmlHariKerja = 0;
-								$jmlTerlambat = 0;
-								$jmlMasuk = 0;
-								$jmlSakit = 0;
-								$jmlIzin = 0;
-								$jmlDispensasi = 0;
-								$jmlDinas = 0;
-								$jmlCuti = 0;
-								$jmlLain = 0;
-							@endphp
 					        <td>{{ $absen->pegawai->nip }}</td>
 					        <td>{{ $absen->pegawai->nm_pegawai }}</td>
 							<td>{{ $absen->hari }}</td>
@@ -88,7 +77,7 @@
 							<td>{{ $absen->dispensasi }}</td>
 							<td>{{ $absen->dinas }}</td>
 							<td>{{ $absen->cuti }}</td>
-							<td>{{ $absen->lain }}</td>
+							<td>{{ $absen->hari - ($absen->masuk + $absen->sakit + $absen->izin + $absen->dispensasi + $absen->dinas + $absen->cuti) }}</td>
 				      	</tr>
 					    @endforeach
 				    </tbody>
