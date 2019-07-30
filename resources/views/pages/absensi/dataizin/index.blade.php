@@ -22,7 +22,7 @@
                 	@role('user|administrator')
                     <div class="form-inline">
                         <a href="/dataizin/tambah" class="btn btn-primary">Tambah</a>&nbsp;
-	                	<form id="frm-cari" action="/dataizin/cetak" method="GET" target="_blank">
+	                	<form action="/dataizin/cetak" method="GET" target="_blank">
 							<input type="hidden" name="tgl" value="{{ $tgl }}" />
                         	<input type="submit" class="btn btn-warning" value="Cetak"> 
 						</form>
