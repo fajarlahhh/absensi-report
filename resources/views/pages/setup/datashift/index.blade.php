@@ -45,6 +45,8 @@
 							<th>Nama Shift</th>
 							<th>Jam Masuk</th>
 							<th>Jam Pulang</th>
+							<th>Jam Masuk Khusus</th>
+							<th>Jam Pulang Khusus</th>
 							<th width="100"></th>
 						</tr>
 					</thead>
@@ -55,6 +57,8 @@
 					        <td>{{ $shift->shift_nama }}</td>
 					        <td>{{ $shift->shift_jam_masuk }}</td>
 					        <td>{{ $shift->shift_jam_pulang }}</td>
+					        <td>{{ $shift->shift_jam_masuk_khusus }}</td>
+					        <td>{{ $shift->shift_jam_pulang_khusus }}</td>
 					        <td class="text-right">
 					        	@role('user|administrator')
 					        	<form action="shift/edit" method="get">

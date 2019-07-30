@@ -8,7 +8,7 @@ class ShiftKaryawan extends Model
 {
     //
     protected $table = 'shift_karyawan';
-    protected $primaryKey = 'anggota_id';
+    protected $primaryKey = 'pegawai_id';
     public $incrementing = false;
     public $timestamps = false;
 
@@ -19,6 +19,6 @@ class ShiftKaryawan extends Model
 
     public function anggota()
     {
-    	return $this->hasOne('Absensi\Anggota', 'anggota_id', 'anggota_id');
+    	return $this->belongsTo('Absensi\Anggota', 'pegawai_id', 'pegawai_id');
     }
 }

@@ -33,11 +33,15 @@ class DatashiftController extends Controller
 			[
 				'shift_nama' => 'required',
 				'shift_jam_masuk' => 'required',
-				'shift_jam_pulang' => 'required'
+				'shift_jam_pulang' => 'required',
+				'shift_jam_masuk_khusus' => 'required',
+				'shift_jam_pulang_khusus' => 'required'
 			],[
          	   'shift_nama.required' => 'Nama shift tidak boleh kosong',
          	   'shift_jam_pulang.required' => 'Jam Pulang tidak boleh kosong',
-         	   'shift_jam_masuk.required' => 'Jam Masuk tidak boleh kosong'
+         	   'shift_jam_masuk.required' => 'Jam Masuk tidak boleh kosong',
+         	   'shift_jam_pulang_khusus.required' => 'Jam Pulang Khusus tidak boleh kosong',
+         	   'shift_jam_masuk_khusus.required' => 'Jam Masuk Khusus tidak boleh kosong'
         	]
 		);
 		try{
@@ -45,6 +49,8 @@ class DatashiftController extends Controller
 			$shift->shift_nama = $req->get('shift_nama');
 			$shift->shift_jam_pulang = $req->get('shift_jam_pulang');
 			$shift->shift_jam_masuk = $req->get('shift_jam_masuk');
+			$shift->shift_jam_pulang_khusus = $req->get('shift_jam_pulang_khusus');
+			$shift->shift_jam_masuk_khusus = $req->get('shift_jam_masuk_khusus');
 			$shift->save();
 			return redirect($req->get('redirect')? $req->get('redirect'): 'shift')
 			->with('pesan', 'Berhasil menambah data shift')
@@ -74,13 +80,16 @@ class DatashiftController extends Controller
 			[
 				'shift_nama' => 'required',
 				'shift_jam_masuk' => 'required',
-				'shift_jam_pulang' => 'required'
+				'shift_jam_pulang' => 'required',
+				'shift_jam_masuk_khusus' => 'required',
+				'shift_jam_pulang_khusus' => 'required'
 			],[
          	   'shift_nama.required' => 'Nama shift tidak boleh kosong',
          	   'shift_jam_pulang.required' => 'Jam Pulang tidak boleh kosong',
-         	   'shift_jam_masuk.required' => 'Jam Masuk tidak boleh kosong'
-        	]
-		);
+         	   'shift_jam_masuk.required' => 'Jam Masuk tidak boleh kosong',
+         	   'shift_jam_pulang_khusus.required' => 'Jam Pulang Khusus tidak boleh kosong',
+         	   'shift_jam_masuk_khusus.required' => 'Jam Masuk Khusus tidak boleh kosong'
+        	]		);
 		try{
 			$shift = new Shift();
 			$shift->exists = true;
@@ -88,6 +97,8 @@ class DatashiftController extends Controller
 			$shift->shift_nama = $req->get('shift_nama');
 			$shift->shift_jam_pulang = $req->get('shift_jam_pulang');
 			$shift->shift_jam_masuk = $req->get('shift_jam_masuk');
+			$shift->shift_jam_pulang_khusus = $req->get('shift_jam_pulang_khusus');
+			$shift->shift_jam_masuk_khusus = $req->get('shift_jam_masuk_khusus');
 			$shift->save();
 			return redirect($req->get('redirect')? $req->get('redirect'): 'shift')
 			->with('pesan', 'Berhasil mengedit data shift')

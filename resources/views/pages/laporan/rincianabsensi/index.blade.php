@@ -18,10 +18,10 @@
 		<!-- begin panel-heading -->
 		<div class="panel-heading">
 			<div class="row">
-                <div class="col-md-12 col-lg-8 col-xl-8 col-xs-12">
+                <div class="col-md-12 col-lg-4 col-xl-4 col-xs-12">
                 	<a href="#" class="btn btn-warning" onclick="cetak()">Cetak</a>&nbsp;
                 </div>
-                <div class="col-md-12 col-lg-4 col-xl-4 col-xs-12">
+                <div class="col-md-12 col-lg-8 col-xl-8 col-xs-12">
 	            	<form id="frm-cari" action="/rinciankehadiran" method="GET">
 	            		@csrf
 	                	<div class="form-inline pull-right">

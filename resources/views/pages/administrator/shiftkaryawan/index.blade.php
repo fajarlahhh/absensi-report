@@ -67,7 +67,7 @@
 					        <td>{{ $sk->anggota->anggota_nip }}</td>
 					        <td>{{ $sk->anggota->pegawai->nm_pegawai }}</td>
 					        <td>{{ $sk->anggota->pegawai->unit->nm_unit }}</td>
-					        <td class="text-right"><a href='javascript:;' onclick="hapus({{ $sk->angota_id }})" id='btn-del' class='btn btn-danger btn-xs'><i class='fa fa-trash-alt'></i></a></td>
+					        <td class="text-right"><a href='javascript:;' onclick="hapus({{ $sk->pegawai_id }})" id='btn-del' class='btn btn-danger btn-xs'><i class='fa fa-trash-alt'></i></a></td>
 				      	</tr>
 						@php $no++;
 						@endphp

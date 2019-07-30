@@ -38,4 +38,8 @@ class Anggota extends Model
     public function kehadiran(){
         return $this->hasMany('Absensi\Kehadiran', 'pegawai_id', 'pegawai_id')->orderBy('kehadiran_tgl');
     }
+
+    public function shiftKaryawan(){
+        return $this->hasMany('Absensi\ShiftKaryawan', 'pegawai_id', 'pegawai_id');
+    }
 }

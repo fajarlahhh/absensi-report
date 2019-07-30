@@ -29,7 +29,7 @@
 				<input type="hidden" name="redirect" value="{{ url()->previous() }}">
 				<div class="form-group input-group-sm">
 					<label class="control-label">Nama Anggota</label>
-					<select class="form-control selectpicker" data-live-search="true" name="pegawai_id" id="pegawai_id" data-style="btn-info" data-width="100%" onchange="getnip()">
+					<select class="form-control selectpicker" data-live-search="true" name="pegawai_id" id="pegawai_id" data-style="btn-info" data-width="100%" >
 						@foreach($anggota as $peg)
 						<option value="{{ $peg->pegawai_id }}">{{ $peg->pegawai->nm_pegawai }}</option>
 						@endforeach

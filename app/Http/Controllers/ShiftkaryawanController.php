@@ -63,8 +63,7 @@ class ShiftkaryawanController extends Controller
 	public function hapus($id)
 	{
 		try{
-			$anggota = Anggota::findorfail($id);
-			$anggota->delete();
+			ShiftKaryawan::destroy($id);
 			return redirect()->back()
 			->with('pesan', 'Berhasil menghapus data shift karyawan')
 			->with('judul', 'Hapus data')

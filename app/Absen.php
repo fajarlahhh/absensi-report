@@ -29,7 +29,8 @@ class Absen extends Model
         'absen_kembali',
         'absen_kembali_keterangan',
         'absen_izin',
-        'absen_izin_keterangan'
+        'absen_izin_keterangan',
+        'absen_shift'
         ];
     
     public function anggota()
