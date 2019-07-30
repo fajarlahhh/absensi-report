@@ -175,6 +175,13 @@ class PostingabsenController extends Controller
 							});
 						$absen_pulang = $data_pulang? date('H:i:s', strtotime($data_pulang->kehadiran_tgl)): null;
 						$absen_pulang_keterangan = $data_pulang? $data_pulang->kehadiran_keterangan: null;
+
+
+						$data_istirahat = $abs->kehadiran->last(function($kode) use ($tgli){
+							return $kode->kehadiran_kode == "1";
+						});
+						$absen_istirahat = $data_istirahat? date('H:i:s', strtotime($data_istirahat->kehadiran_tgl)): null;
+						$absen_istirahat_keterangan = $data_istirahat? $data_istirahat->kehadiran_keterangan: null;
 					}
 					$data[] =[
 						'pegawai_id' => $pegawai_id,

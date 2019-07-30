@@ -35,7 +35,7 @@ class Absen extends Model
     
     public function anggota()
     {
-    	return $this->hasOne('Absensi\Anggota', 'pegawai_id', 'pegawai_id');
+    	return $this->belongsTo('Absensi\Anggota', 'pegawai_id', 'pegawai_id');
     }
 
     public function pegawai(){

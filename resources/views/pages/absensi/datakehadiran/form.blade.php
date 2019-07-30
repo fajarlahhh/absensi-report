@@ -28,8 +28,9 @@
 			@csrf
 			<div class="panel-body">
 				<div class="form-group">
+				<div class="form-group">
 					<label class="control-label">Anggota</label>
-					<select class="form-control selectpicker " data-live-search="true" name="pegawai_id" data-width="100%" data-style="btn-info">
+					<select class="form-control selectpicker" data-live-search="true" name="pegawai_id" data-style="btn-info" data-width="100%">
 						@foreach($anggota as $angg)
 						<option value="{{ $angg->pegawai_id }}" >{{ ucwords(strtolower($angg->pegawai->nm_pegawai)) }}</option>
 						@endforeach
@@ -46,7 +47,7 @@
 				</div>
 				<div class="form-group">
 					<label class="control-label">Kode</label>
-					<select class="form-control selectpicker " data-live-search="true" name="kehadiran_kode" data-width="100%" data-style="btn-warning">
+					<select class="form-control selectpicker" data-live-search="true" name="kehadiran_kode" data-style="btn-info" data-width="100%">
 						<option value="0" >Masuk</option>
 						<option value="1" >Pulang</option>
 						<option value="2" >Istirahat</option>
