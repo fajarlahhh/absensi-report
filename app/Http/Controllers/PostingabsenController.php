@@ -116,7 +116,6 @@ class PostingabsenController extends Controller
 						}
 					}
 
-
 					$absen_masuk = null;
 					$absen_masuk_keterangan = null;
 					$absen_pulang = null;
@@ -157,7 +156,7 @@ class PostingabsenController extends Controller
 						}
 					}else{
 						$data_masuk = $abs->kehadiran->first(function($kode) use ($tgli){
-							return $kode->kehadiran_kode == "0";
+							return $kode->kehadiran_kode == "0" && substr($kode->kehadiran_tgl, 0, 10) == $tgli;
 						});
 						if($data_masuk)
 							$data_masuk = $abs->kehadiran->first(function($tgl) use ($tgli){
@@ -172,7 +171,7 @@ class PostingabsenController extends Controller
 						}
 
 						$data_pulang = $abs->kehadiran->last(function($kode) use ($tgli){
-							return $kode->kehadiran_kode == "1";
+							return $kode->kehadiran_kode == "1" && substr($kode->kehadiran_tgl, 0, 10) == $tgli;
 						});
 						if($data_pulang)
 							$data_pulang = $abs->kehadiran->last(function($tgl) use ($tgli){
@@ -183,12 +182,22 @@ class PostingabsenController extends Controller
 
 
 						$data_istirahat = $abs->kehadiran->last(function($kode) use ($tgli){
-							return $kode->kehadiran_kode == "1";
+							return $kode->kehadiran_kode == "2" && substr($kode->kehadiran_tgl, 0, 10) == $tgli;
 						});
 						$absen_istirahat = $data_istirahat? date('H:i:s', strtotime($data_istirahat->kehadiran_tgl)): null;
 						$absen_istirahat_keterangan = $data_istirahat? $data_istirahat->kehadiran_keterangan: null;
+
+						$data_kembali = $abs->kehadiran->last(function($kode) use ($tgli){
+							return $kode->data_kembali == "3" && substr($kode->kehadiran_tgl, 0, 10) == $tgli;
+						});
+						$absen_kembali = $data_kembali? date('H:i:s', strtotime($data_kembali->kehadiran_tgl)): null;
+						$absen_kembali_keterangan = $data_kembali? $data_kembali->kehadiran_keterangan: null;
+
+						if(!$absen_masuk && !$absen_pulang && !$absen_istirahat && !$absen_kembali){
+							$absen_izin = 'Tanpa Keterangan';
+						}
 					}
-					$data[] =[
+					array_push($data,[
 						'pegawai_id' => $pegawai_id,
 						'absen_tgl' => $absen_tgl,
 						'absen_tgl_keterangan' => $absen_tgl_keterangan,
@@ -209,12 +218,14 @@ class PostingabsenController extends Controller
 						'absen_kembali_keterangan' => $absen_kembali_keterangan,
 						'absen_izin' => $absen_izin,
 						'absen_izin_keterangan' => $absen_izin_keterangan,
-					];
+					]);
 				}
 			}
-			foreach (array_chunk($data, 2000) as $t) {
-				Absen::insert($t);
-            }
+			$dataAbsensi = collect($data)->chunk(1000);
+			foreach ($dataAbsensi as $absen)
+			{
+				Absen::insert($absen->toArray());
+			}
 
 			return \Response::json([
 				'pesan' => 'Proses posting absensi berhasil',

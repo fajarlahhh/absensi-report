@@ -5,8 +5,9 @@ namespace Absensi\Http\Controllers;
 use Illuminate\Http\Request;
 use Absensi\Anggota;
 use Absensi\Absen;
-use Absensi\Kantor;
+use Absensi\Bagian;
 use Illuminate\Support\Facades\DB;
+use PDF;
 
 class RinciankehadiranController extends Controller
 {
@@ -15,19 +16,42 @@ class RinciankehadiranController extends Controller
         $tanggal = explode(' - ', $req->get('tgl'));
         $tgl1 = ($req->get('tgl')? date('Y-m-d', strtotime($tanggal[0])): date('Y-m-1'));
         $tgl2 = ($req->get('tgl')? date('Y-m-d', strtotime($tanggal[1])): date('Y-m-d'));
-        $diff = date_diff(date_create($tgl1), date_create($tgl2))->format("%a") + 1;
-        $kantor = Kantor::all();
-        $ktr = $req->get('ktr')?$req->get('ktr'):$kantor{0}->kantor_id;
+        $bagian = Bagian::all();
+        $bag = $req->get('bag')? $req->get('bag'): $bagian{0}->kd_bagian;
         $absensi = Anggota::with(['absen' => function($q) use($tgl1, $tgl2){
             $q->whereBetween('absen_tgl', [$tgl1, $tgl2]);
-        }])->with('pegawai')->where('kantor_id', $ktr)->groupBy('anggota_id')->orderBy('anggota_nip')->get();
+        }])->with('pegawai')->whereHas('pegawai', function($q) use($bag){
+            $q->where('kd_bagian', $bag);
+        })->select('pegawai_id')->groupBy('pegawai_id')->get();
     	return view('pages.laporan.rincianabsensi.index',[
-            'diff' => $diff,
-            'kantor' => $kantor,
-            'idkantor' => $ktr,
+            'bagian' => $bagian,
+            'bag' => $bag,
             'absensi' => $absensi,
             'tgl' => date('d F Y', strtotime($tgl1)).' - '.date('d F Y', strtotime($tgl2))
     	]);
+    }    
+
+    public function pdf(Request $req)
+    {
+        $tanggal = explode(' - ', $req->get('tgl'));
+        $tgl1 = ($req->get('tgl')? date('Y-m-d', strtotime($tanggal[0])): date('Y-m-1'));
+        $tgl2 = ($req->get('tgl')? date('Y-m-d', strtotime($tanggal[1])): date('Y-m-d'));
+        $bagian = Bagian::all();
+        $bag = $req->get('bag')? $req->get('bag'): $bagian{0}->kd_bagian;
+        $absensi = Anggota::with(['absen' => function($q) use($tgl1, $tgl2){
+            $q->whereBetween('absen_tgl', [$tgl1, $tgl2]);
+        }])->with('pegawai')->whereHas('pegawai', function($q) use($bag){
+            $q->where('kd_bagian', $bag);
+        })->select('pegawai_id')->groupBy('pegawai_id')->get();
+        $pdf = PDF::loadView('pages.laporan.rincianabsensi.pdf', [
+            'absensi' => $absensi,
+            'tanggal' => $req->get('tgl'),
+            'bag' => $bag,
+            'bagian' => $bagian,
+        ], [], [
+            'format' => 'A4-L'
+        ]);
+        return $pdf->stream('Rincian absensi kantor '.($bagian->first(function($q)use($bag){ return $q->kd_bagian == $bag; })).' '.$req->get('tgl').'.pdf');
     }
 
     public function tampil(Request $req)

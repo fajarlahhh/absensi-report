@@ -57,6 +57,7 @@ Route::group(['middleware' => ['auth']], function () {
 
 	Route::group(['middleware' => ['role_or_permission:administrator|rinciankehadiran']], function () {
 		Route::get('/rinciankehadiran', 'RinciankehadiranController@index')->name('rinciankehadiran');
+		Route::get('/rinciankehadiran/pdf', 'RinciankehadiranController@pdf')->name('rinciankehadiran');
 	});
 
 	Route::group(['middleware' => ['role_or_permission:administrator|rekapabsensi']], function () {

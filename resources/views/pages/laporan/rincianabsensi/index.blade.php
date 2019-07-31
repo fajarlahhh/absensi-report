@@ -19,20 +19,24 @@
 		<div class="panel-heading">
 			<div class="row">
                 <div class="col-md-12 col-lg-4 col-xl-4 col-xs-12">
-                	<a href="#" class="btn btn-warning" onclick="cetak()">Cetak</a>&nbsp;
+	            	<form action="/rinciankehadiran/pdf" method="GET" target="_blank">
+                		<input type="hidden" name="bag" value="{{ $bag }}">
+                		<input type="hidden" name="tgl" value="{{ $tgl }}">
+                		<input type="submit" class="btn btn-warning" value="Cetak">
+                	</form>
                 </div>
                 <div class="col-md-12 col-lg-8 col-xl-8 col-xs-12">
 	            	<form id="frm-cari" action="/rinciankehadiran" method="GET">
 	            		@csrf
 	                	<div class="form-inline pull-right">
 	                		<div class="form-group">
-								<select class="form-control selectpicker" onchange="submit()" data-live-search="true" id="ktr" name="ktr"  data-width="100%">
-									@foreach($kantor as $ktr)
-									<option value="{{ $ktr->kantor_id }}" 
-										@if($ktr->kantor_id == $idkantor)
+								<select class="form-control selectpicker" onchange="submit()" data-live-search="true" id="bag" name="bag"  data-width="100%">
+									@foreach($bagian as $bg)
+									<option value="{{ $bg->kd_bagian }}" 
+										@if($bg->kd_bagian == $bag)
 											selected
 										@endif
-									>{{ $ktr->kantor_nama }}</option>
+									>{{ $bg->nm_bagian }}</option>
 									@endforeach
 								</select>
 		                    </div>&nbsp;
@@ -85,12 +89,21 @@
 							@endphp
 					    <tr>
 					        <td class="text-center {{ $bg }}">{{ date('d M Y', strtotime($abs->absen_tgl)) }}</td>
+					        @if($abs->absen_hari != 'b')
+					        <td class="{{ $bg }}"></td>
+					        <td class="{{ $bg }}"></td>
+					        <td class="{{ $bg }}"></td>
+					        <td class="{{ $bg }}"></td>
+					        <td class="{{ $bg }}"></td>
+					        <td class="{{ $bg }}"></td>
+					        @else
 					        <td class="{{ $bg }}">{{ $abs->absen_izin? $abs->absen_izin.' '.$abs->absen_izin_keterangan: '' }}</td>
 					        <td class="text-center {{ $bg }}">{{ $abs->absen_masuk_telat && $abs->absen_hari == "b"? date('H:i:s', strtotime($abs->absen_masuk_telat)): '' }}</td>
 					        <td class="text-center {{ $bg }}">{{ $abs->absen_masuk && !$abs->absen_izin? date('H:i:s', strtotime($abs->absen_masuk)): '' }}</td>
 					        <td class="text-center {{ $bg }}">{{ $abs->absen_istirahat && !$abs->absen_izin? date('H:i:s', strtotime($abs->absen_istirahat)): '' }}</td>
 					        <td class="text-center {{ $bg }}">{{ $abs->absen_kembali && !$abs->absen_izin? date('H:i:s', strtotime($abs->absen_kembali)): '' }}</td>
 					        <td class="text-center {{ $bg }}">{{ $abs->absen_pulang && !$abs->absen_izin? date('H:i:s', strtotime($abs->absen_pulang)): '' }}</td>
+					        @endif
 				      	</tr>
 						@endforeach
 					    @endforeach
