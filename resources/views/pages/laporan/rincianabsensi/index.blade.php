@@ -52,56 +52,24 @@
 				<table class="table table-bordered" id="laporan">
                     <thead>
 						<tr>
-							<th rowspan="2">NIP</th>
-							<th rowspan="2" width="300">Nama</th>
-							@if($absensi)
-							@foreach($absensi{0}->absen as $index => $abs)
-							@php
-								switch($abs->absen_hari){
-									case 'l':
-										$bg = "bg-red-transparent-3";
-										break;
-									case 'k':
-										$bg = "bg-yellow-transparent-3";
-										break;
-									default:
-										$bg = "";
-										break;
-								}
-							@endphp
-					        <th colspan="3" class="{{ $bg }} text-center">{{ date('d M Y', strtotime($abs->absen_tgl)) }}<br><small>{{ $abs->absen_tgl_keterangan }}</small></th>
-							@endforeach
-							@endif
-						</tr>
-						<tr>
-							@if($absensi)
-							@foreach($absensi{0}->absen as $index => $abs)
-							@php
-								switch($abs->absen_hari){
-									case 'l':
-										$bg = "bg-red-transparent-3";
-										break;
-									case 'k':
-										$bg = "bg-yellow-transparent-3";
-										break;
-									default:
-										$bg = "";
-										break;
-								}
-							@endphp
-							<td class="text-center {{ $bg }}">Masuk</td>
-							<td class="text-center {{ $bg }}">Telat</td>
-							<td class="text-center {{ $bg }}">Izin</td>
-							@endforeach
-							@endif
+							<th>NIP</th>
+							<th>Nama</th>
+							<th>Tanggal</th>
+							<th>Keterangan</th>
+							<th>Telat Masuk</th>
+							<th>Masuk</th>
+							<th>Keluar</th>
+							<th>Kembali</th>
+							<th>Pulang</th>
 						</tr>
 					</thead>
 					<tbody>
 						@foreach($absensi as $index => $absen)
 					    <tr>
-					        <td>{{ $absen->pegawai->nip }}</td>
-					        <td>{{ $absen->pegawai->nm_pegawai }}</td>
-							@foreach($absen->absen as $index => $abs)
+					        <td rowspan="{{ sizeof($absen->absen) + 1 }}">{{ $absen->pegawai->nip }}</td>
+					        <td rowspan="{{ sizeof($absen->absen) + 1 }}">{{ $absen->pegawai->nm_pegawai }}</td>
+				      	</tr>
+				      	@foreach($absen->absen as $index => $abs)
 							@php
 								switch($abs->absen_hari){
 									case 'l':
@@ -115,11 +83,16 @@
 										break;
 								}
 							@endphp
-					        <td class="text-center {{ $bg }}">{{ $abs->absen_masuk && !$abs->absen_izin? date('H:i:s', strtotime($abs->absen_masuk)): '' }}</td>
-					        <td class="text-center {{ $bg }}">{{ $abs->absen_masuk_telat && $abs->absen_hari == "b"? date('H:i:s', strtotime($abs->absen_masuk_telat)): '' }}</td>
+					    <tr>
+					        <td class="text-center {{ $bg }}">{{ date('d M Y', strtotime($abs->absen_tgl)) }}</td>
 					        <td class="{{ $bg }}">{{ $abs->absen_izin? $abs->absen_izin.' '.$abs->absen_izin_keterangan: '' }}</td>
-							@endforeach
+					        <td class="text-center {{ $bg }}">{{ $abs->absen_masuk_telat && $abs->absen_hari == "b"? date('H:i:s', strtotime($abs->absen_masuk_telat)): '' }}</td>
+					        <td class="text-center {{ $bg }}">{{ $abs->absen_masuk && !$abs->absen_izin? date('H:i:s', strtotime($abs->absen_masuk)): '' }}</td>
+					        <td class="text-center {{ $bg }}">{{ $abs->absen_istirahat && !$abs->absen_izin? date('H:i:s', strtotime($abs->absen_istirahat)): '' }}</td>
+					        <td class="text-center {{ $bg }}">{{ $abs->absen_kembali && !$abs->absen_izin? date('H:i:s', strtotime($abs->absen_kembali)): '' }}</td>
+					        <td class="text-center {{ $bg }}">{{ $abs->absen_pulang && !$abs->absen_izin? date('H:i:s', strtotime($abs->absen_pulang)): '' }}</td>
 				      	</tr>
+						@endforeach
 					    @endforeach
 				    </tbody>
 				</table>

@@ -10,10 +10,11 @@ class AturanController extends Controller
 {
     public function index(Request $req)
     {
-    	$aturan = Aturan::first();
+    	$aturan = Aturan::get();
+		$hari = array('Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu');
     	return view('pages.setup.aturan.index',[
     		'data' => $aturan,
-    	]);
+    	])->with('hari', $hari);
     }
 
 	public function edit(Request $req)
@@ -33,14 +34,19 @@ class AturanController extends Controller
 		);
 		try{
 			Aturan::truncate();
-			$aturan = new Aturan();
-			$aturan->aturan_masuk = $req->get('aturan_masuk');
-			$aturan->aturan_pulang = $req->get('aturan_pulang');
-			$aturan->aturan_masuk_khusus = $req->get('aturan_masuk_khusus');
-			$aturan->aturan_pulang_khusus = $req->get('aturan_pulang_khusus');
-			$aturan->aturan_hari_libur = implode($req->get('aturan_hari_libur'), '');
-    		$aturan->operator = Auth::user()->pegawai->nm_pegawai;
-			$aturan->save();
+			$data = [];
+			for ($i=0; $i < sizeof($req->get('aturan_hari')); $i++) { 
+				$data[] =[
+					'aturan_hari' => $req->get('aturan_hari')[$i],
+					'aturan_kerja' => $req->get('aturan_kerja')[$i],
+					'aturan_masuk' => $req->get('aturan_masuk')[$i],
+					'aturan_pulang' => $req->get('aturan_pulang')[$i],
+					'aturan_masuk_khusus' => $req->get('aturan_masuk_khusus')[$i],
+					'aturan_pulang_khusus' => $req->get('aturan_pulang_khusus')[$i],
+    				'operator' => Auth::user()->pegawai->nm_pegawai
+				];
+			}
+			Aturan::insert($data);
 			return redirect($req->get('redirect')? $req->get('redirect'): 'aturan')
 			->with('pesan', 'Berhasil mengubah aturan')
 			->with('judul', 'Edit data')

@@ -2,6 +2,7 @@
 
 @push('css')
 	<link href="/assets/plugins/parsleyjs/src/parsley.css" rel="stylesheet" />
+	<link href="/assets/plugins/bootstrap-select/dist/css/bootstrap-select.min.css" rel="stylesheet" />
 	<link href="/assets/plugins/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
 @endpush
 
@@ -18,109 +19,69 @@
 		@csrf
 		<div class="panel panel-inverse">
 			<div class="panel-body">
-				<div class="row">
-					<div class="col-md-6">
-						<div class="panel panel-inverse">
-							<div class="panel-heading">
-								<h4 class="panel-title">Hari Biasa</h4>
-							</div>
-							<div class="panel-body">
-								<div class="form-group">
-									<label class="control-label">Jam Masuk</label>
+				<div class="table-responsive">
+					<table class="table table-hover">
+	                    <thead>
+							<tr>
+								<th>Hari</th>
+								<th>Hari Kerja</th>
+								<th>Masuk</th>
+								<th>Pulang</th>
+								<th>Masuk Khusus</th>
+								<th>Pulang Khusus</th>
+							</tr>
+						</thead>
+						<tbody>
+							@for($i=1;$i <= sizeof($hari); $i++)
+						    <tr>
+								<td><input type="hidden" name="aturan_hari[]" value="{{ $i }}">{{ $hari[$i-1] }}</td>
+								<td>
+									@php
+										$aturan = $data->first(function($q) use($i){
+											return $q->aturan_hari == $i;
+										});
+									@endphp
+									<select class="form-control selectpicker" data-live-search="true" name="aturan_kerja[]" data-style="btn-info" data-width="100%">
+										<option value="Masuk" {{ $aturan && $aturan->aturan_kerja == 'Masuk'? 'selected': '' }}>Ya</option>
+										<option value="Libur" {{ $aturan && $aturan->aturan_kerja == 'Libur'? 'selected': '' }}>Tidak</option>
+									</select>
+								</td>
+								<td>
 									<div class="input-group date" >
-										<input type="text" class="form-control datetimepicker" name="aturan_masuk" value="{{ $data? $data->aturan_masuk: '' }}" required/>
+										<input type="text" class="form-control datetimepicker" name="aturan_masuk[]" value="{{ $aturan? $aturan->aturan_masuk: '' }}" required/>
 										<span class="input-group-addon">
 										<i class="fa fa-clock"></i>
 										</span>
 									</div>
-								</div>
-								<div class="form-group">
-									<label class="control-label">Jam Pulang</label>
+								</td>
+								<td>
 									<div class="input-group date" >
-										<input type="text" class="form-control datetimepicker" name="aturan_pulang" value="{{ $data? $data->aturan_pulang: '' }}" required/>
+										<input type="text" class="form-control datetimepicker" name="aturan_pulang[]" value="{{ $aturan? $aturan->aturan_pulang: '' }}" required/>
 										<span class="input-group-addon">
 										<i class="fa fa-clock"></i>
 										</span>
 									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-6">
-						<div class="panel panel-inverse">
-							<div class="panel-heading">
-								<h4 class="panel-title">Hari Khusus</h4>
-							</div>
-							<div class="panel-body">
-								<div class="form-group">
-									<label class="control-label">Jam Masuk</label>
-									<div class="input-group date">
-										<input type="text" class="form-control datetimepicker" name="aturan_masuk_khusus" value="{{ $data? $data->aturan_masuk_khusus: '' }}" required/>
+								</td>
+								<td>
+									<div class="input-group date" >
+										<input type="text" class="form-control datetimepicker" name="aturan_masuk_khusus[]" value="{{ $aturan? $aturan->aturan_masuk_khusus: '' }}" required/>
 										<span class="input-group-addon">
 										<i class="fa fa-clock"></i>
 										</span>
 									</div>
-								</div>
-								<div class="form-group">
-									<label class="control-label">Jam Pulang</label>
-									<div class="input-group date">
-										<input type="text" class="form-control datetimepicker" name="aturan_pulang_khusus" value="{{ $data? $data->aturan_pulang_khusus: '' }}" required/>
+								</td>
+								<td>
+									<div class="input-group date" >
+										<input type="text" class="form-control datetimepicker" name="aturan_pulang_khusus[]" value="{{ $aturan? $aturan->aturan_pulang_khusus: '' }}" required/>
 										<span class="input-group-addon">
 										<i class="fa fa-clock"></i>
 										</span>
 									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-12 m-l-5">
-						<h4>Hari Libur</h4>
-					</div>
-					<div class="col-md-1">
-						&nbsp;
-					</div>
-					<div class="col-md-1">
-						<div class="checkbox checkbox-css">
-							<input type="checkbox" id="Senin"  value="1" name="aturan_hari_libur[]" {{ $data && strpos($data->aturan_hari_libur, '2') !== false? 'checked': '' }} />
-							<label for="Senin">Senin</label>
-						</div>
-					</div>
-					<div class="col-md-1">
-						<div class="checkbox checkbox-css">
-							<input type="checkbox" id="Selasa"  value="2" name="aturan_hari_libur[]" {{ $data && strpos($data->aturan_hari_libur, '2') !== false? 'checked': '' }} />
-							<label for="Selasa">Selasa</label>
-						</div>
-					</div>
-					<div class="col-md-1">
-						<div class="checkbox checkbox-css">
-							<input type="checkbox" id="Rabu"  value="3" name="aturan_hari_libur[]" {{ $data && strpos($data->aturan_hari_libur, '3') !== false? 'checked': '' }} />
-							<label for="Rabu">Rabu</label>
-						</div>
-					</div>
-					<div class="col-md-1">
-						<div class="checkbox checkbox-css">
-							<input type="checkbox" id="Kamis"  value="4" name="aturan_hari_libur[]" {{ $data && strpos($data->aturan_hari_libur, '4') !== false? 'checked': '' }} />
-							<label for="Kamis">Kamis</label>
-						</div>
-					</div>
-					<div class="col-md-1">
-						<div class="checkbox checkbox-css">
-							<input type="checkbox" id="Jumat"  value="5" name="aturan_hari_libur[]" {{ $data && strpos($data->aturan_hari_libur, '5') !== false? 'checked': '' }} />
-							<label for="Jumat">Jum'at</label>
-						</div>
-					</div>
-					<div class="col-md-1">
-						<div class="checkbox checkbox-css">
-							<input type="checkbox" id="Sabtu" value="6" name="aturan_hari_libur[]" {{ $data && strpos($data->aturan_hari_libur, '6') !== false? 'checked': '' }} />
-							<label for="Sabtu">Sabtu</label>
-						</div>
-					</div>
-					<div class="col-md-1">
-						<div class="checkbox checkbox-css">
-							<input type="checkbox" id="Minggu" value="7" name="aturan_hari_libur[]" {{ $data && strpos($data->aturan_hari_libur, '7') !== false? 'checked': '' }} />
-							<label for="Minggu">Minggu</label>
-						</div>
-					</div>
+								</td>
+					      	</tr>
+					      	@endfor
+					    </tbody>
+					</table>
 				</div>
 			</div>
 			<div class="panel-footer form-inline">

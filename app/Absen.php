@@ -37,8 +37,4 @@ class Absen extends Model
     {
     	return $this->belongsTo('Absensi\Anggota', 'pegawai_id', 'pegawai_id');
     }
-
-    public function pegawai(){
-        return $this->hasOne('Absensi\Pegawai', 'id', 'pegawai_id');
-    }
 }

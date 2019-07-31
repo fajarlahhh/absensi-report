@@ -38,7 +38,7 @@ class PostingabsenController extends Controller
     	}
 		try{
 			$tanggal = explode(' - ', $req->get('tanggal'));
-			$aturan = Aturan::first();
+			$dataaturan = Aturan::get();
 			$tgl1 = date('Y-m-d', strtotime($tanggal[0]));
 			$tgl2 = date('Y-m-d', strtotime($tanggal[1]));
 
@@ -60,7 +60,12 @@ class PostingabsenController extends Controller
 				for ($i=0; $i <= $diff; $i++) {
 					$pegawai_id = $abs->pegawai_id;
 					$tgli = date('Y-m-d', strtotime($tgl1. ' + '.$i.' days'));
+					$hari = date('N', strtotime($tgl1. ' + '.$i.' days'));
 					$absen_tgl =$tgli;
+
+					$aturan = $dataaturan->first(function($q) use($hari){
+						return $q->aturan_hari == $hari;
+					});
 
 					$masuk = $aturan->aturan_masuk;
 					$pulang = $aturan->aturan_pulang;
@@ -94,7 +99,7 @@ class PostingabsenController extends Controller
 						}
 					}else{
 						$absen_shift = 0;
-						if(strpos($aturan->aturan_hari_libur, date('N', strtotime($tgl1. ' + '.($i).' days'))) !== false){
+						if($aturan->aturan_kerja == 'Libur'){
 							$absen_hari = 'l';
 						}else{
 							if($libur){
