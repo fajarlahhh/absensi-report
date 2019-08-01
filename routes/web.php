@@ -69,6 +69,7 @@ Route::group(['middleware' => ['auth']], function () {
 
 	Route::group(['middleware' => ['role_or_permission:administrator|rekapabsensi']], function () {
 		Route::get('/rekapabsensi', 'RekapabsensiController@index')->name('rekapabsensi');
+		Route::get('/rekapabsensi/pdf', 'RekapabsensiController@pdf')->name('rekapabsensi');
 	});
 
 	Route::group(['middleware' => ['role_or_permission:administrator|dataizin']], function () {

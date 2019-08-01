@@ -52,7 +52,7 @@ class RinciankehadiranController extends Controller
         ], [], [
             'format' => 'A4-L'
         ]);
-        return $pdf->stream('Rincian absensi kantor '.($bagian->first(function($q)use($bag){ return $q->kd_bagian == $bag; })).' '.$req->get('tgl').'.pdf');
+        return $pdf->stream('Rincian absensi bagian '.($bagian->first(function($q)use($bag){ return $q->kd_bagian == $bag; })).' '.$req->get('tgl').'.pdf');
     }
 
     public function tampil(Request $req)
