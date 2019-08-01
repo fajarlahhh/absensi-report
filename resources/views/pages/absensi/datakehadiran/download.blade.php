@@ -123,13 +123,10 @@
 		            success: function(data){
 		                waitingDialog.hide();
 		            	swal("Posting", data['pesan'], data['tipe']);
-		            },			
+		            },
 		            error: function(jqXHR, textStatus, errorThrown) {
-		                if(textStatus==="timeout") {
-		                    alert("Call has timed out"); 
-		                } else {
-		                    alert("Another error was returned"); 
-		                }
+		                waitingDialog.hide();
+		            	swal("Posting", jqXHR.responseText, 'error');
 		            }
 		        });
 	    	}
