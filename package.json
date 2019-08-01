@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "@danielfarrell/bootstrap-combobox": "^1.1.8",
+    "autonumeric": "^4.5.4",
     "blueimp-file-upload": "^9.32.0",
     "blueimp-gallery": "^2.33.0",
     "bootstrap": "^4.3.1",

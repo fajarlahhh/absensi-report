@@ -102,18 +102,26 @@ class DatakehadiranController extends Controller
 					}
 					$buffer = $this->parse($buffer,"<GetAttLogResponse>","</GetAttLogResponse>");
 					$buffer = explode("\r\n",$buffer);
+					$kehadiran_ = [];
 					for($i=0;$i<count($buffer);$i++){
 						$data = $this->parse($buffer[$i],"<Row>","</Row>");
+
 						if($data){
-							$kehadiran = new Kehadiran();
-							$kehadiran->kantor_id = $msn->kantor_id;
-							$kehadiran->pegawai_id = (int)$this->parse($data,"<PIN>","</PIN>");
-							$kehadiran->kehadiran_tgl =  $this->parse($data,"<DateTime>","</DateTime>");
-							$kehadiran->kehadiran_kode = $this->parse($data,"<Status>","</Status>");
-		    				$kehadiran->kehadiran_status = 'M';
-		    				$kehadiran->operator = Auth::user()->pegawai->nm_pegawai;
-							$kehadiran->save();
+							array_push($kehadiran_,[
+								'kantor_id' => $msn->kantor_id,
+								'pegawai_id' => (int)$this->parse($data,"<PIN>","</PIN>"),
+								'kehadiran_tgl' =>  $this->parse($data,"<DateTime>","</DateTime>"),
+								'kehadiran_kode' => $this->parse($data,"<Status>","</Status>"),
+			    				'kehadiran_status' => 'M',
+			    				'operator' => Auth::user()->pegawai->nm_pegawai,
+							]);
 						}
+					}
+
+					$datakehadiran = collect($kehadiran_)->chunk(1000);
+					foreach ($datakehadiran as $hadir)
+					{
+						Kehadiran::insert($hadir->toArray());
 					}
 
 					$Connect1 = fsockopen($msn->mesin_ip, "80", $errno, $errstr, 1);

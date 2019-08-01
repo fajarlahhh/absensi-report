@@ -18,24 +18,28 @@
 		<div class="panel-heading">
 			<div class="row">
                 <div class="col-md-12 col-lg-4 col-xl-4 col-xs-12">
-                	<a href="#" class="btn btn-warning" onclick="cetak()">Cetak</a>&nbsp;
+	            	<form action="/rekapabsensi/pdf" method="GET" target="_blank">
+                		<input type="hidden" name="bag" value="{{ $bag }}">
+                		<input type="hidden" name="tgl" value="{{ $tgl }}">
+                		<input type="submit" class="btn btn-warning" value="Cetak">
+                	</form>
                 </div>
                 <div class="col-md-12 col-lg-8 col-xl-8 col-xs-12">
 	            	<form id="frm-cari" action="/rekapabsensi" method="GET">
 	            		@csrf
 	                	<div class="form-inline pull-right">
 	                		<div class="form-group">
-								<select class="form-control selectpicker" onchange="submit()" data-live-search="true" id="ktr" name="ktr"  data-width="100%">
-									@foreach($kantor as $ktr)
-									<option value="{{ $ktr->kantor_id }}" 
-										@if($ktr->kantor_id == $idkantor)
+								<select class="form-control selectpicker" onchange="submit()" data-live-search="true" id="bag" name="bag"  data-width="100%">
+									@foreach($bagian as $bg)
+									<option value="{{ $bg->kd_bagian }}" 
+										@if($bg->kd_bagian == $bag)
 											selected
 										@endif
-									>{{ $ktr->kantor_nama }}</option>
+									>{{ $bg->nm_bagian }}</option>
 									@endforeach
 								</select>
 		                    </div>&nbsp;
-		                	<div class="input-group" id="default-daterange">
+							<div class="input-group" id="default-daterange">
 								<input type="text" name="tgl" class="form-control" value="{{ $tgl }}" placeholder="Pilih Tanggal Izin" readonly onchange="submit()" />
 								<span class="input-group-append">
 								<span class="input-group-text"><i class="fa fa-calendar"></i></span>
@@ -53,15 +57,15 @@
 						<tr>
 							<th>NIP</th>
 							<th width="300">Nama</th>
-							<th>Jumlah Hari Kerja</th>
-							<th>TL</th>
-							<th>M</th>
-							<th>S</th>
-							<th>I</th>
-							<th>D</th>
-							<th>TD</th>
-							<th>C</th>
+							<th>HK</th>
 							<th>TK</th>
+							<th>TL</th>
+							<th>I</th>
+							<th>S</th>
+							<th>C</th>
+							<th>TD</th>
+							<th>Jml. Kehadirah</th>
+							<th>% Kehadiran</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -69,15 +73,15 @@
 					    <tr>
 					        <td>{{ $absen->pegawai->nip }}</td>
 					        <td>{{ $absen->pegawai->nm_pegawai }}</td>
-							<td>{{ $absen->hari }}</td>
-							<td>{{ $absen->telat }}</td>
-							<td>{{ $absen->masuk }}</td>
-							<td>{{ $absen->sakit }}</td>
-							<td>{{ $absen->izin }}</td>
-							<td>{{ $absen->dispensasi }}</td>
-							<td>{{ $absen->dinas }}</td>
-							<td>{{ $absen->cuti }}</td>
-							<td>{{ $absen->hari - ($absen->masuk + $absen->sakit + $absen->izin + $absen->dispensasi + $absen->dinas + $absen->cuti) }}</td>
+							<td class="text-right">{{ sizeof($absen->absen) > 0? $absen->absen[0]->hari: '0' }}</td>
+							<td class="text-right">{{ sizeof($absen->absen) > 0? $absen->absen[0]->tanpaketerangan: '0' }}</td>
+							<td class="text-right">{{ sizeof($absen->absen) > 0? $absen->absen[0]->telat: '0' }}</td>
+							<td class="text-right">{{ sizeof($absen->absen) > 0? $absen->absen[0]->izin: '0' }}</td>
+							<td class="text-right">{{ sizeof($absen->absen) > 0? $absen->absen[0]->sakit: '0' }}</td>
+							<td class="text-right">{{ sizeof($absen->absen) > 0? $absen->absen[0]->cuti: '0' }}</td>
+							<td class="text-right">{{ sizeof($absen->absen) > 0? $absen->absen[0]->dinas: '0' }}</td>
+							<td class="text-right">{{ sizeof($absen->absen) > 0? $absen->absen[0]->masuk: '0' }}</td>
+							<td class="text-right">{{ sizeof($absen->absen) > 0? number_format($absen->absen[0]->masuk/$absen->absen[0]->hari * 100, 2): '0' }}</td>
 				      	</tr>
 					    @endforeach
 				    </tbody>

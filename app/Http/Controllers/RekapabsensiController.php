@@ -4,7 +4,7 @@ namespace Absensi\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Absensi\Anggota;
-use Absensi\Kantor;
+use Absensi\Bagian;
 use Absensi\Absen;
 use Illuminate\Support\Facades\DB;
 
@@ -16,9 +16,10 @@ class RekapabsensiController extends Controller
         $tgl1 = ($req->get('tgl')? date('Y-m-d', strtotime($tanggal[0])): date('Y-m-01'));
         $tgl2 = ($req->get('tgl')? date('Y-m-d', strtotime($tanggal[1])): date('Y-m-d'));
         $diff = date_diff(date_create($tgl1), date_create($tgl2))->format("%a") + 1;
-        $kantor = Kantor::all();
-        $ktr = $req->get('ktr')?$req->get('ktr'):$kantor{0}->kantor_id;
-        $absensi = Anggota::with('pegawai')->selectRaw("anggota_nip, sum(if(absen_hari = 'b', 1, 0)) `hari`, 
+        $bagian = Bagian::all();
+        $bag = $req->get('bag')? $req->get('bag'): $bagian{0}->kd_bagian;
+        $absensi = Anggota::with(['absen' => function($q) use($tgl1, $tgl2){            
+            $q->selectRaw("pegawai_id, sum(if(absen_hari = 'l', 0, 1)) `hari`, 
                 sum(if(absen_masuk_telat, 1, 0)) `telat`, 
                 sum(if(absen_masuk, 1, 0)) `masuk`, 
                 sum(if(absen_izin = 'Sakit', 1, 0)) `sakit`, 
@@ -26,11 +27,15 @@ class RekapabsensiController extends Controller
                 sum(if(absen_izin = 'Dispensasi', 1, 0)) `dispensasi`, 
                 sum(if(absen_izin = 'Tugas Dinas', 1, 0)) `dinas`, 
                 sum(if(absen_izin = 'Cuti', 1, 0)) `cuti`, 
-                sum(if(absen_izin = 'Lain-lain', 1, 0)) `lain`")->leftJoin('absen', 'absen.pegawai_id', '=', 'anggota.pegawai_id')->where('kantor_id', $ktr)->whereBetween('absen_tgl', [$tgl1, $tgl2])->groupBy('anggota_nip')->orderBy('anggota_nip')->get();
+                sum(if(absen_hari = 'l', 0, if(absen_izin = 'Tanpa Keterangan', 1, 0))) `tanpaketerangan`");
+            $q->whereRaw("absen_tgl between '".$tgl1."' and '".$tgl2."'");
+            $q->groupBy('pegawai_id');
+        }])->with('pegawai')->whereHas('pegawai', function($q) use($bag){
+            $q->where('kd_bagian', $bag);
+        })->select('pegawai_id')->groupBy('pegawai_id')->get();
     	return view('pages.laporan.rekapabsensi.index',[
-            'diff' => $diff,
-            'kantor' => $kantor,
-            'idkantor' => $ktr,
+            'bagian' => $bagian,
+            'bag' => $bag,
             'absensi' => $absensi,
             'tgl' => date('d F Y', strtotime($tgl1)).' - '.date('d F Y', strtotime($tgl2))
     	]);

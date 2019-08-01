@@ -48,6 +48,13 @@ Route::group(['middleware' => ['auth']], function () {
 		Route::get('/harilibur/hapus/{post}', 'HariliburController@hapus')->middleware(['role:administrator|user']);
 	});
 
+	Route::group(['middleware' => ['role_or_permission:administrator|jenisizin']], function () {
+		Route::get('/jenisizin', 'JenisizinController@index')->name('jenisizin');
+		Route::get('/jenisizin/tambah', 'JenisizinController@tambah')->middleware(['role:administrator|user']);
+		Route::post('/jenisizin/tambah', 'JenisizinController@do_tambah')->middleware(['role:administrator|user']);
+		Route::get('/jenisizin/hapus/{post}', 'JenisizinController@hapus')->middleware(['role:administrator|user']);
+	});
+
 	Route::group(['middleware' => ['role_or_permission:administrator|harikhusus']], function () {
 		Route::get('/harikhusus', 'HarikhususController@index')->name('harikhusus');
 		Route::get('/harikhusus/tambah', 'HarikhususController@tambah')->middleware(['role:administrator|user']);

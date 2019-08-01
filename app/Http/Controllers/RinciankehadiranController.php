@@ -20,6 +20,7 @@ class RinciankehadiranController extends Controller
         $bag = $req->get('bag')? $req->get('bag'): $bagian{0}->kd_bagian;
         $absensi = Anggota::with(['absen' => function($q) use($tgl1, $tgl2){
             $q->whereBetween('absen_tgl', [$tgl1, $tgl2]);
+            $q->orderBy('absen_tgl');
         }])->with('pegawai')->whereHas('pegawai', function($q) use($bag){
             $q->where('kd_bagian', $bag);
         })->select('pegawai_id')->groupBy('pegawai_id')->get();

@@ -2183,7 +2183,7 @@ textarea.form-control {
 .input-group-lg > .input-group-prepend > .btn, 
 .input-group-lg > .input-group-prepend > .input-group-text,
 select.form-control-lg:not([size]):not([multiple]) {
-	height: 39px;
+	height: 46px;
 	padding: 10px 16px;
 	line-height: 1.3333333;
 	border-radius: 6px;
@@ -2195,7 +2195,7 @@ select.form-control-lg:not([size]):not([multiple]) {
 .input-group-sm > .input-group-prepend > .btn, 
 .input-group-sm > .input-group-prepend > .input-group-text,
 select.form-control-sm:not([size]):not([multiple]) {
-	height: 28px;
+	height: 30px;
 	padding: 5px 10px;
 	line-height: 1.5;
 	border-radius: 3px;

@@ -23,14 +23,14 @@ return [
 		'url' => 'javascript:;',
 		'caret' => true,
 		'sub_menu' => [[
+			'url' => '/dataizin',
+			'title' => 'Data Izin'
+		],[
 			'url' => '/datakehadiran',
 			'title' => 'Data Kehadiran'
 		],[
 			'url' => '/downloadkehadiran',
 			'title' => 'Download Kehadiran'
-		],[
-			'url' => '/dataizin',
-			'title' => 'Data Izin'
 		]]
 	],[
 		'icon' => 'fa fa-gavel',
@@ -53,11 +53,11 @@ return [
 			'url' => '/dataanggota',
 			'title' => 'Data Anggota'
 		],[
-			'url' => '/harilibur',
-			'title' => 'Hari Libur'
-		],[
 			'url' => '/harikhusus',
 			'title' => 'Hari Khusus'
+		],[
+			'url' => '/harilibur',
+			'title' => 'Hari Libur'
 		]]
 	],[
 		'icon' => 'fa fa-file-alt',
@@ -65,11 +65,11 @@ return [
 		'url' => 'javascript:;',
 		'caret' => true,
 		'sub_menu' => [[
-			'url' => '/rinciankehadiran',
-			'title' => 'Rincian Kehadiran'
-		],[
 			'url' => '/rekapabsensi',
 			'title' => 'Rekap Absensi'
+		],[
+			'url' => '/rinciankehadiran',
+			'title' => 'Rincian Kehadiran'
 		]]
 	],[
 		'icon' => 'fa fa-cog',
@@ -77,20 +77,23 @@ return [
 		'url' => 'javascript:;',
 		'caret' => true,
 		'sub_menu' => [[
+			'url' => '/aturan',
+			'title' => 'Aturan'
+		],[
+			'url' => '/datakantor',
+			'title' => 'Data Kantor'
+		],[
 			'url' => '/datamesin',
 			'title' => 'Data Mesin'
 		],[
 			'url' => '/datapengguna',
 			'title' => 'Data Pengguna'
 		],[
-			'url' => '/datakantor',
-			'title' => 'Data Kantor'
+			'url' => '/jenisizin',
+			'title' => 'Jenis Izin'
 		],[
 			'url' => '/shift',
 			'title' => 'Shift'
-		],[
-			'url' => '/aturan',
-			'title' => 'Aturan'
 		]]
 	]]
 ];

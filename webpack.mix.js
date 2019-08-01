@@ -75,6 +75,9 @@ mix.copy('node_modules/simple-line-icons/', 'public/assets/plugins/simple-line-i
 // bootstrap-social
 mix.copy('node_modules/bootstrap-social/bootstrap-social.css', 'public/assets/plugins/bootstrap-social/bootstrap-social.css');
 
+// autonumeric
+mix.copy('node_modules/autonumeric/dist/', 'public/assets/plugins/autonumeric/');
+
 // intro.js
 mix.copy('node_modules/intro.js/introjs.css', 'public/assets/plugins/introjs/introjs.css');
 mix.copy('node_modules/intro.js/introjs-rtl.css', 'public/assets/plugins/introjs/introjs-rtl.css');

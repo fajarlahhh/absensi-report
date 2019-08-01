@@ -23,7 +23,7 @@
                 	@role('user|administrator')
                     <div class="form-inline">
                         <a href="/datakehadiran/tambah" class="btn btn-primary">Tambah</a>&nbsp;
-                        <a href="/datakehadiran/download" class="btn btn-success">Download</a>
+                        <a href="/downloadkehadiran" class="btn btn-success">Download</a>
                     </div>
                     @endrole
                 </div>

@@ -28,7 +28,7 @@ class Anggota extends Model
     }
 
     public function absen(){
-        return $this->hasMany('Absensi\Absen', 'pegawai_id', 'pegawai_id')->orderBy('absen_tgl');
+        return $this->hasMany('Absensi\Absen', 'pegawai_id', 'pegawai_id');
     }
 
     public function izin(){
