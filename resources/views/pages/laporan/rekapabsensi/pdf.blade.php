@@ -21,14 +21,14 @@
 			<tr>
 				<th>NIP</th>
 				<th width="300">Nama</th>
-				<th>HK</th>
-				<th>TK</th>
-				<th>TL</th>
-				<th>I</th>
-				<th>S</th>
-				<th>C</th>
-				<th>TD</th>
-				<th>Jml. Kehadirah</th>
+				<th width="50">HK</th>
+				<th width="50">TK</th>
+				<th width="50">TL</th>
+				<th width="50">I</th>
+				<th width="50">S</th>
+				<th width="50">C</th>
+				<th width="50">TD</th>
+				<th width="50">Jml. Kehadirah</th>
 				<th>% Kehadiran</th>
 			</tr>
 		</thead>
