@@ -162,9 +162,9 @@ class PostingabsenController extends Controller
 							$data_masuk = $abs->kehadiran->first(function($tgl) use ($tgli){
 								return substr($tgl->kehadiran_tgl, 0, 10) == $tgli;
 							});
-						$absen_masuk = $data_masuk? date('H:i:s', strtotime($data_masuk->kehadiran_tgl)): null;
-						$absen_masuk_keterangan = $data_masuk? $data_masuk->kehadiran_keterangan: null;
-						if ($absen_masuk) {
+						$absen_masuk = $data_masuk && $absen_hari == 'b'? date('H:i:s', strtotime($data_masuk->kehadiran_tgl)): null;
+						$absen_masuk_keterangan = $data_masuk && $absen_hari == 'b'? $data_masuk->kehadiran_keterangan: null;
+						if ($absen_masuk && $absen_hari == 'b') {
 							$waktuMasuk = new DateTime($data_masuk->kehadiran_tgl);
 							$aturanMasuk = new DateTime(date('Y-m-d', strtotime($data_masuk->kehadiran_tgl)).' '.$masuk);
 							$absen_masuk_telat = ($waktuMasuk > $aturanMasuk? date_diff($aturanMasuk, $waktuMasuk)->format("%h:%i:%S"): null);
