@@ -73,7 +73,27 @@ class RinciankehadiranController extends Controller
 
     public function list_pegawai(Request $req)
     {
-        if ($req->jenis == 'Telat') {
+        switch ($req->jenis) {
+            case 'tl':
+                $jenis = 'Telat';
+                break;
+            case 's':
+                $jenis = 'Sakit';
+                break;
+            case 'tk':
+                $jenis = 'Tanpa Keterangan';
+                break;
+            case 'c':
+                $jenis = 'Cuti';
+                break;
+            case 'i':
+                $jenis = 'Izin';
+                break;
+            case 'td':
+                $jenis = 'Tugas Dinas';
+                break;
+        }
+        if ($jenis == 'Telat') {
             $data = Absen::whereNotNull('absen_masuk_telat')->where('absen_hari', 'b')->with(['anggota' => function($q){
                 $q->with(['pegawai' => function($q1) {
                     $q1->with('unit');
@@ -83,7 +103,7 @@ class RinciankehadiranController extends Controller
                 }]);
             }])->whereBetween('absen_tgl', [$req->tgl1, $req->tgl2])->orderBy('pegawai_id')->get();
         } else {
-            $data = Absen::where('absen_izin', $req->jenis)->where('absen_hari', 'b')->with(['anggota' => function($q){
+            $data = Absen::where('absen_izin', $jenis)->where('absen_hari', 'b')->with(['anggota' => function($q){
                 $q->with(['pegawai' => function($q1) {
                     $q1->with('unit');
                     $q1->with('bagian');
