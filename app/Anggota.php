@@ -16,7 +16,7 @@ class Anggota extends Model
     ];
 
     public function pegawai(){
-        return $this->hasOne('Absensi\Pegawai', 'id', 'pegawai_id')->select(['id','nip', 'nm_pegawai', 'kd_unit', 'kd_jabatan', 'kd_bagian'])->orderBy('kd_jabatan');
+        return $this->hasOne('Absensi\Pegawai', 'id', 'pegawai_id')->select(['id','nip', 'nm_pegawai', 'kd_unit', 'kd_jabatan', 'kd_bagian', 'kd_seksi'])->orderBy('kd_jabatan');
     }
 
     public function kantor(){

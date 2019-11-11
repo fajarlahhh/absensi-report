@@ -74,4 +74,16 @@ class RekapabsensiController extends Controller
         ]);
         return $pdf->stream('Rekap absensi bagian '.($bagian->first(function($q)use($bag){ return $q->kd_bagian == $bag; })).' '.$req->get('tgl').'.pdf');
     }
+
+    public function rekap_pertanggal(Request $req)
+    {
+        $rekap = Absen::selectRaw("sum(if(absen_masuk_telat is not null, 1, 0)) telat,
+        sum(if(absen_izin = 'Tanpa Keterangan', 1, 0)) tk,
+        sum(if(absen_izin = 'Sakit', 1, 0)) sakit,
+        sum(if(absen_izin = 'Cuti', 1, 0)) cuti,
+        sum(if(absen_izin = 'Izin', 1, 0)) izin,
+        sum(if(absen_izin = 'Tugas Dinas', 1, 0)) td")->whereBetween('absen_tgl', [$req->tgl1, $req->tgl2])->get();
+        
+        return response()->json($rekap);
+    }
 }

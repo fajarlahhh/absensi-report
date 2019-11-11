@@ -70,4 +70,29 @@ class RinciankehadiranController extends Controller
             'tgl2' => $tgl2
         ]);
     }
+
+    public function list_pegawai(Request $req)
+    {
+        $data = Absen::where('absen_izin', $req->jenis)->with(['anggota' => function($q){
+            $q->with(['pegawai' => function($q1) {
+                $q1->with('unit');
+                $q1->with('bagian');
+                $q1->with('jabatan');
+                $q1->with('seksi');
+            }]);
+        }])->whereBetween('absen_tgl', [$req->tgl1, $req->tgl2])->orderBy('pegawai_id')->get();
+        $list = [];
+        foreach ($data as $key => $row) {
+            array_push($list, [
+                'nik' => $row->anggota->anggota_nip,
+                'nama' => $row->anggota->pegawai->nm_pegawai,
+                'unit' => $row->anggota->pegawai->unit->nm_unit,
+                'bagian' => $row->anggota->pegawai->bagian->nm_bagian,
+                'jabatan' => $row->anggota->pegawai->jabatan->nm_jabatan,
+                'seksi' => $row->anggota->pegawai->seksi? $row->anggota->pegawai->seksi->nm_seksi: '',
+                'tanggal' => $row->absen_tgl,
+            ]);
+        }
+        return response()->json($list);
+    }
 }
