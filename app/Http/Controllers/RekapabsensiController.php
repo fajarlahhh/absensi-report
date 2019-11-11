@@ -82,8 +82,8 @@ class RekapabsensiController extends Controller
         sum(if(absen_izin = 'Sakit', 1, 0)) sakit,
         sum(if(absen_izin = 'Cuti', 1, 0)) cuti,
         sum(if(absen_izin = 'Izin', 1, 0)) izin,
-        sum(if(absen_izin = 'Tugas Dinas', 1, 0)) td")->whereBetween('absen_tgl', [$req->tgl1, $req->tgl2])->get();
-        
+        sum(if(absen_izin = 'Tugas Dinas', 1, 0)) td")->where('absen_hari', 'b')->whereBetween('absen_tgl', [$req->tgl1, $req->tgl2])->get();
+
         return response()->json($rekap);
     }
 }
