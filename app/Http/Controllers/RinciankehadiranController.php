@@ -73,14 +73,27 @@ class RinciankehadiranController extends Controller
 
     public function list_pegawai(Request $req)
     {
-        $data = Absen::where('absen_izin', $req->jenis)->with(['anggota' => function($q){
-            $q->with(['pegawai' => function($q1) {
-                $q1->with('unit');
-                $q1->with('bagian');
-                $q1->with('jabatan');
-                $q1->with('seksi');
-            }]);
-        }])->whereBetween('absen_tgl', [$req->tgl1, $req->tgl2])->orderBy('pegawai_id')->get();
+        if ($req->jenis == 'Telat') {
+            $data = Absen::whereNotNull('absen_masuk_telat')->where('absen_hari', 'b')->with(['anggota' => function($q){
+                $q->with(['pegawai' => function($q1) {
+                    $q1->with('unit');
+                    $q1->with('bagian');
+                    $q1->with('jabatan');
+                    $q1->with('seksi');
+                }]);
+            }])->whereBetween('absen_tgl', [$req->tgl1, $req->tgl2])->orderBy('pegawai_id')->get();
+        } else {
+            $data = Absen::where('absen_izin', $req->jenis)->where('absen_hari', 'b')->with(['anggota' => function($q){
+                $q->with(['pegawai' => function($q1) {
+                    $q1->with('unit');
+                    $q1->with('bagian');
+                    $q1->with('jabatan');
+                    $q1->with('seksi');
+                }]);
+            }])->whereBetween('absen_tgl', [$req->tgl1, $req->tgl2])->orderBy('pegawai_id')->get();
+        }
+        
+        
         $list = [];
         foreach ($data as $key => $row) {
             array_push($list, [
