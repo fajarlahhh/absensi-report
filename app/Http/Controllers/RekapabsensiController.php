@@ -3,10 +3,9 @@
 namespace Absensi\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Absensi\Anggota;
-use Absensi\Bagian;
+use Absensi\Pegawai;
+use Absensi\Kantor;
 use Absensi\Absen;
-use Illuminate\Support\Facades\DB;
 use PDF;
 
 class RekapabsensiController extends Controller
@@ -17,11 +16,11 @@ class RekapabsensiController extends Controller
         $tgl1 = ($req->get('tgl')? date('Y-m-d', strtotime($tanggal[0])): date('Y-m-01'));
         $tgl2 = ($req->get('tgl')? date('Y-m-d', strtotime($tanggal[1])): date('Y-m-d'));
         $diff = date_diff(date_create($tgl1), date_create($tgl2))->format("%a") + 1;
-        $bagian = Bagian::all();
-        $bag = $req->get('bag')? $req->get('bag'): $bagian{0}->kd_bagian;
-        $absensi = Anggota::with(['absen' => function($q) use($tgl1, $tgl2){            
-            $q->selectRaw("pegawai_id, sum(if(absen_hari = 'l', 0, 1)) `hari`, 
-                sum(if(absen_masuk_telat, 1, 0)) `telat`, 
+        $kantor = Kantor::orderBy('kantor_nama', 'asc')->get();
+        $ktr = $req->get('ktr')? $req->get('ktr'): $kantor{0}->kantor_id;
+        $absensi = Pegawai::with(['absen' => function($q) use($tgl1, $tgl2){            
+            $q->selectRaw("pegawai_nip, sum(if(absen_hari = 'l', 0, 1)) `hari`, 
+                sum(if(absen_telat, 1, 0)) `telat`, 
                 sum(if(absen_masuk, 1, 0)) `masuk`, 
                 sum(if(absen_izin = 'Sakit', 1, 0)) `sakit`, 
                 sum(if(absen_izin = 'Izin', 1, 0)) `izin`, 
@@ -29,14 +28,12 @@ class RekapabsensiController extends Controller
                 sum(if(absen_izin = 'Tugas Dinas', 1, 0)) `dinas`, 
                 sum(if(absen_izin = 'Cuti', 1, 0)) `cuti`, 
                 sum(if(absen_hari = 'l', 0, if(absen_izin = 'Tanpa Keterangan', 1, 0))) `tanpaketerangan`");
-            $q->whereRaw("absen_tgl between '".$tgl1."' and '".$tgl2."'");
-            $q->groupBy('pegawai_id');
-        }])->with('pegawai')->whereHas('pegawai', function($q) use($bag){
-            $q->where('kd_bagian', $bag);
-        })->select('pegawai_id')->groupBy('pegawai_id')->get();
+            $q->whereRaw("absen_tanggal between '".$tgl1."' and '".$tgl2."'");
+            $q->groupBy('pegawai_nip');
+        }])->select('pegawai_nip','pegawai_nama','pegawai_golongan','pegawai_jenis_kelamin')->groupBy('pegawai_nip','pegawai_nip','pegawai_nama','pegawai_golongan','pegawai_jenis_kelamin')->get();
     	return view('pages.laporan.rekapabsensi.index',[
-            'bagian' => $bagian,
-            'bag' => $bag,
+            'kantor' => $kantor,
+            'ktr' => $ktr,
             'absensi' => $absensi,
             'tgl' => date('d F Y', strtotime($tgl1)).' - '.date('d F Y', strtotime($tgl2))
     	]);
@@ -50,7 +47,7 @@ class RekapabsensiController extends Controller
         $bagian = Bagian::all();
         $bag = $req->get('bag')? $req->get('bag'): $bagian{0}->kd_bagian;
         $absensi = Anggota::with(['absen' => function($q) use($tgl1, $tgl2){            
-            $q->selectRaw("pegawai_id, sum(if(absen_hari = 'l', 0, 1)) `hari`, 
+            $q->selectRaw("pegawai_nip, sum(if(absen_hari = 'l', 0, 1)) `hari`, 
                 sum(if(absen_masuk_telat, 1, 0)) `telat`, 
                 sum(if(absen_masuk, 1, 0)) `masuk`, 
                 sum(if(absen_izin = 'Sakit', 1, 0)) `sakit`, 
@@ -60,10 +57,10 @@ class RekapabsensiController extends Controller
                 sum(if(absen_izin = 'Cuti', 1, 0)) `cuti`, 
                 sum(if(absen_hari = 'l', 0, if(absen_izin = 'Tanpa Keterangan', 1, 0))) `tanpaketerangan`");
             $q->whereRaw("absen_tgl between '".$tgl1."' and '".$tgl2."'");
-            $q->groupBy('pegawai_id');
+            $q->groupBy('pegawai_nip');
         }])->with('pegawai')->whereHas('pegawai', function($q) use($bag){
             $q->where('kd_bagian', $bag);
-        })->select('pegawai_id')->groupBy('pegawai_id')->get();
+        })->select('pegawai_nip')->groupBy('pegawai_nip')->get();
         $pdf = PDF::loadView('pages.laporan.rekapabsensi.pdf', [
             'absensi' => $absensi,
             'tanggal' => $req->get('tgl'),

@@ -17,22 +17,17 @@ class Pengguna extends Authenticatable
      * @var array
      */
     protected $table = 'pengguna';
-    protected $primaryKey = 'pengguna_nip';
+    protected $primaryKey = 'pengguna_id';
     public $incrementing = false;
     protected $rememberTokenName = 'pengingat';
+    public $timestamps = false;
 
     protected $fillable = [
-        'pengguna_nip', 'pengguna_sandi'
+        'pengguna_id', 'pengguna_sandi'
     ];
 
     public function getAuthPassword()
     {
         return $this->pengguna_sandi;
     }
-
-    public function pegawai(){
-        return $this->hasOne('Absensi\Pegawai', 'nip', 'pengguna_nip')->select(['nip', 'nm_pegawai', 'kd_unit', 'kd_jabatan', 'kd_bagian'])->orderBy('nm_pegawai');
-	}
-
-    public static $admin = ['201604331'];
 }

@@ -42,10 +42,8 @@
                     <thead>
 						<tr>
 							<th>No.</th>
-							<th>NIP</th>
+							<th>ID</th>
 							<th>Nama</th>
-							<th>Unit</th>
-							<th>Bagian</th>
 							<th>Level</th>
 							<th width="100"></th>
 						</tr>
@@ -54,21 +52,18 @@
 					    @foreach ($data as $index => $pengguna)
 					    <tr>
 					        <td>{{ (($data->currentPage() - 1 ) * $data->perPage() ) + $loop->iteration }}</td>
-					        <td>{{ $pengguna->pengguna_nip }}</td>
-					        <td>{{ $pengguna->pegawai->nm_pegawai }}</td>
-					        <td>{{ $pengguna->pegawai->unit->nm_unit }}</td>
-					        <td>{{ $pengguna->pegawai->bagian->nm_bagian }}</td>
+					        <td>{{ $pengguna->pengguna_id }}</td>
+					        <td>{{ $pengguna->pengguna_nama }}</td>
 					        <td>{{ ucFirst($pengguna->getRoleNames()[0]) }}</td>
 					        <td class="text-right">
 					        	@role('user|administrator')
 					        	<form action="datapengguna/edit" method="get">
-					        		@csrf
-					        		<input type="hidden" name="id" value="{{ $pengguna->pengguna_nip }}">
+					        		<input type="hidden" name="id" value="{{ $pengguna->pengguna_id }}">
 					        		<button class='btn btn-grey btn-xs'>
 					        			<i class='fa fa-pencil-alt'></i>
 					        		</button>
-						        	@if(!in_array($pengguna->pengguna_nip, config('admin.nip')))
-		                            <a href="javascript:;" onclick="hapus('{{ $pengguna->pengguna_nip }}')" id='btn-del' class='btn btn-danger btn-xs'><i class='fa fa-trash-alt'></i></a>
+						        	@if(!in_array($pengguna->pengguna_id, config('admin.id')))
+		                            <a href="javascript:;" onclick="hapus('{{ $pengguna->pengguna_id }}')" id='btn-del' class='btn btn-danger btn-xs'><i class='fa fa-trash-alt'></i></a>
 		                            @endif
 					        	</form>
 	                    		@endrole

@@ -2,15 +2,16 @@
 
 namespace Absensi\Http\Controllers\Auth;
 
-use Absensi\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Absensi\Pegawai;
+use Absensi\Pengguna;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Session;
-use Absensi\Pengguna;
-use Absensi\Pegawai;
+use Absensi\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 class LoginController extends Controller
 {
@@ -52,19 +53,19 @@ class LoginController extends Controller
     {
         $remember = (Input::has('remember')) ? true : false;
         $attempt = Auth::attempt([
-            'pengguna_nip' => Input::get('uid'), 
+            'pengguna_id' => Input::get('uid'), 
             'password' => Input::get('password')], $remember);
         if ($attempt) {
             return Redirect::route('dashboard')
-            ->with('judul', 'Selamat datang '.ucfirst(Auth::user()->pegawai->nm_pegawai).'!')
+            ->with('judul', 'Selamat datang '.ucfirst(Auth::user()->pengguna_nama).'!')
             ->with('teks', 'Selamat bekerja dan semoga sukses')
-            ->with('gambar', (Auth::user()->pegawai->foto? Auth::user()->pegawai->foto: '../assets/img/user/user.png'));
+            ->with('gambar', '../assets/img/user/user.png');
         }
         return Redirect::back()->withInput()->with('alert', 'ID Pengguna atau Kata Sandi salah');
     }
 
     private function username()
     {
-        return 'pengguna_nip';
+        return 'pengguna_id';
     }
 }

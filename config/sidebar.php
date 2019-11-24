@@ -18,46 +18,16 @@ return [
 		'title' => 'Dashboard',
 		'url' => '/'
 	],[
-		'icon' => 'fa fa-calendar-alt',
-		'title' => 'Absensi',
-		'url' => 'javascript:;',
-		'caret' => true,
-		'sub_menu' => [[
-			'url' => '/dataizin',
-			'title' => 'Data Izin'
-		],[
-			'url' => '/datakehadiran',
-			'title' => 'Data Kehadiran'
-		],[
-			'url' => '/downloadkehadiran',
-			'title' => 'Download Kehadiran'
-		]]
-	],[
-		'icon' => 'fa fa-gavel',
-		'title' => 'Administrator',
-		'url' => 'javascript:;',
-		'caret' => true,
-		'sub_menu' => [[
-			'url' => '/postingabsensi',
-			'title' => 'Posting Absensi'
-		],[
-			'url' => '/shiftkaryawan',
-			'title' => 'Shift Karyawan'
-		]]
-	],[
 		'icon' => 'fa fa-database',
 		'title' => 'Data Master',
 		'url' => 'javascript:;',
 		'caret' => true,
 		'sub_menu' => [[
-			'url' => '/dataanggota',
-			'title' => 'Data Anggota'
+			'url' => '/datakantor',
+			'title' => 'Data Kantor'
 		],[
-			'url' => '/harikhusus',
-			'title' => 'Hari Khusus'
-		],[
-			'url' => '/harilibur',
-			'title' => 'Hari Libur'
+			'url' => '/datapegawai',
+			'title' => 'Data Pegawai'
 		]]
 	],[
 		'icon' => 'fa fa-file-alt',
@@ -77,23 +47,8 @@ return [
 		'url' => 'javascript:;',
 		'caret' => true,
 		'sub_menu' => [[
-			'url' => '/aturan',
-			'title' => 'Aturan'
-		],[
-			'url' => '/datakantor',
-			'title' => 'Data Kantor'
-		],[
-			'url' => '/datamesin',
-			'title' => 'Data Mesin'
-		],[
 			'url' => '/datapengguna',
 			'title' => 'Data Pengguna'
-		],[
-			'url' => '/jenisizin',
-			'title' => 'Jenis Izin'
-		],[
-			'url' => '/shift',
-			'title' => 'Shift'
 		]]
 	]]
 ];

@@ -2,8 +2,8 @@
 
 @push('css')
 	<link href="/assets/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet" />
+	<link href="/assets/plugins/bootstrap-select/dist/css/bootstrap-select.min.css" rel="stylesheet" />
 @endpush
-
 @section('page')
 	<li class="breadcrumb-item active">Rekap Absensi</li>
 @endsection
@@ -18,24 +18,23 @@
 		<div class="panel-heading">
 			<div class="row">
                 <div class="col-md-12 col-lg-4 col-xl-4 col-xs-12">
-	            	<form action="/rekapabsensi/pdf" method="GET" target="_blank">
+	            	{{-- <form action="/rekapabsensi/pdf" method="GET" target="_blank">
                 		<input type="hidden" name="bag" value="{{ $bag }}">
                 		<input type="hidden" name="tgl" value="{{ $tgl }}">
                 		<input type="submit" class="btn btn-warning" value="Cetak">
-                	</form>
+                	</form> --}}
                 </div>
                 <div class="col-md-12 col-lg-8 col-xl-8 col-xs-12">
 	            	<form id="frm-cari" action="/rekapabsensi" method="GET">
-	            		@csrf
 	                	<div class="form-inline pull-right">
 	                		<div class="form-group">
-								<select class="form-control selectpicker" onchange="submit()" data-live-search="true" id="bag" name="bag"  data-width="100%">
-									@foreach($bagian as $bg)
-									<option value="{{ $bg->kd_bagian }}" 
-										@if($bg->kd_bagian == $bag)
+								<select class="form-control selectpicker" onchange="submit()" data-live-search="true" id="ktr" name="ktr" data-size="5" data-width="100%">
+									@foreach($kantor as $bg)
+									<option value="{{ $bg->kantor_id }}" 
+										@if($bg->kantor_id == $ktr)
 											selected
 										@endif
-									>{{ $bg->nm_bagian }}</option>
+									>{{ $bg->kantor_nama }}</option>
 									@endforeach
 								</select>
 		                    </div>&nbsp;
@@ -52,11 +51,13 @@
 		</div>
 		<div class="panel-body">
 			<div class="table-responsive" >
-				<table class="table table-bordered" id="laporan">
+				<table class="table" id="laporan">
                     <thead>
 						<tr>
 							<th>NIP</th>
-							<th width="300">Nama</th>
+							<th>Nama</th>
+							<th>Golongan</th>
+							<th>Jenis Kelamin</th>
 							<th>HK</th>
 							<th>TK</th>
 							<th>TL</th>
@@ -71,8 +72,10 @@
 					<tbody>
 					    @foreach($absensi as $index => $absen)
 					    <tr>
-					        <td>{{ $absen->pegawai->nip }}</td>
-					        <td>{{ $absen->pegawai->nm_pegawai }}</td>
+							<td>{{ $absen->pegawai_nip }}</td>
+							<td>{{ $absen->pegawai_nama }}</td>
+							<td>{{ $absen->pegawai_golongan }}</td>
+							<td>{{ $absen->pegawai_jenis_kelamin }}</td>
 							<td class="text-right">{{ sizeof($absen->absen) > 0? $absen->absen[0]->hari: '0' }}</td>
 							<td class="text-right">{{ sizeof($absen->absen) > 0? $absen->absen[0]->tanpaketerangan: '0' }}</td>
 							<td class="text-right">{{ sizeof($absen->absen) > 0? $absen->absen[0]->telat: '0' }}</td>
@@ -94,16 +97,8 @@
 @push('scripts')
 	<script src="/assets/plugins/bootstrap-daterangepicker/moment.min.js"></script>	
 	<script src="/assets/plugins/bootstrap-daterangepicker/daterangepicker.js"></script>
-	<script src="/assets/plugins/print-this/printThis.js"></script>
+	<script src="/assets/plugins/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
 	<script>
-		function cetak(){
-			$("#laporan").printThis({
-				importCSS: true,
-				importStyle: true,
-				removeInline: false,
-			 	copyTagClasses: true
-			});
-		}
 
 		$('#default-daterange').daterangepicker({
 			opens: 'right',

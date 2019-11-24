@@ -11,7 +11,7 @@ class Kantor extends Model
     protected $primaryKey = 'kantor_id';
     public $timestamps = false;
 
-    public function unit(){
-        return $this->hasOne('Absensi\Unit', 'kd_unit', 'unit_id');
+    public function kantor(){
+    	return $this->hasMany('Absensi\Pegawai', 'kantor_id', 'kantor_id');
 	}
 }

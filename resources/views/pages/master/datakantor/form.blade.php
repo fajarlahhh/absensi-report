@@ -28,26 +28,64 @@
 			@csrf
 			<div class="panel-body">
 				<input type="hidden" name="redirect" value="{{ url()->previous() }}">
-				@if($data)
+				<input type="hidden" name="kantor_id" value="{{ $data? $data->kantor_id: '' }}">
 				<div class="form-group">
-					<label class="control-label">ID</label>
-					<input class="form-control" type="text" name="kantor_id" value="{{ $data? $data->kantor_id: '' }}" required readonly />
-				</div>
-				@endif
-				<div class="form-group">
-					<label class="control-label">Lokasi</label>
+					<label class="control-label">Nama</label>
 					<input class="form-control" type="text" name="kantor_nama" value="{{ $data? $data->kantor_nama: '' }}" required data-parsley-maxlength="250" autocomplete="off" />
 				</div>
 				<div class="form-group input-group-sm">
-					<label class="control-label">Unit</label>
-					<select class="form-control selectpicker" data-live-search="true" name="unit_id" data-style="btn-info" data-width="100%">
-						@foreach($unit as $unt)
-						<option value="{{ $unt->kd_unit }}" 
-							@if($data && $data->unit_id == $unt->kd_unit)
+					<label class="control-label">Kab/Kota</label>
+					<select class="form-control selectpicker" data-live-search="true" name="kantor_lokasi" data-style="btn-info" data-width="100%">
+						<option value="Kab. Bima" 
+							@if($data && $data->kantor_lokasi == "Kab. Bima")
 								selected
 							@endif
-						>{{ $unt->nm_unit }}</option>
-						@endforeach
+						>Kab. Bima</option>
+						<option value="Kab. Dompu" 
+							@if($data && $data->kantor_lokasi == "Kab. Dompu")
+								selected
+							@endif
+						>Kab. Dompu</option>
+						<option value="Kab. Lombok Barat" 
+							@if($data && $data->kantor_lokasi == "Kab. Lombok Barat")
+								selected
+							@endif
+						>Kab. Lombok Barat</option>
+						<option value="Kab. Lombok Tengah" 
+							@if($data && $data->kantor_lokasi == "Kab. Lombok Tengah")
+								selected
+							@endif
+						>Kab. Lombok Tengah</option>
+						<option value="Kab. Lombok Timur" 
+							@if($data && $data->kantor_lokasi == "Kab. Lombok Timur")
+								selected
+							@endif
+						>Kab. Lombok Timur</option>
+						<option value="Kab. Lombok Utara" 
+							@if($data && $data->kantor_lokasi == "Kab. Lombok Utara")
+								selected
+							@endif
+						>Kab. Lombok Utara</option>
+						<option value="Kab. Sumbawa" 
+							@if($data && $data->kantor_lokasi == "Kab. Sumbawa")
+								selected
+							@endif
+						>Kab. Sumbawa</option>
+						<option value="Kab. Sumbawa Barat" 
+							@if($data && $data->kantor_lokasi == "Kab. Sumbawa Barat")
+								selected
+							@endif
+						>Kab. Sumbawa Barat</option>
+						<option value="Kota Bima" 
+							@if($data && $data->kantor_lokasi == "Kota Bima")
+								selected
+							@endif
+						>Kota Bima</option>
+						<option value="Kota Mataram" 
+							@if($data && $data->kantor_lokasi == "Kota Mataram")
+								selected
+							@endif
+						>Kota Mataram</option>
 					</select>
 				</div>
 			</div>

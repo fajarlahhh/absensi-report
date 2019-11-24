@@ -7,19 +7,11 @@
 			<li class="nav-profile">
 				<a href="javascript:;" data-toggle="nav-profile">
 					<div class="cover with-shadow"></div>
-					<img src="{{ (Auth::user()->pegawai->foto? Auth::user()->pegawai->foto: '../assets/img/user/user.png') }}" alt="" class="image" />
+					<img src="/assets/img/user/user.png" alt="" class="image" />
 					<div class="info">
-						<b class="caret pull-right"></b>
-						{{ Auth::user()->pegawai->nm_pegawai }}
-						<small>{{ Auth::user()->pegawai->nip }}</small>
+						{{ Auth::user()->pengguna_nama }}
 					</div>
 				</a>
-			</li>
-			<li>
-				<ul class="nav nav-profile">
-					<li><a href="javascript:;"><i class="fa fa-pencil"></i> Feedback</a></li>
-					<li><a href="javascript:;"><i class="fa fa-question-circle"></i> Bantuan</a></li>
-				</ul>
 			</li>
 		</ul>
 		<!-- end sidebar user -->

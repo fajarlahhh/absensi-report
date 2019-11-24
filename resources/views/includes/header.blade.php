@@ -9,7 +9,7 @@
 	<div id="header" class="header {{ $headerClass }}">
 		<!-- begin navbar-header -->
 		<div class="navbar-header">
-			<a href="/" class="navbar-brand"><img src="/assets/img/logo/favicon.png" alt="" /> <b>PDAM GM</b> {{ config("app.name") }}</a>
+			<a href="/" class="navbar-brand"><img src="/assets/img/logo/favicon.png" alt="" /> <b>DIKBUD NTB</b> {{ config("app.name") }}</a>
 			<button type="button" class="navbar-toggle" data-click="sidebar-toggled">
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
@@ -23,8 +23,8 @@
 		<ul class="navbar-nav navbar-right">
 			<li class="dropdown navbar-user">
 				<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-					<img src="{{ ($foto? $foto: '/assets/img/user/user.png') }}" alt="" />
-					<span class="d-none d-md-inline">{{ strtoupper(Auth::user()->pegawai->nm_pegawai) }}</span> <b class="caret"></b>
+					<img src="/assets/img/user/user.png" alt="" />
+					<span class="d-none d-md-inline">{{ strtoupper(Auth::user()->pengguna_nama) }}</span> <b class="caret"></b>
 				</a>
 				<div class="dropdown-menu dropdown-menu-right">
 					<a href="#modal-katasandi" class="dropdown-item" data-toggle="modal">Ganti Kata Sandi</a>
@@ -57,7 +57,7 @@
 						</div>
 						<div class="form-group">
 							<label class="control-label">Kata Sandi Baru</label>
-							<input data-toggle="password" class="form-control" type="password" name="pengguna_sandi_baru" data-parsley-minlength="8" required />
+							<input data-toggle="password" class="form-control" type="password" name="pengguna_sandi_baru" data-parsley-minlength="5" required />
 						</div>
 					</div>
 					<div class="modal-footer">
