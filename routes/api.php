@@ -17,5 +17,5 @@ use Illuminate\Http\Request;
     return $request->user();
 });*/
 
-Route::get('/keseluruhanpertanggal', 'RekapabsensiController@rekap_pertanggal');
-Route::get('/listpegawai', 'RinciankehadiranController@list_pegawai');
+Route::get('/listkantor', 'DatakantorController@get_all');
+Route::post('/tambahpegawai', 'DatapegawaiController@do_tambah');

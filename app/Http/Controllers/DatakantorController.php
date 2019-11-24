@@ -112,4 +112,14 @@ class DatakantorController extends Controller
 			->with('tipe', 'error');
 		}
 	}
+    
+    public function get_all(Request $req)
+    {
+        $response = [
+            'kantor' => Kantor::all()
+        ];
+
+        return response()->json($response);
+    }
+
 }

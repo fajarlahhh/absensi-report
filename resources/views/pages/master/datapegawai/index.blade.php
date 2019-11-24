@@ -21,21 +21,21 @@
 					&nbsp;
                 </div>
                 <div class="col-md-10 col-lg-6 col-xl-6 col-xs-12 col-sm-12">
-					<form action="/datapegawai" method="GET" id="frm-kantor" class="pull-right">
+					<form action="/datapegawai" method="GET" id="form-cari" class="pull-right">
 	                    <div class="form-inline">
 	                        <div class="form-group">
-								<select class="form-control selectpicker" data-live-search="true" id="kantor" name="kantor" data-style="btn-info" data-width="100%">
-									@foreach($kantor as $ktr)
-									<option value="{{ $ktr->kantor_id }}" 
-										@if($kantor_id == $ktr->kantor_id)
+								<select class="form-control selectpicker cari" data-live-search="true" id="kantor" name="kantor" data-style="btn-info" data-width="100%">
+									@foreach($kantor as $row)
+									<option value="{{ $row->kantor_id }}" 
+										@if($ktr == $row->kantor_id)
 											selected
 										@endif
-									>{{ $ktr->kantor_nama }}</option>
+									>{{ $row->kantor_nama }}</option>
 									@endforeach
 								</select>
 		                    </div>&nbsp;
 	                		<div class="input-group ">
-								<input type="text" class="form-control" name="cari" placeholder="Pencarian" aria-label="Sizing example input" autocomplete="off"  value="{{ $cari }}">
+								<input type="text" class="form-control cari" name="cari" placeholder="Pencarian" aria-label="Sizing example input" autocomplete="off"  value="{{ $cari }}">
 								<div class="input-group-append">
 									<button class="btn input-group-text" >
 										<i class="fa fa-search"></i>
@@ -57,6 +57,7 @@
 							<th>Nama</th>
 							<th>Golongan</th>
 							<th>Jenis Kelamin</th>
+							<th width="50"></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -66,7 +67,12 @@
 					        <td>{{ $pegawai->pegawai_nip }}</td>
 					        <td>{{ $pegawai->pegawai_nama }}</td>
 					        <td>{{ $pegawai->pegawai_golongan }}</td>
-					        <td>{{ $pegawai->pegawai_jenis_kelamin }}</td>
+							<td>{{ $pegawai->pegawai_jenis_kelamin }}</td>
+							<td>
+								@role('user|administrator')
+								<a href="javascript:;" onclick="hapus('{{ $pegawai->pegawai_nip }}')" id='btn-del' class='btn btn-danger btn-xs'><i class='fa fa-trash-alt'></i></a>
+								@endrole
+							</td>
 				      	</tr>
 					    @endforeach
 				    </tbody>
@@ -86,4 +92,37 @@
 
 @push('scripts')
 	<script src="/assets/plugins/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
+	<script>
+		$(".cari").change(function() {
+			$("#form-cari").submit();
+		});
+
+		function hapus(id) {
+			swal({
+				title: 'Apakah anda yakin?',
+				text: 'Anda akan menghapus pegawai dengan nip ' + id + '',
+				icon: 'warning',
+				buttons: {
+					cancel: {
+						text: 'Batal',
+						value: null,
+						visible: true,
+						className: 'btn btn-default',
+						closeModal: true,
+					},
+					confirm: {
+						text: 'Ya',
+						value: true,
+						visible: true,
+						className: 'btn btn-danger',
+						closeModal: true
+					}
+				}
+			}).then(function(isConfirm) {
+		      	if (isConfirm) {
+	          		window.location.href = "/datapegawai/hapus/" + id;
+		      	}
+		    });
+		}
+	</script>
 @endpush

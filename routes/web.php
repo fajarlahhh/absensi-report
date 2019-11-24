@@ -46,7 +46,7 @@ Route::group(['middleware' => ['auth']], function () {
 	});
 
 	Route::group(['middleware' => ['role_or_permission:administrator|datapegawai']], function () {
-		Route::get('/datapegawai', 'Datapegawaicontroller@index')->name('datapegawai');
+		Route::get('/datapegawai', 'DatapegawaiController@index')->name('datapegawai');
 	});
 });
 
