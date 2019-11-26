@@ -19,3 +19,4 @@ use Illuminate\Http\Request;
 
 Route::get('/listkantor', 'DatakantorController@get_all');
 Route::post('/tambahpegawai', 'DatapegawaiController@do_tambah');
+Route::post('/tambahabsen', 'RekapabsensiController@do_tambah');

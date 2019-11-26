@@ -83,4 +83,43 @@ class RekapabsensiController extends Controller
 
         return response()->json($rekap);
     }
+
+    public function do_tambah(Request $req)
+    {
+        $req->validate(
+			[
+				'pegawai_nip' => 'required',
+				'absen_tanggal' => 'required',
+			],[
+         	   'pegawai_nip.required' => 'NIP tidak boleh kosong',
+         	   'absen_tanggal.required' => 'Tanggal tidak boleh kosong',
+        	]
+		);
+		try{
+			$absen = new Absen();
+			$absen->pegawai_nip = $req->get('pegawai_nip');
+			$absen->absen_tanggal = $req->get('absen_tanggal');
+			$absen->absen_hari = $req->get('absen_hari');
+			$absen->absen_izin = $req->get('absen_izin');
+			$absen->absen_telat = $req->get('absen_telat');
+			$absen->absen_masuk = $req->get('absen_masuk');
+			$absen->absen_pulang = $req->get('absen_pulang');
+			$absen->absen_istirahat = $req->get('absen_istirahat');
+			$absen->absen_kembali = $req->get('absen_kembali');
+			$absen->absen_lembur = $req->get('absen_lembur');
+			$absen->absen_lembur_pulang = $req->get('absen_lembur_pulang');
+			$absen->save();
+			$response = [
+				'berhasil' => 'berhasil'
+			];
+	
+			return response()->json($response);
+		}catch(\Exception $e){
+			$response = [
+				'status' => $e
+			];
+	
+			return response()->json($response);
+		}
+    }
 }

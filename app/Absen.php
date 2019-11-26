@@ -8,10 +8,10 @@ class Absen extends Model
 {
     //
     protected $table = 'absen';
-    protected $primaryKey = ['pegawai_id', 'absen_tanggal'];
+    protected $primaryKey = ['pegawai_nip', 'absen_tanggal'];
     public $incrementing = false;
     protected $fillable = [
-        'pegawai_id',
+        'pegawai_nip',
         'absen_tanggal',
         'absen_hari',
         'absen_izin',
@@ -24,8 +24,8 @@ class Absen extends Model
         'absen_lembur_pulang'
         ];
     
-    public function anggota()
+    public function pegawai()
     {
-    	return $this->belongsTo('Absensi\Anggota', 'pegawai_id', 'pegawai_id');
+    	return $this->belongsTo('Absensi\Pegawai', 'pegawai_nip', 'pegawai_nip');
     }
 }
