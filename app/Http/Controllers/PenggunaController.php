@@ -12,7 +12,7 @@ class PenggunaController extends Controller
 {
 	public function index(Request $req)
 	{
-		$pengguna = Pengguna::where('pengguna_nama', 'like', '%'.$req->cari.'%')->paginate(10);
+		$pengguna = Pengguna::where('pengguna_nama', 'like', '%'.$req->cari.'%')->orWhere('pengguna_id', 'like', '%'.$req->cari.'%')->paginate(10);
 		$pengguna->appends($req->only('cari'));
 		return view('pages.setup.datapengguna.index',[
 			'data' => $pengguna,

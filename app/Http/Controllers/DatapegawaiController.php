@@ -10,7 +10,7 @@ class DatapegawaiController extends Controller
 {
     public function index(Request $req)
     {
-		$kantor = Kantor::all();
+		$kantor = Kantor::orderBy('kantor_nama')->get();
 		$ktr = $req->kantor? $req->kantor: $kantor{0}->kantor_id;
 		$pegawai = Pegawai::where(function($q) use ($req){
 			$q->where('pegawai_nama', 'like', '%'.$req->cari.'%');
@@ -60,6 +60,24 @@ class DatapegawaiController extends Controller
 			$pegawai->pegawai_jenis_kelamin = $req->get('pegawai_jenis_kelamin');
 			$pegawai->kantor_id = $req->get('kantor_id');
 			$pegawai->save();
+			$response = [
+				'berhasil' => 'berhasil'
+			];
+	
+			return response()->json($response);
+		}catch(\Exception $e){
+			$response = [
+				'status' => $e
+			];
+	
+			return response()->json($response);
+		}
+	}
+
+	public function hapus_perkantor($id)
+	{
+		try{
+			Pegawai::where("kantor_id", $id)->delete();
 			$response = [
 				'berhasil' => 'berhasil'
 			];

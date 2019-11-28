@@ -30,7 +30,7 @@ class RekapabsensiController extends Controller
                 sum(if(absen_hari = 'l', 0, if(absen_izin = 'Tanpa Keterangan', 1, 0))) `tanpaketerangan`");
             $q->whereRaw("absen_tanggal between '".$tgl1."' and '".$tgl2."'");
             $q->groupBy('pegawai_nip');
-        }])->select('pegawai_nip','pegawai_nama','pegawai_golongan','pegawai_jenis_kelamin')->groupBy('pegawai_nip','pegawai_nip','pegawai_nama','pegawai_golongan','pegawai_jenis_kelamin')->get();
+        }])->where('kantor_id', $ktr)->select('pegawai_nip','pegawai_nama','pegawai_golongan','pegawai_jenis_kelamin')->groupBy('pegawai_nip','pegawai_nip','pegawai_nama','pegawai_golongan','pegawai_jenis_kelamin')->get();
     	return view('pages.laporan.rekapabsensi.index',[
             'kantor' => $kantor,
             'ktr' => $ktr,
@@ -96,18 +96,21 @@ class RekapabsensiController extends Controller
         	]
 		);
 		try{
+            Absen::where('pegawai_nip', $req->get('pegawai_nip'))->where('absen_tanggal', $req->get('absen_tanggal'))->delete();
+
 			$absen = new Absen();
 			$absen->pegawai_nip = $req->get('pegawai_nip');
 			$absen->absen_tanggal = $req->get('absen_tanggal');
 			$absen->absen_hari = $req->get('absen_hari');
 			$absen->absen_izin = $req->get('absen_izin');
-			$absen->absen_telat = $req->get('absen_telat');
-			$absen->absen_masuk = $req->get('absen_masuk');
-			$absen->absen_pulang = $req->get('absen_pulang');
-			$absen->absen_istirahat = $req->get('absen_istirahat');
-			$absen->absen_kembali = $req->get('absen_kembali');
-			$absen->absen_lembur = $req->get('absen_lembur');
-			$absen->absen_lembur_pulang = $req->get('absen_lembur_pulang');
+			$absen->absen_telat = $req->get('absen_telat') == "00:00:00"? null: $req->get('absen_telat');
+			$absen->absen_masuk = $req->get('absen_masuk') == "00:00:00"? null: $req->get('absen_masuk');
+			$absen->absen_pulang = $req->get('absen_pulang') == "00:00:00"? null: $req->get('absen_pulang');
+			$absen->absen_istirahat = $req->get('absen_istirahat') == "00:00:00"? null: $req->get('absen_istirahat');
+			$absen->absen_kembali = $req->get('absen_kembali') == "00:00:00"? null: $req->get('absen_kembali');
+			$absen->absen_lembur = $req->get('absen_lembur') == "00:00:00"? null: $req->get('absen_lembur');
+			$absen->absen_lembur_pulang = $req->get('absen_lembur_pulang') == "00:00:00"? null: $req->get('absen_lembur_pulang');
+			$absen->kantor_id = $req->get('kantor_id');
 			$absen->save();
 			$response = [
 				'berhasil' => 'berhasil'

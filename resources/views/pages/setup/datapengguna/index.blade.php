@@ -16,14 +16,13 @@
                 <div class="col-md-6 col-lg-7 col-xl-9 col-xs-12">
                 	@role('user|administrator')
                     <div class="form-inline">
-                        <a href="/datapengguna/tambah" class="btn btn-sm btn-primary"><span class="glyphicon glyphicon-plus"></span>Tambah</a>
+                        <a href="/datapengguna/tambah" class="btn btn-md btn-primary"><span class="glyphicon glyphicon-plus"></span>Tambah</a>
                     </div>
                     @endrole
                 </div>
                 <div class="col-md-6 col-lg-5 col-xl-3 col-xs-12">
                 	<form action="/datapengguna" method="GET">
-	                	<div class="input-group input-group-sm">
-	                		@csrf
+	                	<div class="input-group">
 							<input type="text" class="form-control" name="cari" placeholder="Pencarian" aria-label="Sizing example input" autocomplete="off" aria-describedby="inputGroup-sizing-sm" value="{{ $cari }}">
 							<div class="input-group-append">
 								<button class="btn input-group-text" id="inputGroup-sizing-sm">

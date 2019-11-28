@@ -10,6 +10,7 @@ class Absen extends Model
     protected $table = 'absen';
     protected $primaryKey = ['pegawai_nip', 'absen_tanggal'];
     public $incrementing = false;
+    public $timestamps = false;
     protected $fillable = [
         'pegawai_nip',
         'absen_tanggal',

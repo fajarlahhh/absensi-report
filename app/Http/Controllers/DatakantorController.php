@@ -10,7 +10,7 @@ class DatakantorController extends Controller
     public function index(Request $req)
     {
 		$lokasi = $req->lokasi? $req->lokasi: 'Kab. Bima';
-    	$kantor = Kantor::where('kantor_nama', 'like', '%'.$req->cari.'%')->where('kantor_lokasi', '=', $lokasi)->paginate(10);
+    	$kantor = Kantor::where('kantor_nama', 'like', '%'.$req->cari.'%')->where('kantor_lokasi', '=', $lokasi)->orderBy('kantor_nama')->paginate(10);
 		$kantor->appends(['lokasi' => $lokasi, 'cari' => $req->cari])->links();
     	return view('pages.master.datakantor.index',[
     		'data' => $kantor,
@@ -115,9 +115,7 @@ class DatakantorController extends Controller
     
     public function get_all(Request $req)
     {
-        $response = [
-            'kantor' => Kantor::all()
-        ];
+        $response = Kantor::all();
 
         return response()->json($response);
     }

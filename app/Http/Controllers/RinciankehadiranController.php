@@ -19,9 +19,7 @@ class RinciankehadiranController extends Controller
         $absensi = Pegawai::with(['absen' => function($q) use($tgl1, $tgl2){
             $q->whereBetween('absen_tanggal', [$tgl1, $tgl2]);
             $q->orderBy('absen_tanggal');
-        }])->with('kantor')->whereHas('kantor', function($q) use($ktr){
-            $q->where('kantor_id', $ktr);
-        })->select('pegawai_nip','pegawai_nama','pegawai_golongan','pegawai_jenis_kelamin')->groupBy('pegawai_nip','pegawai_nip','pegawai_nama','pegawai_golongan','pegawai_jenis_kelamin')->get();
+        }])->where('kantor_id', $ktr)->select('pegawai_nip','pegawai_nama','pegawai_golongan','pegawai_jenis_kelamin')->groupBy('pegawai_nip','pegawai_nip','pegawai_nama','pegawai_golongan','pegawai_jenis_kelamin')->get();
     	return view('pages.laporan.rincianabsensi.index',[
             'kantor' => $kantor,
             'ktr' => $ktr,
